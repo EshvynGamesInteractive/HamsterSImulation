@@ -1,4 +1,4 @@
-using UnityEngine;
+     using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -8,6 +8,7 @@ public class FridgeHeistController : MonoBehaviour
     [SerializeField] private Transform exitPoint;
     [SerializeField] private GameObject stealthUI;
     [SerializeField] private float movementFreezeRadius = 0.1f;
+    [SerializeField] GrandpaPeekController grandpaController;
 
     [SerializeField] private Image stealthMeterImage;
 
@@ -41,6 +42,7 @@ public class FridgeHeistController : MonoBehaviour
 
     private IEnumerator StartHeist()
     {
+        grandpaController.GameStarted();
         player = MainScript.instance.player;
         fP_Controller = player.GetComponent<FP_Controller>();
         if (player == null) yield break;
@@ -106,6 +108,7 @@ public class FridgeHeistController : MonoBehaviour
 
     private void FailHeist()
     {
+        grandpaController.GameEnd();
         heistActive = false;
         stealthUI?.SetActive(false);
         Debug.Log("Heist failed!");
@@ -114,6 +117,7 @@ public class FridgeHeistController : MonoBehaviour
 
     private void EndHeist()
     {
+        grandpaController.GameEnd();
         var movement = player.GetComponent<FP_Controller>(); 
         if (movement != null)
             movement.ExitHeistMode();

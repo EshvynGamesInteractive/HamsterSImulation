@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public enum MiniGameType
 {
@@ -14,11 +15,12 @@ public enum MiniGameType
 public class MiniGameManager : MonoBehaviour
 {
     public static MiniGameManager Instance { get; private set; }
-
+    public Button gameStartBtn;
 
     public FridgeHeistController fridgeLevel;
     public BubblePopManager bubbleLevel;
     public CushionTrampolineManager cushionTrampoline;
+  
 
     public MiniGameType ActiveMiniGame { get; private set; } = MiniGameType.None;
 
@@ -48,7 +50,6 @@ public class MiniGameManager : MonoBehaviour
 
     public void StartMiniGame(MiniGameType type)
     {
-        Debug.Log("ohh");
         if (ActiveMiniGame != MiniGameType.None)
         {
             Debug.LogWarning("A mini-game is already active!");

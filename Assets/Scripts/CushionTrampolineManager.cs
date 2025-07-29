@@ -6,13 +6,19 @@ using System.Collections.Generic;
 public class CushionTrampolineManager : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] GameObject cookieJar;
+    [SerializeField] GameObject jarCamera;
     [SerializeField] private Transform stackPoint;
     [SerializeField] private GameObject gameStartTrigger;
     [SerializeField] private GameObject jumpPowerUI;
     [SerializeField] private Text txtTimer;
     [SerializeField] private FP_Controller player; // control jump
-    [SerializeField] private Camera trampolineCamera;
     [SerializeField] float cushionHeight;
+
+
+
+
+
 
     [Header("Settings")]
     [SerializeField] private float gameDuration = 30f;
@@ -53,36 +59,52 @@ public class CushionTrampolineManager : MonoBehaviour
 
     private void Start()
     {
+        cookieJar.SetActive(false);
         txtTimer.transform.parent.gameObject.SetActive(false);
-        jumpPowerUI.SetActive(false);
-        trampolineCamera.gameObject.SetActive(false);
+        
     }
 
-    private void Update()
-    {
-        if (!isGameActive) return;
+    //private void Update()
+    //{
+    //    if (!isGameActive) return;
 
-        timer -= Time.deltaTime;
-        txtTimer.text = timer.ToString("f0");
+    //    timer -= Time.deltaTime;
+    //    txtTimer.text = timer.ToString("f0");
 
-        if (timer <= 0f)
-            EndMiniGame();
-    }
+    //    if (timer <= 0f)
+    //        EndMiniGame();
+    //}
 
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.CushionTrampoline) return;
+        PlayerScript playerr = player.GetComponent<PlayerScript>();
+        player.canControl = false;
+        //bubbleCam.transform.position = playerr.playerCamera.position;
+        //bubbleCam.transform.rotation = playerr.playerCamera.rotation;
+        jarCamera.SetActive(true);
 
+        float camMoveDuration = 2f;
+
+        jarCamera.transform.DOMove(playerr.playerCamera.position, camMoveDuration).SetEase(Ease.Linear);
+        jarCamera.transform.DORotateQuaternion(playerr.playerCamera.rotation, camMoveDuration);
+
+        DOVirtual.DelayedCall(camMoveDuration, () => {
+            jarCamera.SetActive(false);
+            player.canControl = true;
+        });
+
+
+        cookieJar.SetActive(true);
         isGameActive = true;
         timer = gameDuration;
-        stackedCushions.Clear();
+        //stackedCushions.Clear();
 
         txtTimer.transform.parent.gameObject.SetActive(true);
-        jumpPowerUI.SetActive(true);
-        trampolineCamera.gameObject.SetActive(true);
+        
         gameStartTrigger.SetActive(false);
 
-        MainScript.instance.pnlInfo.ShowInfo("Stack cushions and jump to get the cookie!");
+        MainScript.instance.pnlInfo.ShowInfo("Stack cushions and jump to get the cookie jar!");
     }
 
     public bool CanAddMoreCushions() => stackedCushions.Count < maxCushions;
@@ -114,8 +136,7 @@ public class CushionTrampolineManager : MonoBehaviour
     {
         isGameActive = false;
         txtTimer.transform.parent.gameObject.SetActive(false);
-        jumpPowerUI.SetActive(false);
-        trampolineCamera.gameObject.SetActive(false);
+       
         gameStartTrigger.SetActive(true);
 
         MiniGameManager.Instance.EndMiniGame();

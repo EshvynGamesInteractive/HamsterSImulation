@@ -93,7 +93,7 @@ public class Bubble : MonoBehaviour
         {
             case BubbleType.StinkBomb:
                 Debug.Log("Stink bomb! Penalize.");
-                MiniGameManager.Instance.bubbleLevel?.ApplyPenalty(-2);
+                MiniGameManager.Instance.bubbleLevel?.ApplyPenalty(2);
                 break;
 
             case BubbleType.RegularBubble:

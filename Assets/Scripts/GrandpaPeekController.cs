@@ -62,10 +62,10 @@ public class GrandpaPeekController : MonoBehaviour
 
         GenerateLookCone();
     }
-
+    GameObject cone;
     private void GenerateLookCone()
     {
-        GameObject cone = new GameObject("LookCone");
+         cone= new GameObject("LookCone");
         cone.transform.SetParent(headTransform);
         cone.transform.localPosition = Vector3.zero;
         cone.transform.localRotation = Quaternion.identity;
@@ -125,16 +125,23 @@ public class GrandpaPeekController : MonoBehaviour
         mesh.RecalculateNormals();
 
         mf.mesh = mesh;
+
+        if (cone != null && cone.activeSelf)
+            cone.SetActive(false);
     }
 
-    
+
 
 
 
     private void Update()
     {
         if (playerCaught)
+        {
+           
             return;
+    }
+       
         timer += Time.deltaTime;
 
         if (!isLooking && timer >= lookInterval)
@@ -165,6 +172,18 @@ public class GrandpaPeekController : MonoBehaviour
         }
     }
 
+    public void GameStarted()
+    {
+        Debug.Log("aaaaa")
+;        if (cone != null && !cone.activeSelf)
+            cone.SetActive(true);
+    }
+
+    public void GameEnd()
+    {
+        if (cone != null && cone.activeSelf)
+            cone.SetActive(false);
+    }
     private void CatchPlayer()
     {
         playerCaught = true;
@@ -172,9 +191,15 @@ public class GrandpaPeekController : MonoBehaviour
         StopLooking();
         animator.SetTrigger("Stand");
         transform.position = standPos.position;
-        transform.LookAt(player);
+
+        Vector3 lookPos = player.position - transform.position;
+        lookPos.y = 0; // Ignore vertical difference
+        transform.rotation = Quaternion.LookRotation(lookPos);
+
+
+       
         MainScript.instance.player.PlayerCaught();
-        MainScript.instance.pnlInfo.ShowInfo("You have been caught");
+        
     }
        
 

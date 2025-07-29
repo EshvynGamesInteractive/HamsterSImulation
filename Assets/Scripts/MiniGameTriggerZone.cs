@@ -5,18 +5,26 @@ using UnityEngine.UI;
 public class MiniGameTriggerZone : MonoBehaviour
 {
     [SerializeField] private MiniGameType miniGameToStart;
-    [SerializeField] Button gameStartBtn;
+    private Button gameStartBtn;
 
     private void Start()
     {
-        gameStartBtn.onClick.AddListener(StartMiniGame); 
+        gameStartBtn = MiniGameManager.Instance.gameStartBtn;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            gameStartBtn.onClick.Invoke();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
 
-
+        gameStartBtn.onClick.AddListener(StartMiniGame);
         gameStartBtn.gameObject.SetActive(true);
        
     }
@@ -25,15 +33,19 @@ public class MiniGameTriggerZone : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-
+        gameStartBtn.onClick.RemoveListener(StartMiniGame);
         gameStartBtn.gameObject.SetActive(false);
     }
 
+    private void OnDisable()
+    {
+        gameStartBtn.onClick.RemoveListener(StartMiniGame);
+    }
     public void StartMiniGame()
     {
         gameStartBtn.gameObject.SetActive(false);
         MiniGameManager.Instance?.StartMiniGame(miniGameToStart);
-
+        Debug.Log(gameObject.name);
         gameObject.SetActive(false);
     }
 

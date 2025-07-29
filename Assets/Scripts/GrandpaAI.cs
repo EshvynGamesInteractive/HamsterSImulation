@@ -5,11 +5,12 @@ using UnityEngine.AI;
 
 public class GrandpaAI : MonoBehaviour
 {
+    [SerializeField] bool scoldPlayerWhenSee;
     public List<Transform> waypoints;
     public float[] waitDurations;
     public float reachThreshold = 0.5f;
     public float detectionRange = 10f;
-    public float attackRange = 2.5f;
+    public float catchRange = 2.5f;
 
     private NavMeshAgent agent;
     private int currentIndex = 0;
@@ -19,6 +20,11 @@ public class GrandpaAI : MonoBehaviour
     private Transform player;
     private bool playerHasThrown = false;
     private Animator animator;
+    [Range(0, 360)]
+    public float viewAngleRight = 90f; // in degrees
+    public float viewAngleLeft = 90f; // in degrees
+
+    bool playerCaught;
 
     void Start()
     {
@@ -33,13 +39,17 @@ public class GrandpaAI : MonoBehaviour
             return;
         }
         
+        if(scoldPlayerWhenSee)
+        {
+            catchRange = 5;
+        }
 
         MoveToCurrentWaypoint();
     }
 
     void Update()
     {
-        if (player == null) return;
+        if (player == null || playerCaught) return;
 
         float playerDistance = Vector3.Distance(transform.position, player.position);
 
@@ -47,6 +57,7 @@ public class GrandpaAI : MonoBehaviour
         {
             ChasePlayer(playerDistance);
         }
+        
         else
         {
             if (isChasing)
@@ -57,6 +68,10 @@ public class GrandpaAI : MonoBehaviour
             }
 
             Patrol();
+        }
+        if(scoldPlayerWhenSee && CanSeePlayer())
+        {
+            ChasePlayer(playerDistance);
         }
     }
 
@@ -110,40 +125,71 @@ public class GrandpaAI : MonoBehaviour
 
     void ChasePlayer(float distance)
     {
+
         isChasing = true;
         animator.SetBool("isWalking", true);
         agent.SetDestination(player.position);
 
-        if (distance <= attackRange)
+        if (distance <= catchRange)
         {
-            StartCoroutine(AttackPlayer());
+            if (CanSeePlayer())
+            {
+                StartCoroutine(ScoldPlayer());
+            }
         }
+
     }
 
-    IEnumerator AttackPlayer()
+    bool CanSeePlayer()
     {
+        Vector3 origin = transform.position + Vector3.up * 1.5f;
+        Vector3 target = player.position;
+        Vector3 directionToPlayer = (target - origin).normalized;
+        float distance = Vector3.Distance(origin, target);
+
+        if (distance > detectionRange)
+            return false;
+
+        // Check if player is within view angle
+        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+        if (angleToPlayer > viewAngleLeft / 2f)
+            return false;
+
+        // Check if anything blocks the view
+        if (Physics.Raycast(origin, directionToPlayer, out RaycastHit hit, detectionRange))
+        {
+            Debug.Log(hit.transform.name);
+            Debug.DrawRay(origin, directionToPlayer * detectionRange, Color.red);
+            return hit.collider.CompareTag("Player");
+        }
+
+        return false;
+    }
+
+
+
+
+    IEnumerator ScoldPlayer()
+    {
+        playerCaught = true;
         animator.SetBool("isWalking", false);
         agent.ResetPath();
 
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
         animator.SetTrigger("attack");
 
-        yield return new WaitForSeconds(1.5f); // Adjust to match your attack animation timing
         player.GetComponent<PlayerScript>()?.PlayerCaught();
 
 
-        yield return new WaitForSeconds(1f); // Pause after killing before returning to patrol
+        yield return new WaitForSeconds(4f); // Pause after killing before returning to patrol
 
         isChasing = false;
         playerHasThrown = false;
-        MoveToCurrentWaypoint();
-        animator.SetBool("isWalking", true);
+        //MoveToCurrentWaypoint();
+        //animator.SetBool("isWalking", true);
     }
 
-    public void PlayerDie()
-    {
-        player.GetComponent<PlayerScript>()?.PlayerCaught();
-    }
+  
 
     public void NotifyPlayerHasThrown()
     {
@@ -152,9 +198,26 @@ public class GrandpaAI : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+        // Ranges
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, catchRange);
+
+        // FOV Visualization
+        Vector3 origin = transform.position + Vector3.up * 1.5f;
+        Vector3 forward = transform.forward;
+
+        Quaternion leftRayRotation = Quaternion.Euler(0, -viewAngleLeft / 2f, 0);
+        Quaternion rightRayRotation = Quaternion.Euler(0, viewAngleRight / 2f, 0);
+
+        Vector3 leftRay = leftRayRotation * forward;
+        Vector3 rightRay = rightRayRotation * forward;
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(origin, leftRay * detectionRange);
+        Gizmos.DrawRay(origin, rightRay * detectionRange);
     }
+
+
 }

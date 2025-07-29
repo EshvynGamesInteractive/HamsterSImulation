@@ -48,7 +48,6 @@ public class BubblePopManager : MonoBehaviour
 
     private void OnMiniGameStarted(MiniGameType type)
     {
-        Debug.Log("khhhh");
         if (type != MiniGameType.BubblePopBlitz) return;
         StartCoroutine(
                 StartBubblePopMiniGame());
@@ -57,7 +56,7 @@ public class BubblePopManager : MonoBehaviour
 
     public IEnumerator StartBubblePopMiniGame()
     {
-           
+           timerText.transform.parent.gameObject.SetActive(true);
 
 
         MainScript.instance.pnlInfo.ShowInfo("Pop the bubbles, Avoid Stinky green ones");
@@ -162,7 +161,7 @@ public class BubblePopManager : MonoBehaviour
     {
         
         gameActive = false;
-       
+        timerText.transform.parent.gameObject.SetActive(false);
 
         float jumpDuration = 1;
         bubbleCam.transform.DOJump(player.playerCamera.position, 0.5f, 1, jumpDuration);

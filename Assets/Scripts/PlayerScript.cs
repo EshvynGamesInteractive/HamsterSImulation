@@ -69,7 +69,8 @@ public class PlayerScript : MonoBehaviour
         ChangeObjectLayer(pickedObject.transform, "Default");
         pickedObject = null;
         IsObjectPicked = false;
-        grandpa.NotifyPlayerHasThrown();
+        if (grandpa != null)
+            grandpa.NotifyPlayerHasThrown();
     }
     public void PlaceObject(Vector3 placementPos)
     {
@@ -81,7 +82,7 @@ public class PlayerScript : MonoBehaviour
         ChangeObjectLayer(pickedObject.transform, "Default");
         pickedObject.transform.SetParent(null);
         pickedObject = null;
-        IsObjectPicked = false; 
+        IsObjectPicked = false;
     }
     public bool HasPickedObject()
     {
@@ -90,6 +91,8 @@ public class PlayerScript : MonoBehaviour
 
     public void PlayerCaught()
     {
+        MainScript.instance.pnlInfo.ShowInfo("You have been caught");
+
         GetComponent<FP_Controller>().StopPlayerMovement();
 
         playerHead.gameObject.SetActive((false));
