@@ -65,7 +65,7 @@ public class GrandpaPeekController : MonoBehaviour
     GameObject cone;
     private void GenerateLookCone()
     {
-         cone= new GameObject("LookCone");
+        cone = new GameObject("LookCone");
         cone.transform.SetParent(headTransform);
         cone.transform.localPosition = Vector3.zero;
         cone.transform.localRotation = Quaternion.identity;
@@ -138,10 +138,10 @@ public class GrandpaPeekController : MonoBehaviour
     {
         if (playerCaught)
         {
-           
+
             return;
-    }
-       
+        }
+
         timer += Time.deltaTime;
 
         if (!isLooking && timer >= lookInterval)
@@ -174,13 +174,14 @@ public class GrandpaPeekController : MonoBehaviour
 
     public void GameStarted()
     {
-        Debug.Log("aaaaa")
-;        if (cone != null && !cone.activeSelf)
+        gameObject.SetActive(true);
+        if (cone != null && !cone.activeSelf)
             cone.SetActive(true);
     }
 
     public void GameEnd()
     {
+        gameObject.SetActive(false);
         if (cone != null && cone.activeSelf)
             cone.SetActive(false);
     }
@@ -197,11 +198,11 @@ public class GrandpaPeekController : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(lookPos);
 
 
-       
+
         MainScript.instance.player.PlayerCaught();
-        
+
     }
-       
+
 
     private bool CanSeePlayer()
     {

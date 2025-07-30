@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class GrandpaAI : MonoBehaviour
 {
     [SerializeField] bool scoldPlayerWhenSee;
+    [SerializeField] bool shouldCatchPlayer=true;
     public List<Transform> waypoints;
     public float[] waitDurations;
     public float reachThreshold = 0.5f;
@@ -23,8 +24,8 @@ public class GrandpaAI : MonoBehaviour
     [Range(0, 360)]
     public float viewAngleRight = 90f; // in degrees
     public float viewAngleLeft = 90f; // in degrees
-
-    bool playerCaught;
+    
+    bool stopPatrol;
 
     void Start()
     {
@@ -49,11 +50,11 @@ public class GrandpaAI : MonoBehaviour
 
     void Update()
     {
-        if (player == null || playerCaught) return;
+        if (player == null || stopPatrol) return;
 
         float playerDistance = Vector3.Distance(transform.position, player.position);
 
-        if (playerHasThrown && playerDistance <= detectionRange)
+        if (shouldCatchPlayer && playerHasThrown && playerDistance <= detectionRange)
         {
             ChasePlayer(playerDistance);
         }
@@ -142,7 +143,7 @@ public class GrandpaAI : MonoBehaviour
 
     bool CanSeePlayer()
     {
-        Vector3 origin = transform.position + Vector3.up * 1.5f;
+        Vector3 origin = transform.position;
         Vector3 target = player.position;
         Vector3 directionToPlayer = (target - origin).normalized;
         float distance = Vector3.Distance(origin, target);
@@ -171,7 +172,7 @@ public class GrandpaAI : MonoBehaviour
 
     IEnumerator ScoldPlayer()
     {
-        playerCaught = true;
+        stopPatrol = true;
         animator.SetBool("isWalking", false);
         agent.ResetPath();
 
@@ -205,7 +206,7 @@ public class GrandpaAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, catchRange);
 
         // FOV Visualization
-        Vector3 origin = transform.position + Vector3.up * 1.5f;
+        Vector3 origin = transform.position;
         Vector3 forward = transform.forward;
 
         Quaternion leftRayRotation = Quaternion.Euler(0, -viewAngleLeft / 2f, 0);
@@ -219,5 +220,16 @@ public class GrandpaAI : MonoBehaviour
         Gizmos.DrawRay(origin, rightRay * detectionRange);
     }
 
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Water"))
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetTrigger("Fall");
+            stopPatrol = true;
+            agent.enabled = false;
+            GetComponent<Collider>().enabled = false;
+            //MainScript.instance.activeLevel
+        }
+    }
 }

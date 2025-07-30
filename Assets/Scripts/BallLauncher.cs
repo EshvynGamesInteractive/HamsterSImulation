@@ -34,8 +34,7 @@ public class BallLauncher : Interactable
         txtTimer.transform.parent.gameObject.SetActive(false);
     }
     private void Update()
-    {
-        Debug.Log(ballLaunched);  
+    { 
         if (!ballLaunched) return;
 
         timer -= Time.deltaTime;
@@ -105,7 +104,7 @@ public class BallLauncher : Interactable
     public void OnBallReturned()
     {
         if (!waitingForReturn) return;
-        DisableForInteraction();
+        DisableForInteraction(true);
         ballLaunched = false;
         txtTimer.transform.parent.gameObject.SetActive(false);
 
@@ -145,7 +144,7 @@ public class BallLauncher : Interactable
             player.ThrowObject();
             Destroy(ball.gameObject);
             OnBallReturned();
-            DisableForInteraction();
+            DisableForInteraction(true);
         }
     }
 

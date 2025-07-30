@@ -26,7 +26,10 @@ public class FridgeHeistController : MonoBehaviour
     }
 
 
-
+    private void Start()
+    {
+        grandpaController.gameObject.SetActive(false);
+    }
 
     private void OnDisable()
     {
@@ -42,6 +45,7 @@ public class FridgeHeistController : MonoBehaviour
 
     private IEnumerator StartHeist()
     {
+        
         grandpaController.GameStarted();
         player = MainScript.instance.player;
         fP_Controller = player.GetComponent<FP_Controller>();

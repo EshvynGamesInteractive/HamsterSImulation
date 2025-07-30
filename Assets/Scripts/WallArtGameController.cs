@@ -10,6 +10,7 @@ public class WallArtGameController : MonoBehaviour
     [SerializeField] GameObject btnDraw;
     public float drawDistance = 3f;
     private Camera playerCamera;
+    private PlayerScript player;
 
     private float timer;
     private bool isGameActive;
@@ -17,7 +18,8 @@ public class WallArtGameController : MonoBehaviour
     private void Start()
     {
         grandpa.SetActive(false);
-        playerCamera = MainScript.instance.player.playerCamera.GetComponent<Camera>();
+        player = MainScript.instance.player;
+        playerCamera = player.playerCamera.GetComponent<Camera>();
     }
 
     private void OnEnable()
@@ -99,6 +101,7 @@ public class WallArtGameController : MonoBehaviour
             {
                 Vector3 spawnPoint = hit.point + hit.normal * 0.01f;
                 Instantiate(pawPrintPrefab, spawnPoint, Quaternion.LookRotation(hit.normal));
+                player.AnimatePawToCenter();
             }
         }
     }

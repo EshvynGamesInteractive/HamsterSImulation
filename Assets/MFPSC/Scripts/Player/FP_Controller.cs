@@ -161,6 +161,7 @@ public class FP_Controller : MonoBehaviour
 				jumpTimer++;
 			else if (canJump && jumpTimer >= antiBunnyHopFactor) 
             {
+                GetComponent<PlayerScript>().AnimatePawsForJump();
 				moveDirection.y = jumpForce;
 				jumpTimer = 0;
 			}
