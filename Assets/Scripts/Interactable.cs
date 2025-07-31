@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[RequireComponent (typeof(Outline))]
+
 public abstract class Interactable : MonoBehaviour
 {
     [SerializeField] private bool enableAtStart, showIndicationAtStart;
@@ -24,16 +24,19 @@ public abstract class Interactable : MonoBehaviour
     public void EnableForInteraction(bool showIndication)
     {
         GetComponent<Collider>().enabled = true;
-        if (indication != null && showIndication)
-            indication.SetActive(true);
+        //if (indication != null && showIndication)
+        //    indication.SetActive(true);
+
+        if (showIndication)
+            MainScript.instance.SetIndicationPosition(transform);
         isInteractable = true;
     }
 
     public void DisableForInteraction(bool enableCollider)
     {
         GetComponent<Collider>().enabled = enableCollider;
-        if (indication != null)
-            indication.SetActive(false);
+        //if (indication != null)
+        //    indication.SetActive(false);
         isInteractable = false;
     }
     public void ShowOutline()

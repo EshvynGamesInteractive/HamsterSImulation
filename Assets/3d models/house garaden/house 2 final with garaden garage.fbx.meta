@@ -3,12 +3,317 @@ guid: 1dbfdc58b3951ee48ac4ab568519acbb
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LowPolyInterior2_GLASS
+    second: {fileID: 2100000, guid: 57525001b100a21468d39409007e9c5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LowPolyInterior2_Light
+    second: {fileID: 2100000, guid: 63242f915149b9547956c8ce8131cf1b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LowPolyInterior2_MAIN
+    second: {fileID: 2100000, guid: b8ab19c6e93b7e04aaf6e3da5540b996, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LowPolyInterior2_Mirror
+    second: {fileID: 2100000, guid: 6e177c918933e3745b291614c201e9ef, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LowPolyInterior2_Painting
+    second: {fileID: 2100000, guid: e5be7362c7303d94d9caab32d09179e2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LowPolyInterior2_WINDOWS
+    second: {fileID: 2100000, guid: 29b20469b5efd214d976b28059ab05e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bathroom_2
+    second: {fileID: 2100000, guid: 841bdcfb05dc94b46bb7f183722a4f71, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bathroom_tile
+    second: {fileID: 2100000, guid: 841bdcfb05dc94b46bb7f183722a4f71, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn2
+    second: {fileID: 2100000, guid: 7b3e97c202f18c442b734a7fa9a00a2c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn3
+    second: {fileID: 2100000, guid: aff42a087438549429b0288678d17c73, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: floor1
+    second: {fileID: 2100000, guid: aa24664db51a7ef4ca264fb6d9eec6be, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert2
+    second: {fileID: 2100000, guid: c960d4b676229684e94a20651c062f1a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Carpets
+    second: {fileID: 2100000, guid: a348c9c1772520b4f86dba6d5b715482, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__ColorForAllTextured_Sofa
+    second: {fileID: 2100000, guid: 96cc1696a4d2c834da7403615f879680, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__ColorForAllTextured_Wood
+    second: {fileID: 2100000, guid: 96cc1696a4d2c834da7403615f879680, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__ConcreteFloorT
+    second: {fileID: 2100000, guid: bad2deba008e4b644999df27a00d5aeb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Door_T
+    second: {fileID: 2100000, guid: a714901e3a26ed74eb1b553d9aae51df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__ExteriorTop_T
+    second: {fileID: 2100000, guid: 7efd481a17258ae4da6b2831f3431fc7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__InteractiveMatteButcher_0
+    second: {fileID: 2100000, guid: f3fc1978eed2c6f4986f28bc063f40ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Interactive_Balloons
+    second: {fileID: 2100000, guid: f3fc1978eed2c6f4986f28bc063f40ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__InteriorWalls
+    second: {fileID: 2100000, guid: 3140a87d23e785249b309409905b63de, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Lift_T
+    second: {fileID: 2100000, guid: 73da11062d6a9044dae11c196fbbab90, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Lights
+    second: {fileID: 2100000, guid: 238951db254037c40a6cd9ddcc0c057a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Mat_1
+    second: {fileID: 2100000, guid: ec474ed79ccdbf646a307610d25938a7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Mat_2
+    second: {fileID: 2100000, guid: 3850a2ffbca72f041941e6c71709e5a0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__MediumToolbox_T
+    second: {fileID: 2100000, guid: 86cdf82d7bf19db41a828d55c5d0de1b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__RollingToolbox_T
+    second: {fileID: 2100000, guid: 5fc78bc903af4004d8c8b0bef92e27dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Roof_T
+    second: {fileID: 2100000, guid: b4146a433e7454b40835fc0296ab1714, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__StorageRack_T
+    second: {fileID: 2100000, guid: ac429a2f974dc4e40b82d3afff6e29f0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Tire_T
+    second: {fileID: 2100000, guid: d8eafa7f2e7d86f469fb8b590c249022, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__blinn1
+    second: {fileID: 2100000, guid: 0d77033a613220f47add01e658055f6f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__blinn2
+    second: {fileID: 2100000, guid: 6381bf5962cd9714c94d238f89762b5d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__blinn3
+    second: {fileID: 2100000, guid: b8ab19c6e93b7e04aaf6e3da5540b996, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__lambert2
+    second: {fileID: 2100000, guid: 700b8df4b849e8a4da299bda06c801fd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material
+    second: {fileID: 2100000, guid: cfb4c4231b117af4792280620c083cee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_0
+    second: {fileID: 2100000, guid: 60edaa2e7c49a6541a4a550790ce2c29, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_1
+    second: {fileID: 2100000, guid: f7c98e4a6d57d944bb6d6c46ae760c2f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_13
+    second: {fileID: 2100000, guid: c6b5403bea9ec5942ae35d2eead6365d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_20
+    second: {fileID: 2100000, guid: 7cd65d5d152db5341a327e07b46081e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_23
+    second: {fileID: 2100000, guid: a2936a052db809a4e88fecdfe4b7bd1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_24
+    second: {fileID: 2100000, guid: 1496666df80856746b527046018755b6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_25
+    second: {fileID: 2100000, guid: 0bd35bd03acebdc41ba5d295a2186df4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_26
+    second: {fileID: 2100000, guid: 2837d46da0b9d324ca225121e159f3a3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_29
+    second: {fileID: 2100000, guid: 1917b812942723a409b99b2a8ab27685, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_30
+    second: {fileID: 2100000, guid: 1917b812942723a409b99b2a8ab27685, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_31
+    second: {fileID: 2100000, guid: a7b064f74a76a534a8cb91dabb883def, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_32
+    second: {fileID: 2100000, guid: cd921f0036b227c448cd8f340d376a4e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_35
+    second: {fileID: 2100000, guid: 60edaa2e7c49a6541a4a550790ce2c29, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_36
+    second: {fileID: 2100000, guid: e93eaafad1f710a4d96c2cdef8bd113c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_4
+    second: {fileID: 2100000, guid: 9b1857506dd944e4a924979ac3118f4d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_40
+    second: {fileID: 2100000, guid: b8ab19c6e93b7e04aaf6e3da5540b996, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_41
+    second: {fileID: 2100000, guid: 4e22208f31d693e4c891cfea0c6f6b58, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_43
+    second: {fileID: 2100000, guid: eec411c11aa694e4e890b94ff98c26d1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_44
+    second: {fileID: 2100000, guid: eec411c11aa694e4e890b94ff98c26d1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_45
+    second: {fileID: 2100000, guid: 36f2f1ff9b74a49418ec4b1702adb80d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_46
+    second: {fileID: 2100000, guid: 36f2f1ff9b74a49418ec4b1702adb80d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_47
+    second: {fileID: 2100000, guid: a430358f4f3453641a7b5edb50d8623b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_49
+    second: {fileID: 2100000, guid: 8e1ba40070d6944418edee86587703af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_53
+    second: {fileID: 2100000, guid: 0d54a5e43351db3408bed163497e66a3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__material_8
+    second: {fileID: 2100000, guid: ff2c41be4c61d9a4dbab77c21e47fc82, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: roof
+    second: {fileID: 2100000, guid: 6133287759bb7c747b6c3aaf7b6ebf12, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -16,8 +321,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -32,7 +335,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TeaCupScript : Interactable
 {
+    [SerializeField] int taskNumber=5;
     [SerializeField] Transform ketchupBoxPos;
     public override void Interact(PlayerScript player)
     {
@@ -19,14 +20,14 @@ public class TeaCupScript : Interactable
             ketchupSequence.Append(ketchupBox.transform.DOLocalMove(Vector3.zero, duration));
             ketchupSequence.Join(ketchupBox.transform.DOLocalRotateQuaternion(Quaternion.identity, duration));
             player.ChangeObjectLayer(ketchupBox.transform, "Default");
-            Debug.Log("aaaaaa");
+            
             DOVirtual.DelayedCall(1, () =>
             {
-                Debug.Log("222222");
                 ketchupBox.transform.SetParent(boxParent);
                 ketchupBox.transform.DOLocalMove(Vector3.zero, duration);
                 ketchupBox.transform.DOLocalRotateQuaternion(Quaternion.identity, duration);
                 player.ChangeObjectLayer(ketchupBox.transform, "PickedLayer");
+                MainScript.instance.activeLevel.TaskCompleted(taskNumber);
             });
 
         }

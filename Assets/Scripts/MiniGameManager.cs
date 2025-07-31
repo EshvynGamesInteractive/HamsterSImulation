@@ -59,6 +59,9 @@ public class MiniGameManager : MonoBehaviour
         ActiveMiniGame = type;
         Debug.Log($"Starting mini-game: {type}");
         OnMiniGameStart?.Invoke(type);
+
+
+        MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(false);
     }
 
     public void EndMiniGame()
@@ -72,6 +75,8 @@ public class MiniGameManager : MonoBehaviour
         Debug.Log($"Ending mini-game: {ActiveMiniGame}");
         OnMiniGameEnd?.Invoke(ActiveMiniGame);
         ActiveMiniGame = MiniGameType.None;
+
+        MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
     }
 
     public void MiniGameStarter(MiniGameType miniGameType)

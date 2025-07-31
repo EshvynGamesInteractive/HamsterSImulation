@@ -54,6 +54,7 @@ public class PlayerScript : MonoBehaviour
 
     public void EnablePlayer()
     {
+        Debug.Log("aaa");
         playerCanvas.SetActive(true);
         gameObject.SetActive(true);
         GetComponent<FP_Controller>().canControl = true;
@@ -118,8 +119,7 @@ public class PlayerScript : MonoBehaviour
         if (IsObjectPicked || itemToPick == null || isPicking) return;
         isPicking = true;
         btnThrow.SetActive(true);
-        if (itemToPick.TryGetComponent<Rigidbody>(out Rigidbody existingRb))
-            Destroy(existingRb);
+        
         itemToPick.DisableForInteraction(false);
         pickedObject = itemToPick;
         IsObjectPicked = true;
@@ -127,12 +127,15 @@ public class PlayerScript : MonoBehaviour
         if (itemToPick.TryGetComponent<Cushion>(out Cushion existingCushion))
             pickedObject.transform.SetParent(pickedCushionHolder);
         else
+        DOVirtual.DelayedCall(moveDuration, () =>
+        {
             pickedObject.transform.SetParent(pickedItemHolder);
-        pickedObject.transform.DOLocalMove(Vector3.zero, moveDuration).SetDelay(moveDuration);
-        pickedObject.transform.DOLocalRotate(Vector3.zero, moveDuration).SetDelay(moveDuration);
-
-        ChangeObjectLayer(pickedObject.transform, "PickedLayer");
-
+            if (itemToPick.TryGetComponent<Rigidbody>(out Rigidbody existingRb))
+                Destroy(existingRb);
+            pickedObject.transform.DOLocalMove(Vector3.zero, moveDuration);
+            pickedObject.transform.DOLocalRotate(Vector3.zero, moveDuration);
+            ChangeObjectLayer(pickedObject.transform, "PickedLayer");
+        });
         AnimatePawToCenter();
     }
 
@@ -146,7 +149,7 @@ public class PlayerScript : MonoBehaviour
         rb.AddForce(playerHead.forward * throwForce, ForceMode.Impulse);
 
         Transform objectThrown = pickedObject.transform;
-        DOVirtual.DelayedCall(1, () =>
+        DOVirtual.DelayedCall(moveDuration +0.2f, () =>
         {
             ChangeObjectLayer(objectThrown, "Default");  //added delay so object doesnt collide with player
 
@@ -176,14 +179,19 @@ public class PlayerScript : MonoBehaviour
 
     public void PlayerCaught()
     {
-        MainScript.instance.pnlInfo.ShowInfo("You have been caught");
+        MainScript.instance.PlayerCaught();
+        ShowDogModel();
+    }
+     
+    public void ShowDogModel()
+    {
         GetComponent<FP_Controller>().StopPlayerMovement();
         playerHead.gameObject.SetActive(false);
         playerModel.gameObject.SetActive(true);
         caughtCamera.gameObject.SetActive(true);
         caughtCamera.DOLocalMove(new Vector3(0, 5, -4), 2);
-        Debug.Log("Player has died.");
     }
+
 
     private void DeathFallEffect()
     {

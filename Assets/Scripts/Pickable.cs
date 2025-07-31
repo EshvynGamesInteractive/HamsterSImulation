@@ -2,11 +2,18 @@
 
 public class Pickable : Interactable
 {
+    [SerializeField] GameObject dropPos;
+
 
     protected void PickItem(PlayerScript player)
     {
         if (player != null && !player.IsObjectPicked)
         {
+            if (dropPos != null)
+            {
+                dropPos.SetActive(true);
+                MainScript.instance.SetIndicationPosition(dropPos.transform);
+            }
             player.PickObject(this);
         }
     }

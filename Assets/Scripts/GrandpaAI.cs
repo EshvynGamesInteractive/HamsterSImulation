@@ -6,7 +6,8 @@ using UnityEngine.AI;
 public class GrandpaAI : MonoBehaviour
 {
     [SerializeField] bool scoldPlayerWhenSee;
-    [SerializeField] bool shouldCatchPlayer=true;
+    [SerializeField] bool shouldCatchPlayer = true;
+    [SerializeField] LayerMask playerLayerMask;
     public List<Transform> waypoints;
     public float[] waitDurations;
     public float reachThreshold = 0.5f;
@@ -24,14 +25,14 @@ public class GrandpaAI : MonoBehaviour
     [Range(0, 360)]
     public float viewAngleRight = 90f; // in degrees
     public float viewAngleLeft = 90f; // in degrees
-    
-    bool stopPatrol;
+
+    bool stopWalking;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = MainScript.instance.player.transform;
 
         if (waypoints == null || waypoints.Count < 2)
         {
@@ -39,8 +40,8 @@ public class GrandpaAI : MonoBehaviour
             enabled = false;
             return;
         }
-        
-        if(scoldPlayerWhenSee)
+
+        if (scoldPlayerWhenSee)
         {
             catchRange = 5;
         }
@@ -50,27 +51,27 @@ public class GrandpaAI : MonoBehaviour
 
     void Update()
     {
-        if (player == null || stopPatrol) return;
+        if (player == null || stopWalking) return;
 
-        float playerDistance = Vector3.Distance(transform.position, player.position);
+        float playerDistance = Vector3.Distance(transform.position + Vector3.up *1, player.position);
 
-        if (shouldCatchPlayer && playerHasThrown && playerDistance <= detectionRange)
+        if (shouldCatchPlayer /*&& playerHasThrown*/ && playerDistance <= detectionRange)
         {
             ChasePlayer(playerDistance);
         }
-        
+
         else
         {
             if (isChasing)
             {
                 isChasing = false;
-                animator.SetBool("isWalking", true);
+                EnableWalking(true);
                 MoveToCurrentWaypoint();
             }
 
             Patrol();
         }
-        if(scoldPlayerWhenSee && CanSeePlayer())
+        if (scoldPlayerWhenSee && CanSeePlayer())
         {
             ChasePlayer(playerDistance);
         }
@@ -89,7 +90,7 @@ public class GrandpaAI : MonoBehaviour
     IEnumerator WaitAtWaypoint()
     {
         isWaiting = true;
-        animator.SetBool("isWalking", false);
+        EnableWalking(false);
 
         float waitTime = waitDurations.Length > currentIndex ? waitDurations[currentIndex] : 1f;
         yield return new WaitForSeconds(waitTime);
@@ -97,7 +98,7 @@ public class GrandpaAI : MonoBehaviour
         GetNextWaypoint();
         MoveToCurrentWaypoint();
 
-        animator.SetBool("isWalking", true);
+        EnableWalking(true);
         isWaiting = false;
     }
 
@@ -119,26 +120,49 @@ public class GrandpaAI : MonoBehaviour
 
     void MoveToCurrentWaypoint()
     {
-        if (waypoints.Count > 0)
-            agent.SetDestination(waypoints[currentIndex].position);
-        animator.SetBool("isWalking", true);
+        if (agent.enabled)
+        {
+            if (waypoints.Count > 0)
+                agent.SetDestination(waypoints[currentIndex].position);
+            EnableWalking(true);
+        }
     }
 
     void ChasePlayer(float distance)
     {
-
-        isChasing = true;
-        animator.SetBool("isWalking", true);
-        agent.SetDestination(player.position);
-
-        if (distance <= catchRange)
+        if (agent.enabled)
         {
-            if (CanSeePlayer())
-            {
-                StartCoroutine(ScoldPlayer());
-            }
-        }
+            isChasing = true;
+            EnableWalking(true);
+                agent.SetDestination(player.position);
 
+            if (distance <= catchRange)
+            {
+                if (CanSeePlayer())
+                {
+                    StartCoroutine(ScoldPlayer());
+                }
+            }
+
+            //Vector3 sphereCenter = transform.position + transform.forward * 0.5f + Vector3.up * 0.5f;
+            //Collider[] hits = Physics.OverlapSphere(sphereCenter, catchRange, playerLayerMask);
+
+
+
+            //foreach (var hit in hits)
+            //{
+            //    Debug.Log(hit.transform.name);
+            //    if (hit.CompareTag("Player"))
+            //    {
+            //        if (!stopWalking && CanSeePlayer())
+            //        {
+            //            StartCoroutine(ScoldPlayer());
+            //            break; // Exit loop early since we already found and scolded the player
+            //        }
+
+            //    }
+            //}
+        }
     }
 
     bool CanSeePlayer()
@@ -172,8 +196,8 @@ public class GrandpaAI : MonoBehaviour
 
     IEnumerator ScoldPlayer()
     {
-        stopPatrol = true;
-        animator.SetBool("isWalking", false);
+        stopWalking = true;
+        EnableWalking(false);
         agent.ResetPath();
 
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
@@ -190,7 +214,7 @@ public class GrandpaAI : MonoBehaviour
         //animator.SetBool("isWalking", true);
     }
 
-  
+
 
     public void NotifyPlayerHasThrown()
     {
@@ -199,13 +223,15 @@ public class GrandpaAI : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // Ranges
+        // Detection range
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, catchRange);
 
-        // FOV Visualization
+        // Catch range (3D sphere)
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + Vector3.up * 1, catchRange);
+
+        // Field of view
         Vector3 origin = transform.position;
         Vector3 forward = transform.forward;
 
@@ -220,16 +246,57 @@ public class GrandpaAI : MonoBehaviour
         Gizmos.DrawRay(origin, rightRay * detectionRange);
     }
 
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Water"))
+        if (other.CompareTag("Water"))
         {
-            animator.SetBool("isWalking", false);
-            animator.SetTrigger("Fall");
-            stopPatrol = true;
-            agent.enabled = false;
-            GetComponent<Collider>().enabled = false;
-            //MainScript.instance.activeLevel
+            GrandpaFall();
         }
+    }
+
+    private void EnableWalking(bool enable)
+    {
+        //Debug.Log("Walk" + enable);
+
+        animator.SetBool("isWalking", enable);
+    }
+
+    public void MakeGrandpaSit(Transform sitPos)
+    {
+        transform.position = sitPos.position;
+        transform.rotation = sitPos.rotation;
+        EnableWalking(false);
+        animator.SetTrigger("Sit");
+        stopWalking = true;
+        agent.enabled = false;
+        shouldCatchPlayer = false;
+    }
+
+    private void GrandpaFall()
+    {
+        EnableWalking(false);
+        animator.SetTrigger("Fall");
+        stopWalking = true;
+        agent.enabled = false;
+        GetComponent<Collider>().enabled = false;
+        MainScript.instance.activeLevel.TaskCompleted(1);
+        MainScript.instance.pnlInfo.ShowInfo("Grandpa's down. Run while you can");
+        Invoke(nameof(StartTheChase), 5);
+    }
+
+
+    public void StartTheChase()
+    {
+        EnableWalking(true);
+        stopWalking = false;
+        agent.enabled = true;
+        shouldCatchPlayer = true;
+    }
+
+    public void StopTheChase()
+    {
+
+        shouldCatchPlayer = false;
     }
 }

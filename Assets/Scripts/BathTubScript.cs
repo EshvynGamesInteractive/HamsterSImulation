@@ -11,6 +11,8 @@ public class BathTubScript : Interactable
             blanket.DisableForInteraction(false);
             player.PlaceObject(blanketPos.position);
             DisableForInteraction(true);
+
+            MainScript.instance.activeLevel.TaskCompleted(4);
         }
     }
 }

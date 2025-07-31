@@ -36,6 +36,7 @@ public class VacuumCleaner : Interactable
                 Vector3 randomDir = Random.insideUnitSphere.normalized;
                 randomDir.y = Mathf.Abs(randomDir.y); // Ensure upward scattering
                 rb.AddForce(randomDir * scatterForce, ForceMode.Impulse);
+                MainScript.instance.activeLevel.TaskCompleted(7);
             }
         }
     }

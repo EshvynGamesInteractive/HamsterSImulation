@@ -7,7 +7,7 @@ public class DoorScript : Interactable
     [SerializeField] private float closeAngle = 0f;
     [SerializeField] private Transform door;
     [SerializeField] float animationDuration = 0.2f;
-    [SerializeField]private bool isOpen;
+    [SerializeField] protected bool isOpen;
 
 
     private void Start()
@@ -15,13 +15,13 @@ public class DoorScript : Interactable
         if(door == null)
             door = transform;
     }
-    private void OpenDoor()
+    protected void OpenDoor()
     {
         isOpen = true;
         door.DOLocalRotate(new Vector3(0, openAngle, 0), animationDuration);
     }
 
-    private void CloseDoor()
+    protected void CloseDoor()
     {
         isOpen = false;
         door.DOLocalRotate(new Vector3(0, closeAngle, 0), animationDuration);

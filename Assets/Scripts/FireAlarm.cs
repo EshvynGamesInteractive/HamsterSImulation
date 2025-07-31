@@ -13,6 +13,10 @@ public class FireAlarm : Interactable
         if (isActivated) return;
         isActivated = true;
         bubbleEffect.Play();
+
+        DisableForInteraction(false);
+
+        MainScript.instance.activeLevel.TaskCompleted(6);
     }
 
    
