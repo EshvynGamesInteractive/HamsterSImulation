@@ -17,7 +17,7 @@ public class LightSwitchScript : Interactable
         }
         else
         {
-            MainScript.instance.activeLevel.TaskCompleted(3);
+            MainScript.instance.activeLevel.TaskCompleted(4);
         }
     }
 }

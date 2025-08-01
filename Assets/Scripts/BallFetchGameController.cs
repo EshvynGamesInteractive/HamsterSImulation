@@ -44,6 +44,8 @@ public class BallFetchGameController : MonoBehaviour
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.FetchFrenzy) return;
+
+        MainScript.instance.taskPanel.UpdateTask("Fetch the balls launched and bring them back before time runs out");
         isGameActive = true;
         txtTimer.transform.parent.gameObject.SetActive(true);
         timer = gameduration;

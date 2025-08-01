@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class WallArtGameController : MonoBehaviour
@@ -6,8 +7,9 @@ public class WallArtGameController : MonoBehaviour
     [SerializeField] private GameObject gameStartTrigger;
     [SerializeField] private Transform wallSurface;
     [SerializeField] private float gameDuration = 30f;
-    [SerializeField] GameObject grandpa;
+    [SerializeField] BoxCollider wallCanvas;
     [SerializeField] GameObject btnDraw;
+    [SerializeField] Transform playerStartPos;
     public float drawDistance = 3f;
     private Camera playerCamera;
     private PlayerScript player;
@@ -17,7 +19,6 @@ public class WallArtGameController : MonoBehaviour
 
     private void Start()
     {
-        grandpa.SetActive(false);
         player = MainScript.instance.player;
         playerCamera = player.playerCamera.GetComponent<Camera>();
     }
@@ -46,6 +47,8 @@ public class WallArtGameController : MonoBehaviour
 //            TryDrawAt(Input.GetTouch(0).position);
 //#endif
 
+        CheckWallDistance();
+
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
@@ -53,23 +56,58 @@ public class WallArtGameController : MonoBehaviour
         }
     }
 
+    private void CheckWallDistance()
+    {
+        Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = playerCamera.ScreenPointToRay(screenCenter);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, drawDistance))
+        {
+            if (hit.collider.CompareTag("Wall"))
+            {
+                btnDraw.SetActive(true);
+            }
+            else
+            {
+                btnDraw.SetActive(false);
+            }
+        }
+        else
+        {
+            btnDraw.SetActive(false);
+        }
+    }
+
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.WallArtWhirl) return;
-        grandpa.SetActive(true);
-        btnDraw.SetActive(true);
+
+        MainScript.instance.taskPanel.UpdateTask("Smudge the clean wall with your muddy paws. But beware, Grandpa checks in often");
+
+        MainScript.instance.pnlInfo.ShowInfo("Make this wall your canvas");
+        wallCanvas.enabled = true;
+        MainScript.instance.grandPa.StartPatrolOnFirstFloor();
+     
         isGameActive = true;
         timer = gameDuration;
+
+        player.transform.SetPositionAndRotation(playerStartPos.position, playerStartPos.rotation);
+
+        player.ShowAndHideDog(2);
     }
 
     private void EndMiniGame()
     {
-        grandpa.SetActive(false);
-        btnDraw.SetActive(false);
+        wallCanvas.enabled = false;
         isGameActive = false;
-        gameStartTrigger.SetActive(true);
-        MainScript.instance.pnlInfo.ShowInfo("Art session over!");
-        MiniGameManager.Instance.EndMiniGame();
+        if (!MainScript.instance.gameover)
+        {
+            MainScript.instance.grandPa.StartPatrolOnGroundFloor();
+
+            gameStartTrigger.SetActive(true);
+            MainScript.instance.pnlInfo.ShowInfo("Art session over!");
+            MiniGameManager.Instance.EndMiniGame();
+        }
     }
 
     private void TryDrawAt(Vector2 screenPosition)
@@ -99,9 +137,15 @@ public class WallArtGameController : MonoBehaviour
         {
             if (hit.collider.CompareTag("Wall"))
             {
-                Vector3 spawnPoint = hit.point + hit.normal * 0.01f;
-                Instantiate(pawPrintPrefab, spawnPoint, Quaternion.LookRotation(hit.normal));
                 player.AnimatePawToCenter();
+                DOVirtual.DelayedCall(0.3f, () =>
+                {
+                    Vector3 spawnPoint = hit.point + hit.normal * 0.01f;
+                    GameObject paw = Instantiate(pawPrintPrefab, spawnPoint, Quaternion.LookRotation(hit.normal));
+                    paw.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+                    paw.transform.DOScale(Vector3.one, 0.2f);
+                });
+               
             }
         }
     }

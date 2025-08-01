@@ -32,4 +32,9 @@ public class Level2Script : LevelScript
         }
 
     }
+
+    public override void MiniGameEnded()
+    {
+        throw new System.NotImplementedException();
+    }
 }

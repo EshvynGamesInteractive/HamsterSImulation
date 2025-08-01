@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float moveDuration = 0.3f;
     [SerializeField] private float throwForce = 5f;
     [SerializeField] GameObject btnThrow;
-    [SerializeField] private Transform playerHead, playerModel, caughtCamera;
+    [SerializeField] private Transform playerHead, playerModel, caughtCamera, cinematicCamera;
     [SerializeField] private GrandpaAI grandpa;
     [SerializeField] private Transform rightPaw; // Walking right paw, parented to player
     [SerializeField] private Transform leftPaw; // Walking left paw, parented to player
@@ -119,23 +119,23 @@ public class PlayerScript : MonoBehaviour
         if (IsObjectPicked || itemToPick == null || isPicking) return;
         isPicking = true;
         btnThrow.SetActive(true);
-        
+
+        if (itemToPick.TryGetComponent<Rigidbody>(out Rigidbody existingRb))
+            Destroy(existingRb);
         itemToPick.DisableForInteraction(false);
         pickedObject = itemToPick;
         IsObjectPicked = true;
 
-        if (itemToPick.TryGetComponent<Cushion>(out Cushion existingCushion))
-            pickedObject.transform.SetParent(pickedCushionHolder);
-        else
-        DOVirtual.DelayedCall(moveDuration, () =>
-        {
-            pickedObject.transform.SetParent(pickedItemHolder);
-            if (itemToPick.TryGetComponent<Rigidbody>(out Rigidbody existingRb))
-                Destroy(existingRb);
-            pickedObject.transform.DOLocalMove(Vector3.zero, moveDuration);
-            pickedObject.transform.DOLocalRotate(Vector3.zero, moveDuration);
-            ChangeObjectLayer(pickedObject.transform, "PickedLayer");
-        });
+        //if (itemToPick.TryGetComponent<Cushion>(out Cushion existingCushion))
+        //    pickedObject.transform.SetParent(pickedCushionHolder);
+        //else
+            DOVirtual.DelayedCall(moveDuration, () =>
+            {
+                pickedObject.transform.SetParent(pickedItemHolder);
+                pickedObject.transform.DOLocalMove(Vector3.zero, moveDuration);
+                pickedObject.transform.DOLocalRotate(Vector3.zero, moveDuration);
+                ChangeObjectLayer(pickedObject.transform, "PickedLayer");
+            });
         AnimatePawToCenter();
     }
 
@@ -149,15 +149,22 @@ public class PlayerScript : MonoBehaviour
         rb.AddForce(playerHead.forward * throwForce, ForceMode.Impulse);
 
         Transform objectThrown = pickedObject.transform;
-        DOVirtual.DelayedCall(moveDuration +0.2f, () =>
+        DOVirtual.DelayedCall(moveDuration + 0.2f, () =>
         {
             ChangeObjectLayer(objectThrown, "Default");  //added delay so object doesnt collide with player
 
         });
+
+        if (pickedObject.TryGetComponent<WaterBalloon>(out WaterBalloon balloon))
+            MainScript.instance.activeLevel.TaskCompleted(5);
+
+
         pickedObject = null;
         IsObjectPicked = false;
         if (grandpa != null)
             grandpa.NotifyPlayerHasThrown();
+
+
     }
 
     public void PlaceObject(Vector3 placementPos)
@@ -180,18 +187,48 @@ public class PlayerScript : MonoBehaviour
     public void PlayerCaught()
     {
         MainScript.instance.PlayerCaught();
+        caughtCamera.gameObject.SetActive(true);
         ShowDogModel();
     }
-     
+
     public void ShowDogModel()
     {
         GetComponent<FP_Controller>().StopPlayerMovement();
         playerHead.gameObject.SetActive(false);
         playerModel.gameObject.SetActive(true);
-        caughtCamera.gameObject.SetActive(true);
-        caughtCamera.DOLocalMove(new Vector3(0, 5, -4), 2);
+        playerCanvas.SetActive(false);
+        //caughtCamera.DOLocalMove(new Vector3(0, 5, -4), 2);
     }
 
+    public void PlayDogEatingAnim()
+    {
+        playerModel.GetComponent<Animator>().SetTrigger("Eating");
+    }
+    public void ShowAndHideDog(float delay)
+    {
+        ShowDogModel();
+        cinematicCamera.gameObject.SetActive(true);
+
+        cinematicCamera.GetComponent<CameraVisibilityAdjuster>().enabled = false;
+
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            cinematicCamera.DOMove(playerCamera.position, 0.5f);
+            cinematicCamera.DORotateQuaternion(playerCamera.rotation, 0.5f).OnComplete(() =>
+            {
+                playerHead.gameObject.SetActive(true);
+                playerModel.gameObject.SetActive(false);
+                cinematicCamera.gameObject.SetActive(false);
+                GetComponent<FP_Controller>().canControl = true;
+                cinematicCamera.GetComponent<CameraVisibilityAdjuster>().enabled = true;
+                playerCanvas.SetActive(true);
+            });
+        });
+
+
+
+
+    }
 
     private void DeathFallEffect()
     {

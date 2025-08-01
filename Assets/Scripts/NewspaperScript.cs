@@ -13,7 +13,7 @@ public class NewspaperScript : Pickable
         {
             DOVirtual.DelayedCall(1, () =>
         {
-            MainScript.instance.activeLevel.grandpa.StartTheChase();
+            MainScript.instance.grandPa.StartTheChase();
         });
         }
 

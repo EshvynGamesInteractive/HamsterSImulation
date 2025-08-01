@@ -20,7 +20,7 @@ public class MiniGameManager : MonoBehaviour
     public FridgeHeistController fridgeLevel;
     public BubblePopManager bubbleLevel;
     public CushionTrampolineManager cushionTrampoline;
-  
+    private string currentTask;
 
     public MiniGameType ActiveMiniGame { get; private set; } = MiniGameType.None;
 
@@ -56,6 +56,10 @@ public class MiniGameManager : MonoBehaviour
             return;
         }
 
+        MainScript.instance.HideIndication();
+
+        currentTask = MainScript.instance.taskPanel.GetCurrentTask();
+
         ActiveMiniGame = type;
         Debug.Log($"Starting mini-game: {type}");
         OnMiniGameStart?.Invoke(type);
@@ -72,10 +76,12 @@ public class MiniGameManager : MonoBehaviour
             return;
         }
 
+        MainScript.instance.ShowIndication();
+        MainScript.instance.taskPanel.UpdateTask(currentTask);
         Debug.Log($"Ending mini-game: {ActiveMiniGame}");
         OnMiniGameEnd?.Invoke(ActiveMiniGame);
         ActiveMiniGame = MiniGameType.None;
-
+        MainScript.instance.activeLevel.MiniGameEnded();
         MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
     }
 
@@ -86,6 +92,8 @@ public class MiniGameManager : MonoBehaviour
     
     public void MiniGameEnded(MiniGameType miniGameType)
     {
+
+        Debug.Log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         //Debug.Log(miniGameType);
     }
     

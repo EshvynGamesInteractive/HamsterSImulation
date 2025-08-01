@@ -1,9 +1,6 @@
 using UnityEngine;
 
-public class CookieJar : Interactable
+public class CookieJar : Pickable
 {
-    public override void Interact(PlayerScript player)
-    {
-        gameObject.SetActive(false);
-    }
+   
 }

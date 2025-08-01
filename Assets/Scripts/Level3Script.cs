@@ -22,8 +22,9 @@ public class Level3Script : LevelScript
         {
             if (levelCompleteCutscene != null)
                 levelCompleteCutscene.SetActive(true);
-            //grandpa.StopTheChase();
+            grandpa.StopTheChase();
             MainScript.instance.AllTasksCompleted();
+            MainScript.instance.player.ShowDogModel();
         }
         else
         {
@@ -37,10 +38,20 @@ public class Level3Script : LevelScript
                 grandpa.StopTheChase();
 
             if (taskNumber == 2)   // when topple dishes
+                grandpa.StartTheChase();
+
+            if (taskNumber == 3)   // when licking cutlery
+            {
                 grandpa.StopTheChase();
 
+            }
 
         }
 
+    }
+
+    public override void MiniGameEnded()
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -15,6 +15,8 @@ public class Bubble : MonoBehaviour
     public GameObject popEffect;
     public int scoreValue = 1;
 
+    [SerializeField] GameObject duck, bone, shampoo;
+
     [SerializeField] private float minFloatSpeed = 0.5f;
     [SerializeField] private float maxFloatSpeed = 1.5f;
     [SerializeField] MeshRenderer meshRenderer;
@@ -36,7 +38,27 @@ public class Bubble : MonoBehaviour
     {
         bubbleType = bubbleTypee;
         meshRenderer.material = bubbleMat;
-    }
+
+
+
+        switch (bubbleType)
+        {
+            case BubbleType.StinkBomb:
+                break;
+
+            case BubbleType.RegularBubble:
+                duck.SetActive(true);
+                break;
+
+            case BubbleType.PrizeBubble:
+                shampoo.SetActive(true);
+                break;
+
+            case BubbleType.GlodenBubble:
+                bone.SetActive(true);
+                break;
+        }
+        }
 
     private void Start()
     {
@@ -87,7 +109,7 @@ public class Bubble : MonoBehaviour
 
     private void HandlePop()
     {
-        //Instantiate(popEffect, transform.position, Quaternion.identity);
+        Instantiate(popEffect, transform.position, Quaternion.identity);
 
         switch (bubbleType)
         {

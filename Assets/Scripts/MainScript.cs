@@ -16,6 +16,7 @@ public class MainScript : MonoBehaviour
     private int scoreCount;
     public LevelScript activeLevel;
     public GameObject indication;
+    public bool gameover;
 
     public static int currentLevel=1;
     private void Awake()
@@ -25,7 +26,7 @@ public class MainScript : MonoBehaviour
 
     private void Start()
     {
-        activeLevelIndex = currentLevel-1;//for deployement
+        //activeLevelIndex = currentLevel - 1;//for deployement
 
 
         for (int i = 0; i < levels.Length; i++)
@@ -50,7 +51,7 @@ public class MainScript : MonoBehaviour
 
     public void SetIndicationPosition(Transform pos)
     {
-        indication.SetActive(true);
+        ShowIndication();
         indication.transform.position = pos.position;
     }
 
@@ -59,11 +60,14 @@ public class MainScript : MonoBehaviour
         indication.SetActive(false);
     }
 
-
+    public void ShowIndication()
+    {
+        indication.SetActive(true);
+    }
     public void PlayerCaught()
     {
         MainScript.instance.pnlInfo.ShowInfo("You have been caught");
-
+        gameover = true;
         Invoke(nameof(LevelFailed), 2);
     }
 

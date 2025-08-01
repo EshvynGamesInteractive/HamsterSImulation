@@ -4,8 +4,8 @@
 public abstract class Interactable : MonoBehaviour
 {
     [SerializeField] private bool enableAtStart, showIndicationAtStart;
-    public bool isInteractable=true;
-    public GameObject indication;
+    [HideInInspector]public bool isInteractable=true;
+    //public GameObject indication;
     private Outline outline;
     public abstract void Interact(PlayerScript player);
 

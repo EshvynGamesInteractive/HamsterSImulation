@@ -7,7 +7,9 @@ public class GrandpaAI : MonoBehaviour
 {
     [SerializeField] bool scoldPlayerWhenSee;
     [SerializeField] bool shouldCatchPlayer = true;
-    [SerializeField] LayerMask playerLayerMask;
+
+    [SerializeField] List<Transform> waypointsGroundFloor, waypointsFirstFloor;
+    //[SerializeField] LayerMask playerLayerMask;
     public List<Transform> waypoints;
     public float[] waitDurations;
     public float reachThreshold = 0.5f;
@@ -22,18 +24,21 @@ public class GrandpaAI : MonoBehaviour
     private Transform player;
     private bool playerHasThrown = false;
     private Animator animator;
-    [Range(0, 360)]
-    public float viewAngleRight = 90f; // in degrees
-    public float viewAngleLeft = 90f; // in degrees
+    [Range(0, 180)]
+    public float viewAngle=180;
 
     bool stopWalking;
 
-    void Start()
+    private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+    }
+    void Start()
+    {
+    
         player = MainScript.instance.player.transform;
-
+        StartPatrolOnGroundFloor();
         if (waypoints == null || waypoints.Count < 2)
         {
             Debug.LogError("Need at least 2 waypoints.");
@@ -46,7 +51,9 @@ public class GrandpaAI : MonoBehaviour
             catchRange = 5;
         }
 
+
         MoveToCurrentWaypoint();
+
     }
 
     void Update()
@@ -77,6 +84,26 @@ public class GrandpaAI : MonoBehaviour
         }
     }
 
+
+    public void StartPatrolOnFirstFloor()
+    {
+        Debug.Log("fitstFloor");
+        shouldCatchPlayer = true;
+        waypoints = waypointsFirstFloor;
+    }
+
+    public void StartPatrolOnGroundFloor()
+    {
+        shouldCatchPlayer = false;
+        Debug.Log("grounfFloor");
+        waypoints = waypointsGroundFloor;
+
+        EnableWalking(true);
+        stopWalking = false;
+        agent.enabled = true;
+        shouldCatchPlayer = false;
+
+    }
     void Patrol()
     {
         if (isWaiting || agent.pathPending) return;
@@ -123,7 +150,11 @@ public class GrandpaAI : MonoBehaviour
         if (agent.enabled)
         {
             if (waypoints.Count > 0)
+            {
+                if(currentIndex >= waypoints.Count)
+                    currentIndex=waypoints.Count - 1;
                 agent.SetDestination(waypoints[currentIndex].position);
+            }
             EnableWalking(true);
         }
     }
@@ -167,7 +198,8 @@ public class GrandpaAI : MonoBehaviour
 
     bool CanSeePlayer()
     {
-        Vector3 origin = transform.position;
+        Vector3 eyeOffset = Vector3.up * 1.3f; // Eye level 1.3m above feet
+        Vector3 origin = transform.position + eyeOffset;
         Vector3 target = player.position;
         Vector3 directionToPlayer = (target - origin).normalized;
         float distance = Vector3.Distance(origin, target);
@@ -176,8 +208,8 @@ public class GrandpaAI : MonoBehaviour
             return false;
 
         // Check if player is within view angle
-        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-        if (angleToPlayer > viewAngleLeft / 2f)
+        float angleToPlayer = Vector3.Angle(directionToPlayer, transform.forward);
+        if (angleToPlayer > viewAngle / 2f)
             return false;
 
         // Check if anything blocks the view
@@ -190,6 +222,32 @@ public class GrandpaAI : MonoBehaviour
 
         return false;
     }
+
+    //bool CanSeePlayer()
+    //{
+    //    Vector3 origin = transform.position;
+    //    Vector3 target = player.position;
+    //    Vector3 directionToPlayer = (target - origin).normalized;
+    //    float distance = Vector3.Distance(origin, target);
+
+    //    if (distance > detectionRange)
+    //        return false;
+
+    //    // Check if player is within view angle
+    //    float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+    //    if (angleToPlayer > viewAngleLeft / 2f)
+    //        return false;
+
+    //    // Check if anything blocks the view
+    //    if (Physics.Raycast(origin, directionToPlayer, out RaycastHit hit, detectionRange))
+    //    {
+    //        Debug.Log(hit.transform.name);
+    //        Debug.DrawRay(origin, directionToPlayer * detectionRange, Color.red);
+    //        return hit.collider.CompareTag("Player");
+    //    }
+
+    //    return false;
+    //}
 
 
 
@@ -221,30 +279,31 @@ public class GrandpaAI : MonoBehaviour
         playerHasThrown = true;
     }
 
-    void OnDrawGizmosSelected()
-    {
-        // Detection range
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+    //void OnDrawGizmosSelected()
+    //{
+    //    // Detection range
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        // Catch range (3D sphere)
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + Vector3.up * 1, catchRange);
+    //    // Catch range (3D sphere)
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireSphere(transform.position + Vector3.up * 1, catchRange);
 
-        // Field of view
-        Vector3 origin = transform.position;
-        Vector3 forward = transform.forward;
+    //    // Field of view
+    //    Vector3 origin = transform.position + Vector3.up * 1.3f;
+    //    Vector3 target = player.position;
+    //    Vector3 directionToPlayer = (target - origin).normalized;
 
-        Quaternion leftRayRotation = Quaternion.Euler(0, -viewAngleLeft / 2f, 0);
-        Quaternion rightRayRotation = Quaternion.Euler(0, viewAngleRight / 2f, 0);
+    //    Quaternion leftRayRotation = Quaternion.Euler(0, -viewAngle / 2f, 0);
+    //    Quaternion rightRayRotation = Quaternion.Euler(0, viewAngle / 2f, 0);
 
-        Vector3 leftRay = leftRayRotation * forward;
-        Vector3 rightRay = rightRayRotation * forward;
+    //    Vector3 leftRay = leftRayRotation * directionToPlayer;
+    //    Vector3 rightRay = rightRayRotation * directionToPlayer;
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawRay(origin, leftRay * detectionRange);
-        Gizmos.DrawRay(origin, rightRay * detectionRange);
-    }
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawRay(origin, leftRay * detectionRange);
+    //    Gizmos.DrawRay(origin, rightRay * detectionRange);
+    //}
 
 
     private void OnTriggerEnter(Collider other)
@@ -259,6 +318,8 @@ public class GrandpaAI : MonoBehaviour
     {
         //Debug.Log("Walk" + enable);
 
+
+        Debug.Log(animator);
         animator.SetBool("isWalking", enable);
     }
 
@@ -270,7 +331,7 @@ public class GrandpaAI : MonoBehaviour
         animator.SetTrigger("Sit");
         stopWalking = true;
         agent.enabled = false;
-        shouldCatchPlayer = false;
+        StopTheChase();
     }
 
     private void GrandpaFall()
@@ -288,6 +349,7 @@ public class GrandpaAI : MonoBehaviour
 
     public void StartTheChase()
     {
+        MainScript.instance.pnlInfo.ShowInfo("Grandpa is coming to catch you");
         EnableWalking(true);
         stopWalking = false;
         agent.enabled = true;
@@ -296,7 +358,6 @@ public class GrandpaAI : MonoBehaviour
 
     public void StopTheChase()
     {
-
         shouldCatchPlayer = false;
     }
 }

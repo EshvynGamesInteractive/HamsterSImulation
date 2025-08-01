@@ -126,8 +126,8 @@ public class GrandpaPeekController : MonoBehaviour
 
         mf.mesh = mesh;
 
-        if (cone != null && cone.activeSelf)
-            cone.SetActive(false);
+        //if (cone != null && cone.activeSelf)
+        //    cone.SetActive(false);
     }
 
 
@@ -174,14 +174,12 @@ public class GrandpaPeekController : MonoBehaviour
 
     public void GameStarted()
     {
-        gameObject.SetActive(true);
         if (cone != null && !cone.activeSelf)
             cone.SetActive(true);
     }
 
     public void GameEnd()
     {
-        gameObject.SetActive(false);
         if (cone != null && cone.activeSelf)
             cone.SetActive(false);
     }
@@ -190,7 +188,9 @@ public class GrandpaPeekController : MonoBehaviour
         playerCaught = true;
         Debug.Log("Level Failed: Grandpa caught you moving!");
         StopLooking();
-        animator.SetTrigger("Stand");
+        //animator.SetTrigger("Stand");
+
+        animator.SetTrigger("attack");
         transform.position = standPos.position;
 
         Vector3 lookPos = player.position - transform.position;

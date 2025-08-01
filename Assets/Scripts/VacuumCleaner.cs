@@ -25,7 +25,7 @@ public class VacuumCleaner : Interactable
     {
         if (isBroken) return;
         isBroken = true;
-        animator.SetTrigger(breakAnimationTrigger);
+        //animator.SetTrigger(breakAnimationTrigger);
         for (int i = 0; i < garbageCount; i++)
         {
             Vector3 spawnPos = transform.position + Random.insideUnitSphere * scatterRadius;

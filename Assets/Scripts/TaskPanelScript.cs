@@ -21,4 +21,15 @@ public class TaskPanelScript : MonoBehaviour
         barMoveSeq.Append(taskBar.DOAnchorPosY(150, 0));
         barMoveSeq.Append(taskBar.DOAnchorPosY(0, moveDuration));
     }
+
+
+   
+
+
+
+
+    public string GetCurrentTask()
+    {
+        return txtTask.text;
+    }
 }

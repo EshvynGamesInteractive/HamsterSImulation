@@ -16,6 +16,7 @@ public class MiniGameTriggerZone : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
+            Debug.Log(gameStartBtn);
             gameStartBtn.onClick.Invoke();
         }
     }

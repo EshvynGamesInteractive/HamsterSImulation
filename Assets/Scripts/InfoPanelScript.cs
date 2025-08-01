@@ -10,6 +10,8 @@ public class InfoPanelScript : MonoBehaviour
 
     public void ShowInfo(string info)
     {
+        if (MainScript.instance.gameover)
+            return;
         txtInfo.text = info;
         infoPanel.DOAnchorPosY(100, 0.5f);
         infoPanel.DOAnchorPosY(50, 0.3f).SetDelay(0.6f);

@@ -7,6 +7,7 @@ public class CutsceneTrigger : MonoBehaviour
     [SerializeField] float cutsceneDuration = 5;
     [SerializeField] Transform placementPos;
     [SerializeField] int taskNumber = 2;
+    [SerializeField] string txtTOShow = "Pick a book to bury here";
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,7 +15,7 @@ public class CutsceneTrigger : MonoBehaviour
         {
             if (player.pickedObject == null)
             {
-                MainScript.instance.pnlInfo.ShowInfo("Pick a book to bury here");
+                MainScript.instance.pnlInfo.ShowInfo(txtTOShow);
                 return;
             }
             Pickable itemTODrop = player.pickedObject;
@@ -24,12 +25,25 @@ public class CutsceneTrigger : MonoBehaviour
                 player.PlaceObject(placementPos.position);
             MainScript.instance.HideIndication();
             itemTODrop.DisableForInteraction(false);
+
+
+            itemTODrop.gameObject.SetActive(false);
+
+
+            placementPos.gameObject.SetActive(true);
+
             player.DisablePlayer();
             cutsceneTOPlay.SetActive(true);
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
                 cutsceneTOPlay.SetActive(false);
                 player.EnablePlayer();
+
+                placementPos.gameObject.SetActive(false);
+
+                if (taskNumber == -1)  // means no need to update task
+                    return;
+
                 MainScript.instance.activeLevel.TaskCompleted(taskNumber);
                 
             });

@@ -28,9 +28,14 @@ public class CushionStacker : Interactable
 
             Debug.Log(MiniGameManager.Instance);
             //MiniGameManager.Instance.cushionTrampoline.StackCushion(cushion);
-            //cushion.transform.SetParent(transform);
             player.PlaceObject(MiniGameManager.Instance.cushionTrampoline.GetStackPos(cushion));
+            //cushion.transform.SetParent(transform);
+            cushion.DisableForInteraction(true);
             //Destroy(cushion.gameObject);
+        }
+        else
+        {
+            MainScript.instance.pnlInfo.ShowInfo("Bring cushions to stack here");
         }
     }
 

@@ -49,6 +49,8 @@ public class BubblePopManager : MonoBehaviour
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.BubblePopBlitz) return;
+
+        MainScript.instance.taskPanel.UpdateTask("Pop as many bubbles as you can. Each gives points! But watch out for the stinky green ones!");
         StartCoroutine(
                 StartBubblePopMiniGame());
     }
