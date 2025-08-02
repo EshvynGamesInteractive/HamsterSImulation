@@ -18,7 +18,7 @@ namespace SickscoreGames.HUDNavigationSystem
 		public static HUDNavigationSceneManager Instance {
 			get {
 				if (_Instance == null) {
-					_Instance = FindObjectOfType<HUDNavigationSceneManager> ();
+					_Instance = FindAnyObjectByType<HUDNavigationSceneManager> ();
 				}
 				return _Instance;
 			}
@@ -64,8 +64,8 @@ namespace SickscoreGames.HUDNavigationSystem
 				_HUDNavigationSystem = HUDNavigationSystem.Instance;
 
             // dont destroy on load
-			if (_HUDNavigationSystem != null && _HUDNavigationSystem.KeepAliveOnLoad)
-				DontDestroyOnLoad (this.gameObject);
+			//if (_HUDNavigationSystem != null && _HUDNavigationSystem.KeepAliveOnLoad)
+			//	DontDestroyOnLoad (this.gameObject);
 		}
 		#endregion
 

@@ -187,12 +187,13 @@ public class PlayerScript : MonoBehaviour
     public void PlayerCaught()
     {
         MainScript.instance.PlayerCaught();
-        caughtCamera.gameObject.SetActive(true);
+        //caughtCamera.gameObject.SetActive(true);
         ShowDogModel();
     }
 
     public void ShowDogModel()
     {
+        caughtCamera.gameObject.SetActive(true);
         GetComponent<FP_Controller>().StopPlayerMovement();
         playerHead.gameObject.SetActive(false);
         playerModel.gameObject.SetActive(true);

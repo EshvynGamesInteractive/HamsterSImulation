@@ -6,7 +6,7 @@ public class Level2Script : LevelScript
 
     private void Awake()
     {
-        grandpa.gameObject.SetActive(false);
+        MainScript.instance.grandPa.gameObject.SetActive(false);
     }
     public override void TaskCompleted(int taskNumber)
     {

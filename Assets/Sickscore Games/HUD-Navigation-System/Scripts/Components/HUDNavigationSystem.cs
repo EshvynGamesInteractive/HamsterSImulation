@@ -17,7 +17,7 @@ namespace SickscoreGames.HUDNavigationSystem
 		public static HUDNavigationSystem Instance {
 			get {
 				if (_Instance == null) {
-					_Instance = FindObjectOfType<HUDNavigationSystem> ();
+					_Instance = FindAnyObjectByType<HUDNavigationSystem> ();
 				}
 				return _Instance;
 			}
@@ -160,8 +160,8 @@ namespace SickscoreGames.HUDNavigationSystem
 			}
 
 			// dont destroy on load
-			if (KeepAliveOnLoad)
-			    DontDestroyOnLoad (this.gameObject);
+			//if (KeepAliveOnLoad)
+			//    DontDestroyOnLoad (this.gameObject);
 
 			_Instance = this;
 		}
@@ -218,16 +218,16 @@ namespace SickscoreGames.HUDNavigationSystem
 
 			// try to automatically assign the player camera and transform if possible
 			if (PlayerCamera == null) {
-				HNSPlayerCamera hnsCamera = GameObject.FindObjectOfType<HNSPlayerCamera> ();
-				if (hnsCamera != null)
-					PlayerCamera = hnsCamera.GetComponent<Camera> ();
-				else
+				//HNSPlayerCamera hnsCamera = GameObject.FindAnyObjectByType<HNSPlayerCamera> ();
+				//if (hnsCamera != null)
+				//	PlayerCamera = hnsCamera.GetComponent<Camera> ();
+				//else
 					PlayerCamera = Camera.main;
 				if (PlayerCamera == null)
 					Debug.LogError("[HUDNavigationSystem] Player camera unassigned. Assign camera to resume system!");
 			}
 			if (PlayerController == null) {
-				PlayerScript hnsTransform = GameObject.FindObjectOfType<PlayerScript> ();
+				PlayerScript hnsTransform = GameObject.FindAnyObjectByType<PlayerScript> ();
 				if (hnsTransform != null)
 					PlayerController = hnsTransform.gameObject.transform;
 				if (PlayerController == null)

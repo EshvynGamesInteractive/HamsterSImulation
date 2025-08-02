@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
+    public static GameplayManager instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     public CanvasState currentState;
     public CanvasState prevState;
@@ -21,7 +27,7 @@ public class GameplayManager : MonoBehaviour
 
     public void LoadScene(int i)
     {
-        loading.LoadSceneSmooth(i);
+        //loading.LoadSceneSmooth(i);
     }
 
     // Update is called once per frame

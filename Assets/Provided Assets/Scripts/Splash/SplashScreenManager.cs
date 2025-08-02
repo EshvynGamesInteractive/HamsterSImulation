@@ -20,7 +20,7 @@ public class SplashScreenManager : MonoBehaviour
 
     public void LoadScene(int i)
     {
-        loading.LoadSceneSmooth(i);
+        //loading.LoadSceneSmooth(i);
     }
 
     // Update is called once per frame

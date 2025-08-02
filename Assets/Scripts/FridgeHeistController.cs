@@ -75,7 +75,7 @@ public class FridgeHeistController : MonoBehaviour
 
 
 
-
+        grandpaAI.gameObject.SetActive(true);
         grandpaAI.MakeGrandpaSit(sitPosition);
 
         grandpaPeekController.enabled = true;

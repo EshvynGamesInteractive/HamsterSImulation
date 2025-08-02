@@ -24,6 +24,7 @@ public class Pickable : Interactable
     }
     public override void Interact(PlayerScript player)
     {
+        MainScript.instance.HideIndication();
         PickItem(player);
     }
 }

@@ -14,7 +14,7 @@ namespace SickscoreGames.HUDNavigationSystem
 		public static HUDNavigationCanvas Instance {
 			get {
 				if (_Instance == null) {
-					_Instance = FindObjectOfType<HUDNavigationCanvas> ();
+					_Instance = FindAnyObjectByType<HUDNavigationCanvas> ();
 				}
 				return _Instance;
 			}
@@ -59,8 +59,8 @@ namespace SickscoreGames.HUDNavigationSystem
 				_HUDNavigationSystem = HUDNavigationSystem.Instance;
 
 			// dont destroy on load
-			if (_HUDNavigationSystem != null && _HUDNavigationSystem.KeepAliveOnLoad)
-				DontDestroyOnLoad (this.gameObject);
+			//if (_HUDNavigationSystem != null && _HUDNavigationSystem.KeepAliveOnLoad)
+			//	DontDestroyOnLoad (this.gameObject);
 		}
 
 
@@ -83,38 +83,38 @@ namespace SickscoreGames.HUDNavigationSystem
 		#region Radar Methods
 		public void InitRadar ()
 		{
-			// check references
-			if (Radar.Panel == null || Radar.Radar == null || Radar.ElementContainer == null) {
-				ReferencesMissing ("Radar");
-				return;
-			}
+			//// check references
+			//if (Radar.Panel == null || Radar.Radar == null || Radar.ElementContainer == null) {
+			//	ReferencesMissing ("Radar");
+			//	return;
+			//}
 
-			// show radar
-			ShowRadar (true);
+			//// show radar
+			//ShowRadar (true);
 		}
 
 
 		public void ShowRadar (bool value)
 		{
-			if (Radar.Panel != null)
-				Radar.Panel.gameObject.SetActive (value);
+			//if (Radar.Panel != null)
+			//	Radar.Panel.gameObject.SetActive (value);
 		}
 
 
 		public void UpdateRadar (Transform rotationReference, RadarModes radarType)
 		{
-			// assign map / player indicator rotation
-			if (radarType == RadarModes.RotateRadar) {
-				// set radar rotation
-				Radar.Radar.transform.rotation = Quaternion.Euler (Radar.Panel.transform.eulerAngles.x, Radar.Panel.transform.eulerAngles.y, rotationReference.eulerAngles.y);
-				if (Radar.PlayerIndicator != null)
-					Radar.PlayerIndicator.transform.rotation = Radar.Panel.transform.rotation;
-			} else {
-				// set player indicator rotation
-				Radar.Radar.transform.rotation = Radar.Panel.transform.rotation;
-				if (Radar.PlayerIndicator != null)
-					Radar.PlayerIndicator.transform.rotation = Quaternion.Euler (Radar.Panel.transform.eulerAngles.x, Radar.Panel.transform.eulerAngles.y, -rotationReference.eulerAngles.y);
-			}
+			//// assign map / player indicator rotation
+			//if (radarType == RadarModes.RotateRadar) {
+			//	// set radar rotation
+			//	Radar.Radar.transform.rotation = Quaternion.Euler (Radar.Panel.transform.eulerAngles.x, Radar.Panel.transform.eulerAngles.y, rotationReference.eulerAngles.y);
+			//	if (Radar.PlayerIndicator != null)
+			//		Radar.PlayerIndicator.transform.rotation = Radar.Panel.transform.rotation;
+			//} else {
+			//	// set player indicator rotation
+			//	Radar.Radar.transform.rotation = Radar.Panel.transform.rotation;
+			//	if (Radar.PlayerIndicator != null)
+			//		Radar.PlayerIndicator.transform.rotation = Quaternion.Euler (Radar.Panel.transform.eulerAngles.x, Radar.Panel.transform.eulerAngles.y, -rotationReference.eulerAngles.y);
+			//}
 		}
 		#endregion
 
@@ -122,33 +122,33 @@ namespace SickscoreGames.HUDNavigationSystem
 		#region Compass Bar Methods
 		public void InitCompassBar ()
 		{
-			// check references
-			if (CompassBar.Panel == null || CompassBar.Compass == null || CompassBar.ElementContainer == null) {
-				ReferencesMissing ("Compass Bar");
-				return;
-			}
+			//// check references
+			//if (CompassBar.Panel == null || CompassBar.Compass == null || CompassBar.ElementContainer == null) {
+			//	ReferencesMissing ("Compass Bar");
+			//	return;
+			//}
 
-			// show compass bar
-			ShowCompassBar (true);
+			//// show compass bar
+			//ShowCompassBar (true);
 		}
 
 
 		public void ShowCompassBar (bool value)
 		{
-			if (CompassBar.Panel != null)
-				CompassBar.Panel.gameObject.SetActive (value);
+			//if (CompassBar.Panel != null)
+			//	CompassBar.Panel.gameObject.SetActive (value);
 		}
 
 
 		public void UpdateCompassBar (Transform rotationReference)
 		{
 			// set compass bar texture coordinates
-			CompassBar.Compass.uvRect = new Rect ((rotationReference.eulerAngles.y / 360f) - .5f, 0f, 1f, 1f);
+			//CompassBar.Compass.uvRect = new Rect ((rotationReference.eulerAngles.y / 360f) - .5f, 0f, 1f, 1f);
 
-			// calculate 0-360 degrees value
-			Vector3 perpDirection = Vector3.Cross (Vector3.forward, rotationReference.forward);
-			float angle = Vector3.Angle (new Vector3 (rotationReference.forward.x, 0f, rotationReference.forward.z), Vector3.forward);
-			CompassBarCurrentDegrees = (perpDirection.y >= 0f) ? angle : 360f - angle;
+			//// calculate 0-360 degrees value
+			//Vector3 perpDirection = Vector3.Cross (Vector3.forward, rotationReference.forward);
+			//float angle = Vector3.Angle (new Vector3 (rotationReference.forward.x, 0f, rotationReference.forward.z), Vector3.forward);
+			//CompassBarCurrentDegrees = (perpDirection.y >= 0f) ? angle : 360f - angle;
 		}
 		#endregion
 
@@ -179,88 +179,88 @@ namespace SickscoreGames.HUDNavigationSystem
 		public void InitMinimap (HNSMapProfile profile)
 		{
 			// check references
-			if (Minimap.Panel == null || Minimap.MapMaskImage == null || Minimap.MapContainer == null || Minimap.ElementContainer == null) {
-				ReferencesMissing ("Minimap");
-				return;
-			}
+			//if (Minimap.Panel == null || Minimap.MapMaskImage == null || Minimap.MapContainer == null || Minimap.ElementContainer == null) {
+			//	ReferencesMissing ("Minimap");
+			//	return;
+			//}
 
-			// set minimap background
-			Minimap.MapMaskImage.color = profile.MapBackground;
+			//// set minimap background
+			//Minimap.MapMaskImage.color = profile.MapBackground;
 
-			// create minimap image gameobject
-			GameObject imageGO = new GameObject (profile.MapTexture.name);
-			imageGO.transform.SetParent (Minimap.MapContainer, false);
+			//// create minimap image gameobject
+			//GameObject imageGO = new GameObject (profile.MapTexture.name);
+			//imageGO.transform.SetParent (Minimap.MapContainer, false);
 
-			// setup minimap image component
-			Image image = imageGO.AddComponent<Image> ();
-			image.sprite = profile.MapTexture;
-			image.preserveAspect = true;
-			image.SetNativeSize ();
+			//// setup minimap image component
+			//Image image = imageGO.AddComponent<Image> ();
+			//image.sprite = profile.MapTexture;
+			//image.preserveAspect = true;
+			//image.SetNativeSize ();
 
-			// create custom layers
-			if (profile.CustomLayers.Count > 0) {
-				int layerCount = 0;
-				foreach (CustomLayer layer in profile.CustomLayers.Reverse<CustomLayer> ()) {
-					if (layer.sprite == null)
-						continue;
+			//// create custom layers
+			//if (profile.CustomLayers.Count > 0) {
+			//	int layerCount = 0;
+			//	foreach (CustomLayer layer in profile.CustomLayers.Reverse<CustomLayer> ()) {
+			//		if (layer.sprite == null)
+			//			continue;
 
-					// create layer image gameobject
-					GameObject layerGO = new GameObject (layer.name + "_Layer_" + layerCount++);
-					layerGO.transform.SetParent (Minimap.MapContainer, false);
-					layerGO.SetActive (layer.enabled);
+			//		// create layer image gameobject
+			//		GameObject layerGO = new GameObject (layer.name + "_Layer_" + layerCount++);
+			//		layerGO.transform.SetParent (Minimap.MapContainer, false);
+			//		layerGO.SetActive (layer.enabled);
 
-					// setup minimap image component
-					Image layerImage = layerGO.AddComponent<Image> ();
-					layerImage.sprite = layer.sprite;
-					layerImage.preserveAspect = true;
-					layerImage.SetNativeSize ();
+			//		// setup minimap image component
+			//		Image layerImage = layerGO.AddComponent<Image> ();
+			//		layerImage.sprite = layer.sprite;
+			//		layerImage.preserveAspect = true;
+			//		layerImage.SetNativeSize ();
 
-					// assign layer instance
-					layer.instance = layerGO;
-				}
-			}
+			//		// assign layer instance
+			//		layer.instance = layerGO;
+			//	}
+			//}
 
-			// show minimap
-			ShowMinimap (true);
+			//// show minimap
+			//ShowMinimap (true);
 		}
 
 
 		public void ShowMinimap (bool value)
 		{
-			if (Minimap.Panel != null)
-				Minimap.Panel.gameObject.SetActive (value);
+			//if (Minimap.Panel != null)
+			//	Minimap.Panel.gameObject.SetActive (value);
 		}
 
 
 		public void UpdateMinimap (Transform rotationReference, MinimapModes minimapMode, Transform playerTransform, HNSMapProfile profile, float scale)
 		{
-			// assign map rotation
-			Quaternion identityRotation = Minimap.Panel.transform.rotation;
-			Quaternion mapRotation = identityRotation;
-			if (minimapMode == MinimapModes.RotateMinimap)
-				mapRotation = Quaternion.Euler (Minimap.Panel.transform.eulerAngles.x, Minimap.Panel.transform.eulerAngles.y, rotationReference.eulerAngles.y);
+			//// assign map rotation
+			//Quaternion identityRotation = Minimap.Panel.transform.rotation;
+			//Quaternion mapRotation = identityRotation;
+			//if (minimapMode == MinimapModes.RotateMinimap)
+			//	mapRotation = Quaternion.Euler (Minimap.Panel.transform.eulerAngles.x, Minimap.Panel.transform.eulerAngles.y, rotationReference.eulerAngles.y);
 
-			// set player indicator rotation
-			if (Minimap.PlayerIndicator != null) {
-				if (minimapMode == MinimapModes.RotateMinimap)
-					Minimap.PlayerIndicator.transform.rotation = identityRotation;
-				else
-					Minimap.PlayerIndicator.transform.rotation = Quaternion.Euler (Minimap.Panel.transform.eulerAngles.x, Minimap.Panel.transform.eulerAngles.y, -rotationReference.eulerAngles.y);
-			}
+			//// set player indicator rotation
+			//if (Minimap.PlayerIndicator != null) {
+			//	if (minimapMode == MinimapModes.RotateMinimap)
+			//		Minimap.PlayerIndicator.transform.rotation = identityRotation;
+			//	else
+			//		Minimap.PlayerIndicator.transform.rotation = Quaternion.Euler (Minimap.Panel.transform.eulerAngles.x, Minimap.Panel.transform.eulerAngles.y, -rotationReference.eulerAngles.y);
+			//}
 
-			// calculate map position
-			Vector2 unitScale = profile.GetMapUnitScale ();
-			Vector3 posOffset = profile.MapBounds.center - playerTransform.position;
-			Vector3 mapPos = new Vector3 (posOffset.x * unitScale.x, posOffset.z * unitScale.y, 0f) * scale;
+			//// calculate map position
+			//Vector2 unitScale = profile.GetMapUnitScale ();
+			//Vector3 posOffset = profile.MapBounds.center - playerTransform.position;
+			//Vector3 mapPos = new Vector3 (posOffset.x * unitScale.x, posOffset.z * unitScale.y, 0f) * scale;
 
-			// adjust map position when using minimap rotation mode
-			if (minimapMode == MinimapModes.RotateMinimap)
-				mapPos = playerTransform.MinimapRotationOffset (mapPos);
+			//// adjust map position when using minimap rotation mode
+			//if (minimapMode == MinimapModes.RotateMinimap)
+			//	mapPos = playerTransform.MinimapRotationOffset (mapPos);
 
-			// set map position, rotation and scale
-			Minimap.MapContainer.localPosition = new Vector2 (mapPos.x, mapPos.y);
-			Minimap.MapContainer.rotation = mapRotation;
-			Minimap.MapContainer.localScale = new Vector3 (scale, scale, 1f);
+			//// set map position, rotation and scale
+			//Minimap.MapContainer.localPosition = new Vector2 (mapPos.x, mapPos.y);
+			//Minimap.MapContainer.rotation = mapRotation;
+			//Minimap.MapContainer.localScale = new Vector3 (scale, scale, 1f);
 		}
 
 

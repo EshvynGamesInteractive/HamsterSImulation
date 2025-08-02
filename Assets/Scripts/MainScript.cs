@@ -7,7 +7,7 @@ public class MainScript : MonoBehaviour
     public static MainScript instance;
     public InfoPanelScript pnlInfo;
     public TaskPanelScript taskPanel;
-    [SerializeField] GameObject btnRetry, btnNext;
+    [SerializeField] GameObject btnRetry, btnNext, pnlPause, pnlWin, pnlLose;
     [SerializeField] Text txtScore;
     [SerializeField] int activeLevelIndex;
     [SerializeField] LevelScript[] levels;
@@ -18,7 +18,6 @@ public class MainScript : MonoBehaviour
     public GameObject indication;
     public bool gameover;
 
-    public static int currentLevel=1;
     private void Awake()
     {
         instance = this;
@@ -26,9 +25,10 @@ public class MainScript : MonoBehaviour
 
     private void Start()
     {
-        //activeLevelIndex = currentLevel - 1;//for deployement
+        Time.timeScale = 1;
+        activeLevelIndex = GlobalValues.currentLevel - 1;
 
-
+        Debug.Log(activeLevelIndex);
         for (int i = 0; i < levels.Length; i++)
         {
             levels[i].gameObject.SetActive(false);
@@ -41,11 +41,11 @@ public class MainScript : MonoBehaviour
 
 
 
-   
+
     public void PointScored(int points)
     {
-        scoreCount+=points;
-        txtScore.text=scoreCount.ToString();
+        scoreCount += points;
+        txtScore.text = scoreCount.ToString();
     }
 
 
@@ -81,21 +81,51 @@ public class MainScript : MonoBehaviour
 
     private void LevelCompleted()
     {
-        btnNext.SetActive(true);
+        OpenPopup(pnlWin);
     }
     private void LevelFailed()
     {
-        btnRetry.SetActive(true);
+        OpenPopup(pnlLose);
     }
-
+    public void OpenPausePanel()
+    {
+        Time.timeScale = 0.001f;
+        OpenPopup(pnlPause);
+    }
+    public void OpenPopup(GameObject pnl)
+    {
+        pnl.SetActive(true);
+    }
+    public void ClosePopup(GameObject pnl)
+    {
+        Time.timeScale = 1;
+        pnl.SetActive(false);
+    }
     public void OnBtnRetry()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1;
+        GlobalValues.sceneTOLoad = "Gameplay";
+        SceneManager.LoadScene("Loading");
+    }
+    public void OnBtnHome()
+    {
+        Time.timeScale = 1;
+        GlobalValues.sceneTOLoad = "MainMenu";
+        SceneManager.LoadScene("Loading");
+    }
+
+    public void OnBtnResume()
+    {
+
     }
 
     public void OnBtnNext()
     {
-        currentLevel++;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1;
+        if (GlobalValues.currentLevel == GlobalValues.UnlockedLevels)
+            GlobalValues.UnlockedLevels++;
+        GlobalValues.currentLevel++;
+        GlobalValues.sceneTOLoad = "Gameplay";
+        SceneManager.LoadScene("Loading");
     }
 }

@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class MainMenuManager : MonoBehaviour
 {
+    public static MainMenuManager instance;
     public CanvasStats currentStats;
     public CanvasStats prevStats;
     public GameObject[] CanvasState;
     public SmoothLoading loading;
 
     // Start is called before the first frame update
+
+
+    private void Awake()
+    {
+        instance = this;
+    }
     void ChangeCanvas(CanvasStats newStats)
     {
         prevStats = currentStats;
@@ -20,7 +27,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadScene(int i)
     {
-        loading.LoadSceneSmooth(i);
+        //loading.LoadSceneSmooth(i);
     }
 
 }

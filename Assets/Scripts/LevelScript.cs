@@ -6,11 +6,13 @@ public abstract class LevelScript : MonoBehaviour
     [SerializeField]protected string[] tasks;
 
     protected GrandpaAI grandpa;
+    protected PlayerScript player;
    
 
     protected void Start()
     {
         grandpa = MainScript.instance.grandPa;
+        player = MainScript.instance.player;
         MainScript.instance.taskPanel.UpdateTask(tasks[0]);
     }
 

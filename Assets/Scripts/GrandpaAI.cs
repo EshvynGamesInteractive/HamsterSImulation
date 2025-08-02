@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,7 +26,7 @@ public class GrandpaAI : MonoBehaviour
     private bool playerHasThrown = false;
     private Animator animator;
     [Range(0, 180)]
-    public float viewAngle=180;
+    public float viewAngle = 180;
 
     bool stopWalking;
 
@@ -36,7 +37,7 @@ public class GrandpaAI : MonoBehaviour
     }
     void Start()
     {
-    
+
         player = MainScript.instance.player.transform;
         StartPatrolOnGroundFloor();
         if (waypoints == null || waypoints.Count < 2)
@@ -60,7 +61,7 @@ public class GrandpaAI : MonoBehaviour
     {
         if (player == null || stopWalking) return;
 
-        float playerDistance = Vector3.Distance(transform.position + Vector3.up *1, player.position);
+        float playerDistance = Vector3.Distance(transform.position + Vector3.up * 1, player.position);
 
         if (shouldCatchPlayer /*&& playerHasThrown*/ && playerDistance <= detectionRange)
         {
@@ -151,8 +152,8 @@ public class GrandpaAI : MonoBehaviour
         {
             if (waypoints.Count > 0)
             {
-                if(currentIndex >= waypoints.Count)
-                    currentIndex=waypoints.Count - 1;
+                if (currentIndex >= waypoints.Count)
+                    currentIndex = waypoints.Count - 1;
                 agent.SetDestination(waypoints[currentIndex].position);
             }
             EnableWalking(true);
@@ -165,7 +166,7 @@ public class GrandpaAI : MonoBehaviour
         {
             isChasing = true;
             EnableWalking(true);
-                agent.SetDestination(player.position);
+            agent.SetDestination(player.position);
 
             if (distance <= catchRange)
             {
@@ -319,7 +320,6 @@ public class GrandpaAI : MonoBehaviour
         //Debug.Log("Walk" + enable);
 
 
-        Debug.Log(animator);
         animator.SetBool("isWalking", enable);
     }
 
@@ -328,10 +328,15 @@ public class GrandpaAI : MonoBehaviour
         transform.position = sitPos.position;
         transform.rotation = sitPos.rotation;
         EnableWalking(false);
-        animator.SetTrigger("Sit");
         stopWalking = true;
         agent.enabled = false;
         StopTheChase();
+        animator.SetTrigger("Sit");
+
+        DOVirtual.DelayedCall(1, () =>
+        {
+            animator.SetTrigger("Sit");
+        });
     }
 
     private void GrandpaFall()

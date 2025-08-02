@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public class SmoothLoading : MonoBehaviour
 {
     [Header("UI Elements")]
-    public CanvasGroup fadePanel; 
-    public Slider loadingBar;    
+    //public Slider loadingBar;    
+    public Image loadingBar;    
 
     [Header("Fade Settings")]
     public float fadeDuration = 1f;
@@ -20,8 +20,6 @@ public class SmoothLoading : MonoBehaviour
 
     public IEnumerator LoadSceneSmooth(int sceneIndex)
     {
-        yield return StartCoroutine(Fade(0f, 1f));
-
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
         operation.allowSceneActivation = false;
 
@@ -30,7 +28,7 @@ public class SmoothLoading : MonoBehaviour
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
 
             if (loadingBar != null)
-                loadingBar.value = progress;
+                loadingBar.fillAmount = progress;
 
             if (operation.progress >= 0.9f)
             {
@@ -42,21 +40,5 @@ public class SmoothLoading : MonoBehaviour
         }
     }
 
-    private IEnumerator Fade(float from, float to)
-    {
-        float elapsed = 0f;
-            
-        fadePanel.blocksRaycasts = true;
 
-            while (elapsed < fadeDuration)
-            {
-                fadePanel.alpha = Mathf.Lerp(from, to, elapsed / fadeDuration);
-                elapsed += Time.deltaTime;
-                yield return null;
-            }
-
-            fadePanel.alpha = to;
-            fadePanel.blocksRaycasts = (to > 0);
-        
-    }
 }

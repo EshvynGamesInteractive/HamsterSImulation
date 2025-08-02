@@ -60,7 +60,7 @@ public class BubblePopManager : MonoBehaviour
     {
            timerText.transform.parent.gameObject.SetActive(true);
 
-
+        scoreText.transform.parent.gameObject.SetActive(true);
         MainScript.instance.pnlInfo.ShowInfo("Pop the bubbles, Avoid Stinky green ones");
 
         player.DisablePlayer();
@@ -161,7 +161,7 @@ public class BubblePopManager : MonoBehaviour
 
     private void EndMiniGame()
     {
-        
+        scoreText.transform.parent.gameObject.SetActive(false);
         gameActive = false;
         timerText.transform.parent.gameObject.SetActive(false);
 
