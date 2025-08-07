@@ -58,11 +58,11 @@ public class Level3Script : LevelScript
             if (taskNumber >1)
             {
                 tableCloth.SetActive(false);
-                DOVirtual.DelayedCall(1, () =>
-                {
-                    grandpa.ChasePlayerForDuration(1);
+                //DOVirtual.DelayedCall(1, () =>
+                //{
+                //    grandpa.ChasePlayerForDuration(1);
 
-                });
+                //});
             }
 
             if (taskNumber == 1)
@@ -83,6 +83,6 @@ public class Level3Script : LevelScript
 
     public override void MiniGameEnded()
     {
-        throw new System.NotImplementedException();
+       
     }
 }

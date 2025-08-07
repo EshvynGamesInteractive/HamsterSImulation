@@ -74,6 +74,7 @@ public class MiniGameManager : MonoBehaviour
 
     public void EndMiniGame()
     {
+        MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
         if (ActiveMiniGame == MiniGameType.None)
         {
             Debug.LogWarning("No mini-game is currently active!");

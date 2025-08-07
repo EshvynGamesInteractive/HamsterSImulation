@@ -27,7 +27,7 @@ public class MainScript : MonoBehaviour
     private void Start()
     {
 
-        //GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
+        GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
 
 
         Time.timeScale = 1;
