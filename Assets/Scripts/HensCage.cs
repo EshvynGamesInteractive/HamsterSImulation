@@ -5,6 +5,9 @@ public class HensCage : Interactable
     [SerializeField] HenScript[] hens;
     public override void Interact(PlayerScript player)
     {
+        SoundManager.instance.PlaySound(SoundManager.instance.hens);
+        SoundManager.instance.PlaySoundDelayed(SoundManager.instance.hens, 4);
+        SoundManager.instance.PlaySoundDelayed(SoundManager.instance.hens, 8);
         player.AnimatePawToCenter();
         MainScript.instance.activeLevel.TaskCompleted(4);
         DisableForInteraction(true);

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class GrandpaPeekController : MonoBehaviour
 {
+    public GameObject dogInHand;
     [Header("Vision Settings")]
     [SerializeField] private float viewDistance = 5f;
     [SerializeField] private float viewAngle = 60f;
@@ -23,7 +24,6 @@ public class GrandpaPeekController : MonoBehaviour
     [SerializeField] private float targetMoveSpeed = 1f;
 
 
-
     [SerializeField] private Transform player;
     [SerializeField] private LayerMask obstructionMask;
 
@@ -35,7 +35,7 @@ public class GrandpaPeekController : MonoBehaviour
     private bool movingToToPoint = true;
 
     private float timer;
-    private bool isLooking = false;
+    public bool isLooking = false;
 
 
 
@@ -46,7 +46,7 @@ public class GrandpaPeekController : MonoBehaviour
     [SerializeField] private int coneSegments = 24;
     [SerializeField] private Material coneMaterial; // Assign in Inspector for visibility
 
-    private bool playerCaught;
+    public bool playerCaught;
 
 
 
@@ -61,6 +61,8 @@ public class GrandpaPeekController : MonoBehaviour
         currentTargetPos = toPoint.position;
 
         GenerateLookCone();
+
+        StartLooking();
     }
     GameObject cone;
     private void GenerateLookCone()
@@ -132,7 +134,7 @@ public class GrandpaPeekController : MonoBehaviour
 
 
 
-
+  
 
     private void Update()
     {
@@ -142,12 +144,12 @@ public class GrandpaPeekController : MonoBehaviour
             return;
         }
 
-        timer += Time.deltaTime;
+        //timer += Time.deltaTime;
 
-        if (!isLooking && timer >= lookInterval)
-        {
-            StartLooking();
-        }
+        //if (!isLooking && timer >= lookInterval)
+        //{
+        //    StartLooking();
+        //}
 
         if (isLooking)
         {
@@ -174,6 +176,7 @@ public class GrandpaPeekController : MonoBehaviour
 
     public void GameStarted()
     {
+        StartLooking();
         if (cone != null && !cone.activeSelf)
             cone.SetActive(true);
     }
@@ -197,8 +200,8 @@ public class GrandpaPeekController : MonoBehaviour
         lookPos.y = 0; // Ignore vertical difference
         transform.rotation = Quaternion.LookRotation(lookPos);
 
-
-
+        MiniGameManager.Instance.fridgeLevel.btnRevive.SetActive(true);
+        dogInHand.SetActive(true);
         MainScript.instance.player.PlayerCaught();
 
     }
@@ -233,6 +236,7 @@ public class GrandpaPeekController : MonoBehaviour
 
     private void StartLooking()
     {
+        playerCaught = false;
         isLooking = true;
         timer = 0f;
         Debug.Log("Grandpa started watching permanently.");

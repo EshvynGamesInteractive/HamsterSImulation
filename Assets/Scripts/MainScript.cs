@@ -7,7 +7,7 @@ public class MainScript : MonoBehaviour
     public static MainScript instance;
     public InfoPanelScript pnlInfo;
     public TaskPanelScript taskPanel;
-    [SerializeField] GameObject btnRetry, btnNext, pnlPause, pnlWin, pnlLose;
+    [SerializeField] GameObject btnRetry, btnNext, pnlPause, pnlWin, pnlLose, pnlAd;
     [SerializeField] Text txtScore;
     [SerializeField] int activeLevelIndex;
     [SerializeField] LevelScript[] levels;
@@ -17,7 +17,8 @@ public class MainScript : MonoBehaviour
     public LevelScript activeLevel;
     public GameObject indication;
     public bool gameover;
-
+    public NavmeshPathDraw pathDraw;
+    public static int currentTaskNumber;
     private void Awake()
     {
         instance = this;
@@ -25,22 +26,41 @@ public class MainScript : MonoBehaviour
 
     private void Start()
     {
+
+        //GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
+
+
         Time.timeScale = 1;
+        if (GlobalValues.currentLevel > levels.Length)
+            GlobalValues.currentLevel = levels.Length;
+        if (GlobalValues.retryAfterLevelCompleted && GlobalValues.currentLevel > 1)
+        {
+            GlobalValues.currentLevel--;
+        }
+        GlobalValues.retryAfterLevelCompleted = false;
+
         activeLevelIndex = GlobalValues.currentLevel - 1;
 
-        Debug.Log(activeLevelIndex);
         for (int i = 0; i < levels.Length; i++)
         {
             levels[i].gameObject.SetActive(false);
         }
         if (activeLevelIndex >= levels.Length)
             activeLevelIndex = levels.Length - 1;
+
+
         levels[activeLevelIndex].gameObject.SetActive(true);
         activeLevel = levels[activeLevelIndex];
+
+
+
     }
 
 
-
+    public void OnBtnClick()
+    {
+        SoundManager.instance.PlaySound(SoundManager.instance.buttonClick);
+    }
 
     public void PointScored(int points)
     {
@@ -53,10 +73,21 @@ public class MainScript : MonoBehaviour
     {
         ShowIndication();
         indication.transform.position = pos.position;
+        if (pos.TryGetComponent<Interactable>(out Interactable interactable))
+        {
+            if (interactable.indicationPoint != null)
+            {
+                pathDraw.SetDestination(interactable.indicationPoint);
+                return;
+            }
+        }
+
+        pathDraw.SetDestination(pos);
     }
 
     public void HideIndication()
     {
+        pathDraw.Stop();
         indication.SetActive(false);
     }
 
@@ -66,36 +97,69 @@ public class MainScript : MonoBehaviour
     }
     public void PlayerCaught()
     {
+        if (gameover)
+            return;
+        if (currentTaskNumber > 0)
+            currentTaskNumber--;
         MainScript.instance.pnlInfo.ShowInfo("You have been caught");
         gameover = true;
         Invoke(nameof(LevelFailed), 2);
     }
 
+    public void PlayerRevived()
+    {
+        gameover = false;
+        ClosePopup(pnlLose);
+    }
+
     public void AllTasksCompleted()
     {
+        if (gameover)
+            return;
         player.DisablePlayer();
         player.gameObject.SetActive(true);
+        gameover = true;
         Invoke(nameof(LevelCompleted), 1);
     }
 
 
     private void LevelCompleted()
     {
+        if (GlobalValues.currentLevel == GlobalValues.UnlockedLevels)
+            GlobalValues.UnlockedLevels++;
+        GlobalValues.currentLevel++;
+        SoundManager.instance.PlaySound(SoundManager.instance.levelComplete);
         OpenPopup(pnlWin);
+        currentTaskNumber = 0;
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
     }
     private void LevelFailed()
     {
+        SoundManager.instance.PlaySound(SoundManager.instance.levelFail);
         OpenPopup(pnlLose);
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
     }
     public void OpenPausePanel()
     {
-        Time.timeScale = 0.001f;
         OpenPopup(pnlPause);
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
     }
+
     public void OpenPopup(GameObject pnl)
     {
+        Time.timeScale = 0.001f;
         pnl.SetActive(true);
     }
+
+    public void CloseAdPopup()
+    {
+        ClosePopup(pnlAd);
+    }
+
+
     public void ClosePopup(GameObject pnl)
     {
         Time.timeScale = 1;
@@ -107,24 +171,28 @@ public class MainScript : MonoBehaviour
         GlobalValues.sceneTOLoad = "Gameplay";
         SceneManager.LoadScene("Loading");
     }
+
+    public void OnBtnRetryAfterLevelCompleted()
+    {
+        GlobalValues.retryAfterLevelCompleted = true;
+        Time.timeScale = 1;
+        GlobalValues.sceneTOLoad = "Gameplay";
+        SceneManager.LoadScene("Loading");
+    }
     public void OnBtnHome()
     {
+        currentTaskNumber = 0;
         Time.timeScale = 1;
         GlobalValues.sceneTOLoad = "MainMenu";
         SceneManager.LoadScene("Loading");
     }
 
-    public void OnBtnResume()
-    {
 
-    }
 
     public void OnBtnNext()
     {
         Time.timeScale = 1;
-        if (GlobalValues.currentLevel == GlobalValues.UnlockedLevels)
-            GlobalValues.UnlockedLevels++;
-        GlobalValues.currentLevel++;
+
         GlobalValues.sceneTOLoad = "Gameplay";
         SceneManager.LoadScene("Loading");
     }

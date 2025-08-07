@@ -18,6 +18,8 @@ public class CutsceneTrigger : MonoBehaviour
                 MainScript.instance.pnlInfo.ShowInfo(txtTOShow);
                 return;
             }
+            MainScript.instance.grandPa.StopTheChase();
+
             Pickable itemTODrop = player.pickedObject;
 
             GetComponent<Collider>().enabled = false;
@@ -33,6 +35,7 @@ public class CutsceneTrigger : MonoBehaviour
             placementPos.gameObject.SetActive(true);
 
             player.DisablePlayer();
+            Debug.Log(cutsceneTOPlay + "ssssssssssssssssssssssssssssssssssssssssssss");
             cutsceneTOPlay.SetActive(true);
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
@@ -45,7 +48,7 @@ public class CutsceneTrigger : MonoBehaviour
                     return;
 
                 MainScript.instance.activeLevel.TaskCompleted(taskNumber);
-                
+
             });
         }
     }

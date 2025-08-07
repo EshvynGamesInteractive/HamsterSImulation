@@ -5,28 +5,28 @@ using UnityEngine.UI;
 public class MiniGameTriggerZone : MonoBehaviour
 {
     [SerializeField] private MiniGameType miniGameToStart;
-    private Button gameStartBtn;
+    private Button miniGameBtn, gameStartBtn;
 
     private void Start()
     {
+        miniGameBtn = MiniGameManager.Instance.miniGameBtn;
         gameStartBtn = MiniGameManager.Instance.gameStartBtn;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log(gameStartBtn);
-            gameStartBtn.onClick.Invoke();
-        }
-    }
+    //private void Update()
+    //{
+    //    //if (Input.GetKeyDown(KeyCode.E))
+    //    //{
+    //    //    gameStartBtn.onClick.Invoke();
+    //    //}
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
 
         gameStartBtn.onClick.AddListener(StartMiniGame);
-        gameStartBtn.gameObject.SetActive(true);
+        miniGameBtn.gameObject.SetActive(true);
        
     }
 
@@ -35,16 +35,18 @@ public class MiniGameTriggerZone : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         gameStartBtn.onClick.RemoveListener(StartMiniGame);
-        gameStartBtn.gameObject.SetActive(false);
+        miniGameBtn.gameObject.SetActive(false);
     }
 
     private void OnDisable()
     {
-        gameStartBtn.onClick.RemoveListener(StartMiniGame);
+        if (gameStartBtn != null)
+            gameStartBtn.onClick.RemoveListener(StartMiniGame);
     }
     public void StartMiniGame()
     {
-        gameStartBtn.gameObject.SetActive(false);
+        MainScript.instance.CloseAdPopup();
+        miniGameBtn.gameObject.SetActive(false);
         MiniGameManager.Instance?.StartMiniGame(miniGameToStart);
         Debug.Log(gameObject.name);
         gameObject.SetActive(false);

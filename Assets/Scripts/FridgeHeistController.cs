@@ -13,7 +13,10 @@ public class FridgeHeistController : MonoBehaviour
     [SerializeField]  Transform foorCamera;
     [SerializeField] GameObject foodTOPick;
     [SerializeField] private Image stealthMeterImage;
+    public GameObject btnRevive;
 
+    private Vector3 foodCamPos;
+    private Vector3 foodCamRot;
     private PlayerScript player;
     private FP_Controller fP_Controller;
     private bool heistActive = false;
@@ -26,6 +29,8 @@ public class FridgeHeistController : MonoBehaviour
 
     private void Start()
     {
+        foodCamPos = foorCamera.localPosition;
+        foodCamRot = foorCamera.localEulerAngles;
         player = MainScript.instance.player;
         grandpaAI = MainScript.instance.grandPa;
         grandpaPeekController = grandpaAI.GetComponent<GrandpaPeekController>();
@@ -58,11 +63,16 @@ public class FridgeHeistController : MonoBehaviour
         player.DisablePlayer();
         //bubbleCam.transform.position = playerr.playerCamera.position;
         //bubbleCam.transform.rotation = playerr.playerCamera.rotation;
+
+        foorCamera.localPosition = foodCamPos;
+        foorCamera.localEulerAngles = foodCamRot;
         foorCamera.gameObject.SetActive(true);
 
         float camMoveDuration = 2f;
 
-        foodTOPick.SetActive(true);
+        //foodTOPick.SetActive(true);
+
+        Instantiate(foodTOPick, foodTOPick.transform.position, Quaternion.identity).SetActive(true);
         foorCamera.transform.DOMove(player.playerCamera.position, camMoveDuration).SetEase(Ease.Linear);
         foorCamera.transform.DORotate(player.playerCamera.eulerAngles, camMoveDuration / 4).SetDelay(camMoveDuration - (camMoveDuration / 4));
 
@@ -76,17 +86,19 @@ public class FridgeHeistController : MonoBehaviour
 
 
         grandpaAI.gameObject.SetActive(true);
+        grandpaAI.enabled = false;
         grandpaAI.MakeGrandpaSit(sitPosition);
 
         grandpaPeekController.enabled = true;
 
         grandpaPeekController.GameStarted();
+        
         player = MainScript.instance.player;
         fP_Controller = player.GetComponent<FP_Controller>();
         if (player == null) yield break;
 
         heistActive = true;
-        stealthUI?.SetActive(true);
+        //stealthUI?.SetActive(true);
         SlowDownPlayer(true);
 
         Debug.Log("Fridge Heist started!");
@@ -152,24 +164,38 @@ public class FridgeHeistController : MonoBehaviour
         stealthUI?.SetActive(false);
         Debug.Log("Heist failed!");
         // Optional: play scolding animation or reload
-
+        btnRevive.SetActive(true);
         grandpaPeekController.enabled = false;
+        grandpaAI.enabled = true;
+    }
+
+
+    public void RevivePlayer()
+    {
+        grandpaAI.dogInHand.SetActive(false);
+        grandpaPeekController.dogInHand.SetActive(false);
+        btnRevive.SetActive(false);
+        heistActive = true;
+        player.PlayereRevived();
+        MainScript.instance.pnlInfo.ShowInfo("Grandpa cannot see you now");
     }
 
     private void EndHeist()
     {
-        grandpaAI.StartPatrolOnGroundFloor();
         grandpaPeekController.GameEnd();
+        heistActive = false;
+        stealthUI?.SetActive(false);
+        //player.DisablePlayer();
+        grandpaPeekController.enabled = false;
+        grandpaAI.enabled = true;
+        grandpaAI.StartPatrolOnGroundFloor();
         var movement = player.GetComponent<FP_Controller>(); 
         if (movement != null)
             movement.ExitHeistMode();
-        heistActive = false;
-        stealthUI?.SetActive(false);
         MainScript.instance.pnlInfo.ShowInfo("Heist completed");
         Debug.Log("Heist completed successfully!");
         MiniGameManager.Instance.EndMiniGame();
 
-        grandpaPeekController.enabled = false;
     }
 
     private void SlowDownPlayer(bool slow)

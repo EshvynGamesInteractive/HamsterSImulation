@@ -8,6 +8,7 @@ public class DishesScript : Interactable
     public override void Interact(PlayerScript player)
     {
         DisableForInteraction(true);
+        SoundManager.instance.PlaySound(SoundManager.instance.toppleDishes);
         foreach (Rigidbody dish in dishes)
         {
             dish.useGravity = true;

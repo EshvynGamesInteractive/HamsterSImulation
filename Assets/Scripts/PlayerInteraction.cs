@@ -51,11 +51,11 @@ public class PlayerInteraction : MonoBehaviour
             {
                 currentInteractable = interactable;
                 interactButton?.SetActive(true);
-                currentInteractable.ShowOutline();
+                //currentInteractable.ShowOutline();
                 return;
             }
         }
-        currentInteractable?.HideOutline();
+        //currentInteractable?.HideOutline();
         currentInteractable = null;
         interactButton?.SetActive(false);
     }
@@ -64,6 +64,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (currentInteractable != null)
         {
+            SoundManager.instance.PlaySound(SoundManager.instance.interact);
             currentInteractable.Interact(player);
         }
     }

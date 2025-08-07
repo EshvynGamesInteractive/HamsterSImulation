@@ -12,6 +12,7 @@ public class GoatScript : Interactable
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Animator animator;
     [SerializeField] GameObject goatGrandpa;
+    [SerializeField] GameObject leash;
 
     private GrandpaAI grandpaAI;
     private Camera mainCamera;
@@ -34,10 +35,14 @@ public class GoatScript : Interactable
 
     public override void Interact(PlayerScript player)
     {
+        grandpaAI.StopTheChase();
+        leash.SetActive(false);
         DisableForInteraction(true);
         MainScript.instance.HideIndication();
         StartSequence();
         StartCoroutine(PlayCutscene());
+        SoundManager.instance.PlaySound(SoundManager.instance.goat);
+        SoundManager.instance.PlaySoundDelayed(SoundManager.instance.goat, 2);
     }
 
     public void StartSequence()

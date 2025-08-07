@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "801085310949",
+    "project_id": "gangster-game-67883",
+    "storage_bucket": "gangster-game-67883.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801085310949:android:c1336eb41742c45f47d10c",
+        "android_client_info": {
+          "package_name": "com.nickogames.mafia.crime.city.gangster.game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAslblVGNeTpTbg1joY5cXjv4RI4uXPMU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

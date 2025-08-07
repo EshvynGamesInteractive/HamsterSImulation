@@ -9,6 +9,11 @@ public class Level4Script : LevelScript
     [SerializeField] Transform cutsceneCamera;
     [SerializeField] Transform cat;
     [SerializeField] SquirrelAI squirrel;
+    [SerializeField] GameObject catTimeline, hensTimeline;
+    [SerializeField] float catTimelineDuration, hensTimelineDuration;
+    [SerializeField] GameObject squirrelCage;
+
+
     private new void Start()
     {
         base.Start();
@@ -17,9 +22,15 @@ public class Level4Script : LevelScript
 
                 grandpa.MakeGrandpaSit(sitPos);
             });
+
+        TaskCompleted(MainScript.currentTaskNumber);
+        grandpa.StopTheChase();
+
     }
     public override void TaskCompleted(int taskNumber)
     {
+        if (taskNumber < MainScript.currentTaskNumber)
+            return;
         if (taskNumber >= tasks.Length)
         {
             if (levelCompleteCutscene != null)
@@ -34,6 +45,8 @@ public class Level4Script : LevelScript
             items[taskNumber].EnableForInteraction(true);
             MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
 
+            if (taskNumber >1)
+                squirrelCage.SetActive(false);
 
             //if (taskNumber == 1)
             //    grandpa.StopTheChase();
@@ -43,16 +56,33 @@ public class Level4Script : LevelScript
 
             if (taskNumber == 3)   // when throw cat at sock
             {
+                catTimeline.SetActive(true);
+                player.DisablePlayer();
+                DOVirtual.DelayedCall(catTimelineDuration, () =>
+                {
+                    catTimeline.SetActive(false);
+                    player.EnablePlayer();
+                    grandpa.ChasePlayerForDuration(30);
+
+                });
                 grandpa.StopTheChase();
 
             }
 
             if (taskNumber == 4)   // when scare hens
             {
-                grandpa.StartTheChase();
+                hensTimeline.SetActive(true);
+                player.DisablePlayer();
+                DOVirtual.DelayedCall(hensTimelineDuration, () =>
+                {
+                    hensTimeline.SetActive(false);
+                    player.EnablePlayer();
+                    grandpa.ChasePlayerForDuration(30);
+
+                });
 
             }
-
+            MainScript.currentTaskNumber = taskNumber;
         }
 
     }
@@ -76,7 +106,7 @@ public class Level4Script : LevelScript
             {
                 player.EnablePlayer();
                 grandpa.gameObject.SetActive(true);
-                grandpa.StartTheChase();
+                grandpa.ChasePlayerForDuration(30);
                 squirrelCutscene.SetActive(false);
                 squirrel.RunTowardsCage();
             });

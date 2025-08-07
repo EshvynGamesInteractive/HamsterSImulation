@@ -25,6 +25,7 @@ public class VacuumCleaner : Interactable
     {
         if (isBroken) return;
         isBroken = true;
+        SoundManager.instance.PlaySound(SoundManager.instance.spillTrash);
         //animator.SetTrigger(breakAnimationTrigger);
         for (int i = 0; i < garbageCount; i++)
         {

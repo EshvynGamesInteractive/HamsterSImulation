@@ -201,7 +201,8 @@ public class FP_CameraLook : MonoBehaviour
                     // time for next footstep sound:
                     nextStepTime = headBobCycle + .5f;
                     // play footstep sounds
-                    footSteps.PlayFootstepSounds(audioSource);
+                    
+                    //footSteps.PlayFootstepSounds(audioSource);  //khubaib
 
                 }
             }

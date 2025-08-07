@@ -11,7 +11,7 @@ public class BathTubScript : Interactable
             blanket.DisableForInteraction(false);
             player.PlaceObject(blanketPos.position);
             DisableForInteraction(true);
-
+            SoundManager.instance.PlaySoundDelayed(SoundManager.instance.throwBlanket, 0.5f);
             MainScript.instance.activeLevel.TaskCompleted(4);
         }
     }

@@ -3,8 +3,9 @@
 
 public abstract class Interactable : MonoBehaviour
 {
+    public Transform indicationPoint;
     [SerializeField] private bool enableAtStart, showIndicationAtStart;
-    [HideInInspector]public bool isInteractable=true;
+    public bool isInteractable=true;
     //public GameObject indication;
     private Outline outline;
     public abstract void Interact(PlayerScript player);
@@ -29,6 +30,7 @@ public abstract class Interactable : MonoBehaviour
 
         if (showIndication)
             MainScript.instance.SetIndicationPosition(transform);
+
         isInteractable = true;
     }
 

@@ -11,9 +11,9 @@ public class NewspaperScript : Pickable
 
         if (startGrandpaChase)
         {
-            DOVirtual.DelayedCall(1, () =>
+            DOVirtual.DelayedCall(3, () =>
         {
-            MainScript.instance.grandPa.StartTheChase();
+            MainScript.instance.grandPa.ChasePlayerForDuration(30);
         });
         }
 

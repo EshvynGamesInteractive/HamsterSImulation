@@ -25,6 +25,7 @@ public class KidAI : MonoBehaviour
     {
         if (hasStumbled || !other.CompareTag("Toy")) return;
         hasStumbled = true;
+        Debug.Log(animator);
         animator.SetTrigger(stumbleAnimationTrigger);
         MainScript.instance.activeLevel.TaskCompleted(1);
     }

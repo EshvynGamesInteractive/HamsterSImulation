@@ -13,6 +13,7 @@ public class Bubble : MonoBehaviour
 {
     public BubbleType bubbleType;
     public GameObject popEffect;
+    public GameObject dustEffect;
     public int scoreValue = 1;
 
     [SerializeField] GameObject duck, bone, shampoo;
@@ -30,7 +31,7 @@ public class Bubble : MonoBehaviour
     private float waveFrequency;
     private float waveAmplitude;
     private Vector3 startScale;
-
+    private GameObject itemInBubble;
 
 
 
@@ -47,14 +48,17 @@ public class Bubble : MonoBehaviour
                 break;
 
             case BubbleType.RegularBubble:
+                itemInBubble = duck;
                 duck.SetActive(true);
                 break;
 
             case BubbleType.PrizeBubble:
+                itemInBubble = shampoo;
                 shampoo.SetActive(true);
                 break;
 
             case BubbleType.GlodenBubble:
+                itemInBubble = bone;
                 bone.SetActive(true);
                 break;
         }
@@ -109,26 +113,36 @@ public class Bubble : MonoBehaviour
 
     private void HandlePop()
     {
-        Instantiate(popEffect, transform.position, Quaternion.identity);
-
+        
+        SoundManager.instance.PlaySound(SoundManager.instance.bubblePop);
+        if (itemInBubble != null)
+        {
+            itemInBubble.AddComponent<Rigidbody>();
+            itemInBubble.transform.SetParent(null);
+            Destroy(itemInBubble, 3);
+        }
         switch (bubbleType)
         {
             case BubbleType.StinkBomb:
+                Instantiate(dustEffect, transform.position, Quaternion.identity);
                 Debug.Log("Stink bomb! Penalize.");
                 MiniGameManager.Instance.bubbleLevel?.ApplyPenalty(2);
                 break;
 
             case BubbleType.RegularBubble:
+                Instantiate(popEffect, transform.position, Quaternion.identity);
                 Debug.Log("Rubber Duck! +1");
                 MiniGameManager.Instance.bubbleLevel?.AddScore(1);
                 break;
 
             case BubbleType.PrizeBubble:
+                Instantiate(popEffect, transform.position, Quaternion.identity);
                 Debug.Log("Shampoo! +2");
                 MiniGameManager.Instance.bubbleLevel?.AddScore(3);
                 break;
 
             case BubbleType.GlodenBubble:
+                Instantiate(popEffect, transform.position, Quaternion.identity);
                 Debug.Log("Golden Bone! +5");
                 MiniGameManager.Instance.bubbleLevel?.AddScore(5);
                 break;

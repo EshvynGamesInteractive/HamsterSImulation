@@ -13,7 +13,7 @@ public abstract class LevelScript : MonoBehaviour
     {
         grandpa = MainScript.instance.grandPa;
         player = MainScript.instance.player;
-        MainScript.instance.taskPanel.UpdateTask(tasks[0]);
+        //MainScript.instance.taskPanel.UpdateTask(tasks[0]);
     }
 
     public abstract void TaskCompleted(int taskNumber);

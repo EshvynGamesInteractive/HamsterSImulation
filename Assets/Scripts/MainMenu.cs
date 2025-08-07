@@ -4,26 +4,51 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] Sprite soundOn, soundOff;
-    [SerializeField] Image btnSound;
+    [SerializeField] Image btnSound1, btnSound2;
     [SerializeField] GameObject levelSelection;
-    public void OnBtnSound()
+
+    private void Start()
     {
-        if(GlobalValues.Effects==1)
+        CheckSound();
+    }
+    private void CheckSound()
+    {
+        if (GlobalValues.Effects == 1)
         {
-            btnSound.sprite = soundOff;
-            GlobalValues.Effects = 0;
-            GlobalValues.Music = 0;
+            btnSound1.sprite = soundOn;
+            btnSound2.sprite = soundOn;
+            SoundManager.instance.SoundOn();
         }
         else
         {
-            btnSound.sprite = soundOff;
+            btnSound1.sprite = soundOff;
+            btnSound2.sprite = soundOff;
+            SoundManager.instance.SoundOff();
+        }
+    }
+
+    public void OnBtnSound()
+    {
+        if (GlobalValues.Effects == 1)
+        {
+            btnSound1.sprite = soundOff;
+            btnSound2.sprite = soundOff;
+            GlobalValues.Effects = 0;
+            GlobalValues.Music = 0;
+            SoundManager.instance.SoundOff();
+        }
+        else
+        {
+            btnSound1.sprite = soundOn;
+            btnSound2.sprite = soundOn;
             GlobalValues.Effects = 1;
             GlobalValues.Music = 1;
+            SoundManager.instance.SoundOn();
         }
-        SoundManager.instance.ToggleSound();
     }
     public void OnBtnStart()
     {
+        SoundManager.instance.PlaySound(SoundManager.instance.dogBark);
         levelSelection.SetActive(true);
     }
 
@@ -39,5 +64,11 @@ public class MainMenu : MonoBehaviour
     public void OnBtnQuit()
     {
         Application.Quit();
+    }
+
+
+    public void OnBtnClick()
+    {
+        SoundManager.instance.PlaySound(SoundManager.instance.buttonClick);
     }
 }

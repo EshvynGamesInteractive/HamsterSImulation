@@ -1,5 +1,7 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -7,12 +9,39 @@ public class LoadingManager : MonoBehaviour
 {
     [SerializeField] private Image loadingBar; // Loading bar fill image
     [SerializeField] private float loadDuration = 3f; // Total load duration in seconds
+    [SerializeField] RectTransform[] letters;
+    [SerializeField] float oneLetterTime = 0.5f;
+    [SerializeField] float letterScale = 1.5f;
+    [SerializeField] RectTransform dog;
 
-    public void Start()
+    public IEnumerator Start()
     {
         Time.timeScale = 1;
         StartCoroutine(LoadSceneAsync());
+
+        dog.localScale = Vector3.one * letterScale;
+        dog.GetComponent<Image>().DOFade(0, 0);
+
+
+        foreach (var letter in letters)
+        {
+            letter.localScale = Vector3.one * letterScale;
+            letter.GetComponent<Image>().DOFade(0, 0);
+        }
+
+        foreach (var letter in letters)
+        {
+            letter.localScale = Vector3.one * letterScale;
+            letter.GetComponent<Image>().DOFade(1, oneLetterTime);
+            letter.DOScale(Vector3.one, oneLetterTime);
+            yield return new WaitForSeconds(oneLetterTime);
+        }
+
+        dog.DOScale(1, oneLetterTime);
+        dog.GetComponent<Image>().DOFade(1, oneLetterTime);
+        dog.DOPunchScale(new Vector2(0.2f, 0.2f), 0.5f, 10, 10);
     }
+
 
     private IEnumerator LoadSceneAsync()
     {

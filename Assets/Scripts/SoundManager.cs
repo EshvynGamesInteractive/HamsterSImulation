@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -5,6 +6,8 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     [SerializeField]private AudioSource musicSource, effectsSource, loopSource;
+    public AudioClip buttonClick, levelFail, levelComplete, taskComplete, ballLaunch, timeOut, dogBark, eat, interact, bubblePop, dogPawPrint, 
+        dropBucket, spillWater, lightSwitch, throwBlanket, pour, fireAlarm, spillTrash, throwItem, toppleDishes, lick, hens, goat, cageOpen, catMeow;
 
     private void Awake()
     {
@@ -23,11 +26,26 @@ public class SoundManager : MonoBehaviour
     {
         effectsSource.PlayOneShot(clip);
     }
-
-
-    public void ToggleSound()
+    public void PlaySoundDelayed(AudioClip clip, float delay)
     {
-        musicSource.mute = !musicSource.mute;
-        effectsSource.mute = !effectsSource.mute;
+        DOVirtual.DelayedCall(1, () =>
+        {
+            effectsSource.PlayOneShot(clip);
+        });
+    }
+    
+
+    public void SoundOff()
+    {
+        musicSource.mute = true;
+        effectsSource.mute = true;
+        loopSource.mute = true;
+    }
+
+    public void SoundOn()
+    {
+        musicSource.mute = false;
+        effectsSource.mute = false;
+        loopSource.mute = false;
     }
 }

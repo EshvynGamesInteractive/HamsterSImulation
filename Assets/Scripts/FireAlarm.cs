@@ -13,7 +13,7 @@ public class FireAlarm : Interactable
         if (isActivated) return;
         isActivated = true;
         bubbleEffect.Play();
-
+        SoundManager.instance.PlaySound(SoundManager.instance.fireAlarm);
         DisableForInteraction(false);
 
         MainScript.instance.activeLevel.TaskCompleted(6);

@@ -92,7 +92,7 @@ public class BallLauncher : Interactable
             Vector3 force = launchDir * launchForce + Vector3.up * upwardForce;
             rb.AddForce(force, ForceMode.Impulse);
         }
-
+        SoundManager.instance.PlaySound(SoundManager.instance.ballLaunch);
         //if (currentBall.TryGetComponent<FetchBall>(out FetchBall fetchBall))
         //{
         //    fetchBall.Setup(this, returnZone);

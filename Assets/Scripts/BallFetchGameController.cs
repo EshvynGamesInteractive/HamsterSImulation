@@ -66,6 +66,7 @@ public class BallFetchGameController : MonoBehaviour
 
     private void EndMiniGame()
     {
+      
         gameStartTrigger.SetActive(true);
         MainScript.instance.pnlInfo.ShowInfo("Game session ended. You can play it anytime");
         Debug.Log("Ball Fetch Frenzy ended!");

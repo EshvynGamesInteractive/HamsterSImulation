@@ -20,9 +20,12 @@ public class WaterContainer : Interactable
 
     private void SpillWater()
     {
+        MainScript.instance.HideIndication();
+        SoundManager.instance.PlaySound(SoundManager.instance.dropBucket);
         spilledWater.gameObject.SetActive(true);
         transform.DORotateQuaternion(fallPos.rotation, 0.3f);
         transform.DOMove(fallPos.position, 0.3f);
-        spilledWater.DOScale(Vector3.one, 1).SetDelay(1f);
+        SoundManager.instance.PlaySound(SoundManager.instance.spillWater);
+        spilledWater.DOScale(Vector3.one, 0.5f).SetDelay(0.3f);
     }
 }

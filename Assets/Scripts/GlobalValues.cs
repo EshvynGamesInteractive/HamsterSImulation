@@ -4,6 +4,7 @@ public static class GlobalValues
 {
     public static int currentLevel=1;
     public static string sceneTOLoad = "MainMenu";
+    public static bool retryAfterLevelCompleted;
     public static int Music
     {
 

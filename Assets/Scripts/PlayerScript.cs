@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float moveDuration = 0.3f;
     [SerializeField] private float throwForce = 5f;
     [SerializeField] GameObject btnThrow;
-    [SerializeField] private Transform playerHead, playerModel, caughtCamera, cinematicCamera;
+    [SerializeField] private Transform playerHead, playerModel, cinematicCamera;
     [SerializeField] private GrandpaAI grandpa;
     [SerializeField] private Transform rightPaw; // Walking right paw, parented to player
     [SerializeField] private Transform leftPaw; // Walking left paw, parented to player
@@ -31,10 +31,14 @@ public class PlayerScript : MonoBehaviour
     private Vector3 leftPawOriginalLocalPosition;
     private Vector3 animRightPawOriginalLocalPosition;
     private Vector3 animLeftPawOriginalLocalPosition;
+    private Vector3 dogCamOriginalPos;
+    private Vector3 dogCamOriginalRot;
     private bool isPicking;
 
     void Start()
     {
+        dogCamOriginalPos = cinematicCamera.transform.localPosition;
+        dogCamOriginalRot = cinematicCamera.transform.localEulerAngles;
         if (rightPaw) pawOriginalLocalPosition = rightPaw.localPosition;
         if (leftPaw) leftPawOriginalLocalPosition = leftPaw.localPosition;
         if (animRightPaw) animRightPawOriginalLocalPosition = animRightPaw.localPosition;
@@ -47,6 +51,7 @@ public class PlayerScript : MonoBehaviour
 
     public void DisablePlayer()
     {
+        Debug.Log("disableeeeeeee");
         playerCanvas.SetActive(false);
         gameObject.SetActive(false);
         GetComponent<FP_Controller>().StopPlayerMovement();
@@ -118,7 +123,11 @@ public class PlayerScript : MonoBehaviour
     {
         if (IsObjectPicked || itemToPick == null || isPicking) return;
         isPicking = true;
-        btnThrow.SetActive(true);
+        if (itemToPick.TryGetComponent<BlanketScript>(out BlanketScript blanket) ||
+            itemToPick.TryGetComponent<NewspaperScript>(out NewspaperScript news))
+            btnThrow.SetActive(false);
+        else
+            btnThrow.SetActive(true);
 
         if (itemToPick.TryGetComponent<Rigidbody>(out Rigidbody existingRb))
             Destroy(existingRb);
@@ -129,19 +138,20 @@ public class PlayerScript : MonoBehaviour
         //if (itemToPick.TryGetComponent<Cushion>(out Cushion existingCushion))
         //    pickedObject.transform.SetParent(pickedCushionHolder);
         //else
-            DOVirtual.DelayedCall(moveDuration, () =>
-            {
-                pickedObject.transform.SetParent(pickedItemHolder);
-                pickedObject.transform.DOLocalMove(Vector3.zero, moveDuration);
-                pickedObject.transform.DOLocalRotate(Vector3.zero, moveDuration);
-                ChangeObjectLayer(pickedObject.transform, "PickedLayer");
-            });
+        DOVirtual.DelayedCall(moveDuration, () =>
+        {
+            pickedObject.transform.SetParent(pickedItemHolder);
+            pickedObject.transform.DOLocalMove(Vector3.zero, moveDuration);
+            pickedObject.transform.DOLocalRotate(Vector3.zero, moveDuration);
+            ChangeObjectLayer(pickedObject.transform, "PickedLayer");
+        });
         AnimatePawToCenter();
     }
 
     public void ThrowObject()
     {
         if (!IsObjectPicked || pickedObject == null) return;
+        SoundManager.instance.PlaySound(SoundManager.instance.throwItem);
         btnThrow.SetActive(false);
         pickedObject.EnableForInteraction(false);
         pickedObject.transform.SetParent(null);
@@ -167,6 +177,11 @@ public class PlayerScript : MonoBehaviour
 
     }
 
+    public void ShowDogCamera(Vector3 pos)
+    {
+
+    }
+
     public void PlaceObject(Vector3 placementPos)
     {
         if (!IsObjectPicked || pickedObject == null) return;
@@ -187,13 +202,23 @@ public class PlayerScript : MonoBehaviour
     public void PlayerCaught()
     {
         MainScript.instance.PlayerCaught();
+        cinematicCamera.gameObject.SetActive(true);
+        GetComponent<FP_Controller>().StopPlayerMovement();
+        playerHead.gameObject.SetActive(false);
+        playerCanvas.SetActive(false);
         //caughtCamera.gameObject.SetActive(true);
-        ShowDogModel();
+        //ShowDogModel();
+    }
+
+    public void PlayereRevived()
+    {
+        MainScript.instance.PlayerRevived();
+        HideDogModel();
     }
 
     public void ShowDogModel()
     {
-        caughtCamera.gameObject.SetActive(true);
+        cinematicCamera.gameObject.SetActive(true);
         GetComponent<FP_Controller>().StopPlayerMovement();
         playerHead.gameObject.SetActive(false);
         playerModel.gameObject.SetActive(true);
@@ -201,15 +226,25 @@ public class PlayerScript : MonoBehaviour
         //caughtCamera.DOLocalMove(new Vector3(0, 5, -4), 2);
     }
 
+    public void HideDogModel()
+    {
+        cinematicCamera.gameObject.SetActive(false);
+        GetComponent<FP_Controller>().canControl = true;
+        playerHead.gameObject.SetActive(true);
+        playerModel.gameObject.SetActive(false);
+        playerCanvas.SetActive(true);
+    }
     public void PlayDogEatingAnim()
     {
+        SoundManager.instance.PlaySound(SoundManager.instance.eat);
         playerModel.GetComponent<Animator>().SetTrigger("Eating");
     }
     public void ShowAndHideDog(float delay)
     {
         ShowDogModel();
         cinematicCamera.gameObject.SetActive(true);
-
+        cinematicCamera.transform.localPosition = dogCamOriginalPos;
+        cinematicCamera.transform.localEulerAngles = dogCamOriginalRot;
         cinematicCamera.GetComponent<CameraVisibilityAdjuster>().enabled = false;
 
         DOVirtual.DelayedCall(delay, () =>

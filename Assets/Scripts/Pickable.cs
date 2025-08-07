@@ -3,6 +3,7 @@
 public class Pickable : Interactable
 {
     [SerializeField] GameObject dropPos;
+    [SerializeField] Transform dropPointIndicationPos;
 
 
     protected void PickItem(PlayerScript player)
@@ -13,7 +14,10 @@ public class Pickable : Interactable
             {
                 dropPos.SetActive(true);
                 dropPos.GetComponent<Collider>().enabled = true;
-                MainScript.instance.SetIndicationPosition(dropPos.transform);
+                if (dropPointIndicationPos != null)
+                    MainScript.instance.SetIndicationPosition(dropPointIndicationPos);
+                else
+                    MainScript.instance.SetIndicationPosition(dropPos.transform);
             }
             player.PickObject(this);
         }

@@ -15,8 +15,9 @@ public enum MiniGameType
 public class MiniGameManager : MonoBehaviour
 {
     public static MiniGameManager Instance { get; private set; }
-    public Button gameStartBtn;
+    public Button miniGameBtn, gameStartBtn;
 
+    [SerializeField] MiniGameTriggerZone[] miniGameTriggerZones;
     public FridgeHeistController fridgeLevel;
     public BubblePopManager bubbleLevel;
     public CushionTrampolineManager cushionTrampoline;
@@ -63,7 +64,10 @@ public class MiniGameManager : MonoBehaviour
         ActiveMiniGame = type;
         Debug.Log($"Starting mini-game: {type}");
         OnMiniGameStart?.Invoke(type);
-
+        for (int i = 0; i < miniGameTriggerZones.Length; i++)
+        {
+            miniGameTriggerZones[i].gameObject.SetActive(false);
+        }
 
         MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(false);
     }
@@ -75,7 +79,11 @@ public class MiniGameManager : MonoBehaviour
             Debug.LogWarning("No mini-game is currently active!");
             return;
         }
-
+        for (int i = 0; i < miniGameTriggerZones.Length; i++)
+        {
+            miniGameTriggerZones[i].gameObject.SetActive(true);
+        }
+        SoundManager.instance.PlaySound(SoundManager.instance.timeOut);
         MainScript.instance.ShowIndication();
         MainScript.instance.taskPanel.UpdateTask(currentTask);
         Debug.Log($"Ending mini-game: {ActiveMiniGame}");
@@ -83,6 +91,7 @@ public class MiniGameManager : MonoBehaviour
         ActiveMiniGame = MiniGameType.None;
         MainScript.instance.activeLevel.MiniGameEnded();
         MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
+        MainScript.instance.pnlInfo.ShowInfo("Mini game ended");
     }
 
     public void MiniGameStarter(MiniGameType miniGameType)
@@ -93,7 +102,6 @@ public class MiniGameManager : MonoBehaviour
     public void MiniGameEnded(MiniGameType miniGameType)
     {
 
-        Debug.Log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         //Debug.Log(miniGameType);
     }
     

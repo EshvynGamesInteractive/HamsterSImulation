@@ -8,5 +8,6 @@ public class KetchupBoxScript : Pickable
     {
         PickItem(player);
         teaCup.EnableForInteraction(true);
+        MainScript.instance.grandPa.StopTheChase();
     }
 }

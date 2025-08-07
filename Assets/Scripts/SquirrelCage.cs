@@ -15,6 +15,7 @@ public class SquirrelCage : Interactable
 
     private void OpenCageDoor()
     {
+        SoundManager.instance.PlaySound(SoundManager.instance.cageOpen);
         cageDoor.DOLocalRotate(new Vector3(0, 60, 0), 0.3f);
         squirrel.RunTowardsSlipper();
     }
