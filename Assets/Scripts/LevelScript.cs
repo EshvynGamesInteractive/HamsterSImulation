@@ -7,14 +7,20 @@ public abstract class LevelScript : MonoBehaviour
 
     protected GrandpaAI grandpa;
     protected PlayerScript player;
-   
 
-    protected void Start()
+    protected void OnEnable()
     {
         grandpa = MainScript.instance.grandPa;
         player = MainScript.instance.player;
-        //MainScript.instance.taskPanel.UpdateTask(tasks[0]);
     }
+
+
+    //protected void Start()
+    //{
+    //    grandpa = MainScript.instance.grandPa;
+    //    player = MainScript.instance.player;
+    //    //MainScript.instance.taskPanel.UpdateTask(tasks[0]);
+    //}
 
     public abstract void TaskCompleted(int taskNumber);
     public abstract void MiniGameEnded();

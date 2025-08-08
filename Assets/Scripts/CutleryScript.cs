@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class CutleryScript : Interactable
@@ -9,5 +10,8 @@ public class CutleryScript : Interactable
         MainScript.instance.activeLevel.TaskCompleted(3);
        
         player.PlayDogEatingAnim();
+
+
+    
     }
 }

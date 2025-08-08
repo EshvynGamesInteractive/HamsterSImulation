@@ -5,6 +5,7 @@ public abstract class Interactable : MonoBehaviour
 {
     public Transform indicationPoint;
     [SerializeField] private bool enableAtStart, showIndicationAtStart;
+    [SerializeField] GameObject glowingParticle;
     public bool isInteractable=true;
     //public GameObject indication;
     private Outline outline;
@@ -13,18 +14,24 @@ public abstract class Interactable : MonoBehaviour
     private void Awake()
     {
         outline = GetComponent<Outline>();
+        Debug.Log("Awake");
         if (enableAtStart)
         {
             EnableForInteraction(showIndicationAtStart);
         }
-        else
-        {
-            DisableForInteraction(true);
-        }
+        //else
+        //{
+        //    DisableForInteraction(true);
+        //}
     }
     public void EnableForInteraction(bool showIndication)
     {
         GetComponent<Collider>().enabled = true;
+        if (glowingParticle != null)
+        {
+            glowingParticle.SetActive(true);
+        }
+        ShowOutline();
         //if (indication != null && showIndication)
         //    indication.SetActive(true);
 
@@ -36,6 +43,11 @@ public abstract class Interactable : MonoBehaviour
 
     public void DisableForInteraction(bool enableCollider)
     {
+        HideOutline();
+        if (glowingParticle != null)
+        {
+            glowingParticle.SetActive(false);
+        }
         GetComponent<Collider>().enabled = enableCollider;
         //if (indication != null)
         //    indication.SetActive(false);

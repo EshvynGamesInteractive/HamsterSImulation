@@ -7,28 +7,39 @@ public class Level1Script : LevelScript
     [SerializeField] GameObject levelCompleteCutscene;
     [SerializeField] GameObject televisionTimeline, ketchupTimeline;
     [SerializeField] float tvTimelineDuration, ketchupTimelineDuration;
-    [SerializeField] GameObject tv;
     private bool watchingTV, drinkingTea;
-    [SerializeField] GameObject bucket;
+    [SerializeField] GameObject bucket, spilledWater;
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
-        TaskCompleted(MainScript.currentTaskNumber);
+        //base.Start();
+        //TaskCompleted(MainScript.currentTaskNumber);
         grandpa.StopTheChase();
         MainScript.instance.pnlInfo.ShowInfo("Player spawned");
+    }
+
+    private new void OnEnable()
+    {
+        base.OnEnable();
+        if (MainScript.currentTaskNumber < 0)
+            MainScript.currentTaskNumber = 0;
+      
+        DOVirtual.DelayedCall(1, () =>
+        {
+            TaskCompleted(MainScript.currentTaskNumber);
+        });
     }
 
     private void MakeGrandpaWatchTV()
     {
         watchingTV = true;
-        grandpa.MakeGrandpaSit(grandpaTvPos);
+        MainScript.instance.grandPa.MakeGrandpaSit(grandpaTvPos);
 
     }
     private void MakeGrandpaDrinkTea()
     {
         drinkingTea = true;
-        grandpa.MakeGrandpaSit(drinkTeaPos);
+        MainScript.instance.grandPa.MakeGrandpaSit(drinkTeaPos);
     }
 
 
@@ -45,22 +56,32 @@ public class Level1Script : LevelScript
         }
         else
         {
+            Debug.Log(taskNumber);
             if (taskNumber == 0)
+            {
                 bucket.GetComponent<Interactable>().EnableForInteraction(true);
+            }
             else
+            {
                 bucket.SetActive(false);
+                spilledWater.SetActive(false);
+            }
 
-            Debug.Log(items[taskNumber].name);
-            items[taskNumber].EnableForInteraction(true);
-            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+            float waitDuration = 1;
+
+            //Debug.Log(items[taskNumber].name);
+            //items[taskNumber].EnableForInteraction(true);
+            //MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
 
             if (taskNumber == 2)   //when bury book
-                MakeGrandpaWatchTV();
+                DOVirtual.DelayedCall(1, () => MakeGrandpaWatchTV());
             else
                 watchingTV = false;
 
             if (taskNumber == 3)    // when turn tv off
             {
+                Typewriter.instance.StartTyping("Hey! Who turned off my TV? I was watchin’ that! Dog? Was that you again? Come back here, you little rascal!", 2);
+                waitDuration = tvTimelineDuration;
                 televisionTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(tvTimelineDuration, () =>
@@ -76,12 +97,14 @@ public class Level1Script : LevelScript
             }
 
             if (taskNumber == 4)    // when toss blanket in tub
-                MakeGrandpaDrinkTea();
+                DOVirtual.DelayedCall(1, () => MakeGrandpaDrinkTea());
             else
-                drinkingTea = true;
+                drinkingTea = false;
 
             if (taskNumber == 5)    // pour ketchup
             {
+                Typewriter.instance.StartTyping("Blegh! What in tarnation—this ain’t tea! Who put ketchup in my cup?! Dog?!", 3);
+                waitDuration = ketchupTimelineDuration;
                 ketchupTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(ketchupTimelineDuration, () =>
@@ -97,7 +120,15 @@ public class Level1Script : LevelScript
             }
 
 
-            MainScript.currentTaskNumber = taskNumber;
+
+            DOVirtual.DelayedCall(waitDuration, () =>
+            {
+                Debug.Log(items[taskNumber].name);
+                items[taskNumber].EnableForInteraction(true);
+                MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                MainScript.currentTaskNumber = taskNumber;
+            });
+
         }
 
 
@@ -110,6 +141,8 @@ public class Level1Script : LevelScript
 
     public override void MiniGameEnded()
     {
+        //Debug.Log(drinkingTea);
+        //Debug.Log(watchingTV);
         if (drinkingTea)
             MakeGrandpaDrinkTea();
         if (watchingTV)

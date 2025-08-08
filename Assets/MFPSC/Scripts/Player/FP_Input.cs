@@ -4,7 +4,10 @@ public class FP_Input : MonoBehaviour
 {
     public bool UseMobileInput = true;
     public Inputs mobileInputs;
-
+    private void OnEnable()
+    {
+        //UseMobileInput = Application.platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer;
+    }
     public void ResetInputs()
     {
         if (mobileInputs.moveJoystick != null) mobileInputs.moveJoystick.ResetInput();

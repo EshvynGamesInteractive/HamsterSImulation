@@ -276,6 +276,10 @@ public class FP_Controller : MonoBehaviour
     {
         return surfaceTag;
     }
+    public void ForceJump()
+    {
+        DoTrampolineJump(5);
+    }
 }
 
 

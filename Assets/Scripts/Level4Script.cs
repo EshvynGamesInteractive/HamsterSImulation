@@ -14,19 +14,31 @@ public class Level4Script : LevelScript
     [SerializeField] GameObject squirrelCage;
 
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
+        //base.Start();
         DOVirtual.DelayedCall(1, () =>
             {
 
                 grandpa.MakeGrandpaSit(sitPos);
             });
 
-        TaskCompleted(MainScript.currentTaskNumber);
+        //TaskCompleted(MainScript.currentTaskNumber);
         grandpa.StopTheChase();
 
     }
+    private new void OnEnable()
+    {
+        base.OnEnable();
+        if (MainScript.currentTaskNumber < 0)
+            MainScript.currentTaskNumber = 0;
+
+        DOVirtual.DelayedCall(1, () =>
+        {
+            TaskCompleted(MainScript.currentTaskNumber);
+        });
+    }
+
     public override void TaskCompleted(int taskNumber)
     {
         if (taskNumber < MainScript.currentTaskNumber)
@@ -71,6 +83,7 @@ public class Level4Script : LevelScript
 
             if (taskNumber == 4)   // when scare hens
             {
+                Typewriter.instance.StartTyping("What’s all that cluckin’?! Dog, stop botherin’ the hens!", 4);
                 hensTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(hensTimelineDuration, () =>

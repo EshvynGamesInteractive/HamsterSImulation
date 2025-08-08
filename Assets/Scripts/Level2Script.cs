@@ -7,14 +7,25 @@ public class Level2Script : LevelScript
     [SerializeField] GameObject shutDoorTimeline, saltTimeline, toyThrowTimeline;
     [SerializeField] float shutDoorTimelineDuration, saltTimelineDuration, throwTimelineDuration;
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
-        TaskCompleted(MainScript.currentTaskNumber);
+        //base.Start();
+        //TaskCompleted(MainScript.currentTaskNumber);
         grandpa.StopTheChase();
         MainScript.instance.pnlInfo.ShowInfo("Player spawned");
     }
+    private new void OnEnable()
+    {
+        base.OnEnable();
 
+        if (MainScript.currentTaskNumber < 0)
+            MainScript.currentTaskNumber = 0;
+
+        DOVirtual.DelayedCall(1, () =>
+        {
+            TaskCompleted(MainScript.currentTaskNumber);
+        });
+    }
     //private void Awake()
     //{
     //    MainScript.instance.grandPa.gameObject.SetActive(false);
@@ -41,7 +52,8 @@ public class Level2Script : LevelScript
 
             if (taskNumber == 1)  //throw toy
             {
-                Debug.Log("ggggggggggggg");
+                Typewriter.instance.StartTyping("Oww! Hey! That hurt! Waaah!", 1);
+                
                 toyThrowTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(throwTimelineDuration, () =>
@@ -56,15 +68,15 @@ public class Level2Script : LevelScript
                 });
             }
 
-            if(taskNumber == 2) //when salt pour
+            if (taskNumber == 2) //when salt pour
             {
                 //saltTimeline.SetActive(true);
                 //player.DisablePlayer();
                 //DOVirtual.DelayedCall(saltTimelineDuration, () =>
                 //{
                 //saltTimeline.SetActive(false);
-                    //player.EnablePlayer();
-                    grandpa.ChasePlayerForDuration(30);
+                //player.EnablePlayer();
+                grandpa.ChasePlayerForDuration(30);
 
                 //});
             }
@@ -72,8 +84,9 @@ public class Level2Script : LevelScript
             {
                 grandpa.ChasePlayerForDuration(30);
             }
-                if (taskNumber == 4)    // when door shut
+            if (taskNumber == 4)    // when door shut
             {
+                Typewriter.instance.StartTyping("Waaah! We’re locked in! Somebody help!", 1);
                 shutDoorTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(shutDoorTimelineDuration, () =>
@@ -91,6 +104,6 @@ public class Level2Script : LevelScript
 
     public override void MiniGameEnded()
     {
-        throw new System.NotImplementedException();
+
     }
 }

@@ -11,6 +11,7 @@ public class TimelineScript : MonoBehaviour
         {
             itemsToHide[i].SetActive(false);
         }
+        MainScript.instance.HideIndication();
     }
 
 
@@ -20,5 +21,6 @@ public class TimelineScript : MonoBehaviour
         {
             itemsToHide[i].SetActive(true);
         }
+        MainScript.instance.ShowIndication();
     }
 }

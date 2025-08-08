@@ -35,7 +35,7 @@ public class CutsceneTrigger : MonoBehaviour
             placementPos.gameObject.SetActive(true);
 
             player.DisablePlayer();
-            Debug.Log(cutsceneTOPlay + "ssssssssssssssssssssssssssssssssssssssssssss");
+            //Debug.Log(cutsceneTOPlay + "ssssssssssssssssssssssssssssssssssssssssssss");
             cutsceneTOPlay.SetActive(true);
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
@@ -45,7 +45,10 @@ public class CutsceneTrigger : MonoBehaviour
                 placementPos.gameObject.SetActive(false);
 
                 if (taskNumber == -1)  // means no need to update task
+                {
+                    MainScript.instance.activeLevel.TaskCompleted(MainScript.currentTaskNumber);
                     return;
+                }
 
                 MainScript.instance.activeLevel.TaskCompleted(taskNumber);
 
@@ -53,8 +56,14 @@ public class CutsceneTrigger : MonoBehaviour
         }
     }
 
-   
 
 
-
+    private void OnEnable()
+    {
+        MainScript.instance.HideIndication();
+    }
+    private void OnDisable()
+    {
+        MainScript.instance.ShowIndication();
+    }
 }

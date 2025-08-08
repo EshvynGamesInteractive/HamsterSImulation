@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum MiniGameType
 {
@@ -9,7 +10,8 @@ public enum MiniGameType
     FridgeHeist,
     BubblePopBlitz,
     CushionTrampoline,
-    WallArtWhirl
+    WallArtWhirl,
+    BubblePopBlitzGround
 }
 
 public class MiniGameManager : MonoBehaviour
@@ -80,10 +82,7 @@ public class MiniGameManager : MonoBehaviour
             Debug.LogWarning("No mini-game is currently active!");
             return;
         }
-        for (int i = 0; i < miniGameTriggerZones.Length; i++)
-        {
-            miniGameTriggerZones[i].gameObject.SetActive(true);
-        }
+      
         SoundManager.instance.PlaySound(SoundManager.instance.timeOut);
         MainScript.instance.ShowIndication();
         MainScript.instance.taskPanel.UpdateTask(currentTask);
@@ -93,6 +92,15 @@ public class MiniGameManager : MonoBehaviour
         MainScript.instance.activeLevel.MiniGameEnded();
         MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
         MainScript.instance.pnlInfo.ShowInfo("Mini game ended");
+
+        DOVirtual.DelayedCall(5, () =>
+        {
+            for (int i = 0; i < miniGameTriggerZones.Length; i++)
+            {
+                miniGameTriggerZones[i].gameObject.SetActive(true);
+            }
+        });
+
     }
 
     public void MiniGameStarter(MiniGameType miniGameType)

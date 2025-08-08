@@ -11,7 +11,7 @@ public class TaskPanelScript : MonoBehaviour
     public void UpdateTask(string newTask)
     {
         if (txtTask.text == newTask) return;
-        Debug.Log("tassssssk");
+        //Debug.Log("tassssssk");
         SoundManager.instance.PlaySound(SoundManager.instance.taskComplete);
 
         //txtTask.text = newTask;

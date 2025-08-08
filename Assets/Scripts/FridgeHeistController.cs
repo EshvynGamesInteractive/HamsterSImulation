@@ -114,7 +114,7 @@ public class FridgeHeistController : MonoBehaviour
         if (Vector3.Distance(player.transform.position, exitPoint.position) < 1f 
             && player.pickedObject!=null && player.pickedObject.TryGetComponent<FoodItemScript>(out _ )  )
         {
-            Debug.Log("Success! You escaped with food!");
+            //Debug.Log("Success! You escaped with food!");
             EndHeist();
         }
         float speed = fP_Controller.controller.velocity.magnitude;
@@ -193,7 +193,7 @@ public class FridgeHeistController : MonoBehaviour
         if (movement != null)
             movement.ExitHeistMode();
         MainScript.instance.pnlInfo.ShowInfo("Heist completed");
-        Debug.Log("Heist completed successfully!");
+        //Debug.Log("Heist completed successfully!");
         MiniGameManager.Instance.EndMiniGame();
 
     }

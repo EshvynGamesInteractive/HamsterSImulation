@@ -27,7 +27,7 @@ public class GrandpaAI : MonoBehaviour
     private bool isChasing = false;
     private PlayerScript player;
     private bool playerHasThrown = false;
-    private Animator animator;
+    [SerializeField]private Animator animator;
     [Range(0, 180)]
     public float viewAngle = 180;
     bool stopWalking;
@@ -37,7 +37,6 @@ public class GrandpaAI : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
     }
 
     void Start()
@@ -157,8 +156,11 @@ public class GrandpaAI : MonoBehaviour
     public void StartPatrolOnFirstFloor()
     {
         Debug.Log("fitstFloor");
-        shouldCatchPlayer = true;
         waypoints = waypointsFirstFloor;
+        EnableWalking(true);
+        stopWalking = false;
+        agent.enabled = true;
+        shouldCatchPlayer = false;
     }
 
     public void StartPatrolOnGroundFloor()
@@ -312,10 +314,11 @@ public class GrandpaAI : MonoBehaviour
         agent.enabled = false;
         StopTheChase();
         animator.SetTrigger("Sit");
-        DOVirtual.DelayedCall(1, () =>
+        DOVirtual.DelayedCall(2, () =>
         {
-            animator.SetTrigger("Sit");
             EnableWalking(false);
+            stopWalking = true;
+            animator.SetTrigger("Sit");
         });
     }
 
@@ -334,7 +337,7 @@ public class GrandpaAI : MonoBehaviour
         if (faceMat != null) 
             faceMat.color = Color.red;
 
-
+        Typewriter.instance.StartTyping("Dang it! Slipped again?! This dog's gonna be the end of me!", 3);
         DOVirtual.DelayedCall(4, () => {
             angryEmote.Play();
         });

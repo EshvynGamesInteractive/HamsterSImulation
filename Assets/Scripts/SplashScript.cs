@@ -38,7 +38,9 @@ public class SplashScript : MonoBehaviour
 
         dog.DOScale(1, oneLetterTime);
         dog.GetComponent<Image>().DOFade(1, oneLetterTime);
-        dog.DOPunchScale(new Vector2(0.2f, 0.2f), 0.5f, 10, 10);
+        dog.DOPunchScale(new Vector2(0.2f, 0.2f), 1.5f, 4, 5).SetEase(Ease.Linear);
+        if (SoundManager.instance)
+            SoundManager.instance.PlaySound(SoundManager.instance.dogBark);
     }
 
 

@@ -7,6 +7,7 @@ public class BubblePopManager : MonoBehaviour
 {
     //public static BubblePopManager Instance { get; private set; }
 
+    [SerializeField] private MiniGameType miniGameType;
     [SerializeField] GameObject gameStartTrigger;
     [SerializeField] Material stinkyBubble, rubberDuck, shampooBottle, goldenBone;
     [Header("Mini‑Game Settings")]
@@ -48,7 +49,9 @@ public class BubblePopManager : MonoBehaviour
 
     private void OnMiniGameStarted(MiniGameType type)
     {
-        if (type != MiniGameType.BubblePopBlitz) return;
+        if (type != miniGameType) return;
+
+        MiniGameManager.Instance.bubbleLevel = this;
 
         MainScript.instance.taskPanel.UpdateTask("Pop as many bubbles as you can. Each gives points! But watch out for the stinky green ones!");
         StartCoroutine(

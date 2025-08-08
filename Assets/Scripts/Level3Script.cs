@@ -14,11 +14,22 @@ public class Level3Script : LevelScript
     {
         Invoke(nameof(GrandpaSitForDinner), 0.2f);
     }
-    private new void Start()
+    private void Start()
     {
-        base.Start();
-        TaskCompleted(MainScript.currentTaskNumber);
+        //base.Start();
+        //TaskCompleted(MainScript.currentTaskNumber);
         grandpa.StopTheChase();
+    }
+    private new void OnEnable()
+    {
+        base.OnEnable();
+        if (MainScript.currentTaskNumber < 0)
+            MainScript.currentTaskNumber = 0;
+
+        DOVirtual.DelayedCall(1, () =>
+        {
+            TaskCompleted(MainScript.currentTaskNumber);
+        });
     }
 
     private void GrandpaSitForDinner()
@@ -38,6 +49,7 @@ public class Level3Script : LevelScript
             player.DisablePlayer();
             DOVirtual.DelayedCall(balloonTimelineDuration, () =>
             {
+                Typewriter.instance.StartTyping("What the—!? Water on the floor?! Dog! I’m gonna slip and break somethin’!", 2);
                 balloonTimeline.SetActive(false);
                 player.EnablePlayer();
 
@@ -55,7 +67,7 @@ public class Level3Script : LevelScript
             items[taskNumber].EnableForInteraction(true);
             MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
 
-            if (taskNumber >1)
+            if (taskNumber >=1)
             {
                 tableCloth.SetActive(false);
                 //DOVirtual.DelayedCall(1, () =>
@@ -74,7 +86,11 @@ public class Level3Script : LevelScript
             if (taskNumber == 3)   // when licking cutlery
             {
                 grandpa.StopTheChase();
+                DOVirtual.DelayedCall(5, () =>
+                {
+                    grandpa.ChasePlayerForDuration(30);
 
+                });
             }
             MainScript.currentTaskNumber = taskNumber;
         }

@@ -51,7 +51,7 @@ public class PlayerScript : MonoBehaviour
 
     public void DisablePlayer()
     {
-        Debug.Log("disableeeeeeee");
+        //Debug.Log("disableeeeeeee");
         playerCanvas.SetActive(false);
         gameObject.SetActive(false);
         GetComponent<FP_Controller>().StopPlayerMovement();
@@ -59,7 +59,7 @@ public class PlayerScript : MonoBehaviour
 
     public void EnablePlayer()
     {
-        Debug.Log("aaa");
+        //Debug.Log("aaa");
         playerCanvas.SetActive(true);
         gameObject.SetActive(true);
         GetComponent<FP_Controller>().canControl = true;

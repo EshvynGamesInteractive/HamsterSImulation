@@ -13,6 +13,7 @@ public class LightSwitchScript : Interactable
         DisableForInteraction(false);
         switchBtn.DOLocalRotate(new Vector3(-10, 0, 0), 0.1f);
         SoundManager.instance.PlaySound(SoundManager.instance.lightSwitch);
+        player.GetComponent<FP_Controller>().ForceJump();
         if (!isFinalSwitch)
         {
             nextSwitch.EnableForInteraction(true);

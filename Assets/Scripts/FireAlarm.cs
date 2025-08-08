@@ -15,7 +15,7 @@ public class FireAlarm : Interactable
         bubbleEffect.Play();
         SoundManager.instance.PlaySound(SoundManager.instance.fireAlarm);
         DisableForInteraction(false);
-
+        player.GetComponent<FP_Controller>().ForceJump();
         MainScript.instance.activeLevel.TaskCompleted(6);
     }
 

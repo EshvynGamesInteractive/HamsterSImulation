@@ -11,6 +11,9 @@ public class WallArtGameController : MonoBehaviour
     [SerializeField] BoxCollider wallCanvas;
     [SerializeField] GameObject btnDraw;
     [SerializeField] Transform playerStartPos;
+    [SerializeField] Transform grandpaPosWithWall;
+    [SerializeField] GameObject stareWallCutscene;
+    [SerializeField] float cutsceneDuration;
     public float drawDistance = 3f;
     private Camera playerCamera;
     private PlayerScript player;
@@ -109,8 +112,21 @@ public class WallArtGameController : MonoBehaviour
         if (!MainScript.instance.gameover)
         {
             MainScript.instance.grandPa.StartPatrolOnGroundFloor();
+            GrandpaAI grandpaAI = MainScript.instance.grandPa;
+            //grandpaAI.gameObject.SetActive(false);
+            stareWallCutscene.SetActive(true);
+            grandpaAI.transform.SetPositionAndRotation(grandpaPosWithWall.position, grandpaPosWithWall.rotation);
 
-            gameStartTrigger.SetActive(true);
+
+            DOVirtual.DelayedCall(cutsceneDuration, () =>
+            {
+                stareWallCutscene.SetActive(false);
+
+
+                DOVirtual.DelayedCall(4, () => { grandpaAI.ChasePlayerForDuration(30); });
+            });
+
+            //gameStartTrigger.SetActive(true);
             //MainScript.instance.pnlInfo.ShowInfo("Art session over!");
             MiniGameManager.Instance.EndMiniGame();
         }
