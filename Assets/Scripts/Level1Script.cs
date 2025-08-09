@@ -72,7 +72,10 @@ public class Level1Script : LevelScript
             //Debug.Log(items[taskNumber].name);
             //items[taskNumber].EnableForInteraction(true);
             //MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
-
+            if(taskNumber == 1)
+            {
+                DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(30));
+            }
             if (taskNumber == 2)   //when bury book
                 DOVirtual.DelayedCall(1, () => MakeGrandpaWatchTV());
             else
@@ -111,7 +114,7 @@ public class Level1Script : LevelScript
                 {
                     ketchupTimeline.SetActive(false);
                     player.EnablePlayer();
-                    DOVirtual.DelayedCall(4, () =>
+                    DOVirtual.DelayedCall(3, () =>
                     {
                         grandpa.ChasePlayerForDuration(30);
                     });
@@ -123,7 +126,7 @@ public class Level1Script : LevelScript
 
             DOVirtual.DelayedCall(waitDuration, () =>
             {
-                Debug.Log(items[taskNumber].name);
+                //Debug.Log(items[taskNumber].name);
                 items[taskNumber].EnableForInteraction(true);
                 MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
                 MainScript.currentTaskNumber = taskNumber;

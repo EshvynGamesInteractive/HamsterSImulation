@@ -22,7 +22,7 @@ public class MainScript : MonoBehaviour
     public NavmeshPathDraw pathDraw;
     public static int currentTaskNumber;
     public static int decrementedNumber;
-    public bool openAdPopup = true;
+    public bool canShowRewardedPopup = true;
     private void Awake()
     {
         instance = this;
@@ -75,7 +75,6 @@ public class MainScript : MonoBehaviour
 
     public void SetIndicationPosition(Transform pos)
     {
-        Debug.Log(pos.name);
         ShowIndication();
         indication.transform.position = pos.position;
         if (pos.TryGetComponent<Interactable>(out Interactable interactable))
@@ -102,10 +101,7 @@ public class MainScript : MonoBehaviour
         if (indication != null)
             indication.SetActive(true);
     }
-    public void CloseTimerAd()
-    {
-        timerAd.StartPanelTimer();
-    }
+   
     public void PlayerCaught()
     {
         if (gameover)
@@ -139,7 +135,8 @@ public class MainScript : MonoBehaviour
 
     private void LevelCompleted()
     {
-        openAdPopup = false;
+
+        canShowRewardedPopup = false;
         if (GlobalValues.currentLevel == GlobalValues.UnlockedLevels)
             GlobalValues.UnlockedLevels++;
         GlobalValues.currentLevel++;
@@ -152,7 +149,7 @@ public class MainScript : MonoBehaviour
     }
     private void LevelFailed()
     {
-        openAdPopup = false;
+        canShowRewardedPopup = false;
         SoundManager.instance.PlaySound(SoundManager.instance.levelFail);
         OpenPopup(pnlLose);
         System.GC.Collect();
@@ -167,8 +164,8 @@ public class MainScript : MonoBehaviour
 
     public void OpenPopup(GameObject pnl)
     {
-        openAdPopup = false;
-        Debug.Log("opennnn");
+        canShowRewardedPopup = false;
+       
         Time.timeScale = 0.001f;
         pnl.SetActive(true);
         float animTime = 1;
@@ -190,7 +187,7 @@ public class MainScript : MonoBehaviour
 
     public void ClosePopup(GameObject pnl)
     {
-        openAdPopup = true;
+        canShowRewardedPopup = true;
         Time.timeScale = 1;
         float animTime = 1;
 

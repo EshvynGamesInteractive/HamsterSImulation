@@ -12,7 +12,8 @@ public class InfoPanelScript : MonoBehaviour
     {
         if (MainScript.instance.gameover)
             return;
-        txtInfo.text = info;
+        if (txtInfo != null)
+            txtInfo.text = info;
         infoPanel.DOAnchorPosY(100, 0.5f);
         infoPanel.DOAnchorPosY(50, 0.3f).SetDelay(0.6f);
         infoPanel.DOAnchorPosY(-2000, 0.3f).SetDelay(3);

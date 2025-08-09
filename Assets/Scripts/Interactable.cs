@@ -6,15 +6,17 @@ public abstract class Interactable : MonoBehaviour
     public Transform indicationPoint;
     [SerializeField] private bool enableAtStart, showIndicationAtStart;
     [SerializeField] GameObject glowingParticle;
-    public bool isInteractable=true;
+    public bool isInteractable = true;
     //public GameObject indication;
-    private Outline outline;
+    [SerializeField] private Outline outline;
     public abstract void Interact(PlayerScript player);
 
     private void Awake()
     {
-        outline = GetComponent<Outline>();
-        Debug.Log("Awake");
+        if (outline == null)
+            outline = TryGetComponent<Outline>(out var outl) ? outl : null;
+
+      
         if (enableAtStart)
         {
             EnableForInteraction(showIndicationAtStart);
@@ -27,10 +29,10 @@ public abstract class Interactable : MonoBehaviour
     public void EnableForInteraction(bool showIndication)
     {
         GetComponent<Collider>().enabled = true;
-        if (glowingParticle != null)
-        {
-            glowingParticle.SetActive(true);
-        }
+        //if (glowingParticle != null)
+        //{
+        //    glowingParticle.SetActive(true);
+        //}
         ShowOutline();
         //if (indication != null && showIndication)
         //    indication.SetActive(true);

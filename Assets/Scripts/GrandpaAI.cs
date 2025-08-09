@@ -20,24 +20,21 @@ public class GrandpaAI : MonoBehaviour
     public float reachThreshold = 0.5f;
     public float detectionRange = 10f;
     public float catchRange = 2.5f;
-    private NavMeshAgent agent;
+    [SerializeField] private NavMeshAgent agent;
     private int currentIndex = 0;
     private int direction = 1;
     private bool isWaiting = false;
     private bool isChasing = false;
     private PlayerScript player;
     private bool playerHasThrown = false;
-    [SerializeField]private Animator animator;
+    [SerializeField] private Animator animator;
     [Range(0, 180)]
     public float viewAngle = 180;
     bool stopWalking;
     private bool isChasingForDuration; // New: Track duration-based chase
     private float chaseTimer; // New: Timer for duration-based chase
 
-    private void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
+
 
     void Start()
     {
@@ -69,17 +66,19 @@ public class GrandpaAI : MonoBehaviour
             // ✅ Stop if Grandpa reaches the end point (like a door)
             if (chaseEndPoint != null && Vector3.Distance(transform.position, chaseEndPoint.position) <= chaseEndThreshold)
             {
-                chaseTimer = 0;
-                isChasingForDuration = false;
-                MoveToCurrentWaypoint();
+                StopTheChase();
+                //chaseTimer = 0;
+                //isChasingForDuration = false;
+                //MoveToCurrentWaypoint();
                 return;
             }
 
             // ✅ Stop if timer runs out
             if (chaseTimer <= 0)
             {
-                isChasingForDuration = false;
-                MoveToCurrentWaypoint();
+                StopTheChase();
+                //isChasingForDuration = false;
+                //MoveToCurrentWaypoint();
                 return;
             }
 
@@ -220,6 +219,8 @@ public class GrandpaAI : MonoBehaviour
         //    }
         //    EnableWalking(true);
         //}
+
+
         if (agent.enabled && agent.isOnNavMesh)
         {
             if (waypoints.Count > 0)
@@ -332,13 +333,14 @@ public class GrandpaAI : MonoBehaviour
         stopWalking = true;
         agent.enabled = false;
         GetComponent<Collider>().enabled = false;
-        MainScript.instance.activeLevel.TaskCompleted(1);
+        //MainScript.instance.activeLevel.TaskCompleted(1);
 
-        if (faceMat != null) 
+        if (faceMat != null)
             faceMat.color = Color.red;
 
         Typewriter.instance.StartTyping("Dang it! Slipped again?! This dog's gonna be the end of me!", 3);
-        DOVirtual.DelayedCall(4, () => {
+        DOVirtual.DelayedCall(4, () =>
+        {
             angryEmote.Play();
         });
 
@@ -353,8 +355,8 @@ public class GrandpaAI : MonoBehaviour
                 grandPaCamera.gameObject.SetActive(false);
                 player.EnablePlayer();
                 //StartTheChase();
-
-                ChasePlayerForDuration(30);
+                MainScript.instance.activeLevel.TaskCompleted(1);
+                //ChasePlayerForDuration(30);
             });
         });
     }
@@ -370,6 +372,9 @@ public class GrandpaAI : MonoBehaviour
 
     public void StopTheChase()
     {
+        Debug.Log("stopChase");
+        if (shouldCatchPlayer || isChasingForDuration)
+            MainScript.instance.pnlInfo.ShowInfo("Grandpa gave up the chase.");
         shouldCatchPlayer = false;
         chaseTimer = 0;
         isChasingForDuration = false;

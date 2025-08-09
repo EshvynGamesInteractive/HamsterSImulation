@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class WallArtGameController : MonoBehaviour
 {
+    [SerializeField] GameObject pnlWallColor;
     [SerializeField] private GameObject pawPrintPrefab;
     [SerializeField] private GameObject gameStartTrigger;
     [SerializeField] private Transform wallSurface;
@@ -13,7 +14,10 @@ public class WallArtGameController : MonoBehaviour
     [SerializeField] Transform playerStartPos;
     [SerializeField] Transform grandpaPosWithWall;
     [SerializeField] GameObject stareWallCutscene;
+    [SerializeField] Collider wallToColorCollider;
     [SerializeField] float cutsceneDuration;
+    [SerializeField] Transform wallCamera;
+  
     public float drawDistance = 3f;
     private Camera playerCamera;
     private PlayerScript player;
@@ -23,6 +27,8 @@ public class WallArtGameController : MonoBehaviour
 
     private void Start()
     {
+        
+        wallToColorCollider.enabled = false;
         player = MainScript.instance.player;
         playerCamera = player.playerCamera.GetComponent<Camera>();
     }
@@ -51,7 +57,7 @@ public class WallArtGameController : MonoBehaviour
         //            TryDrawAt(Input.GetTouch(0).position);
         //#endif
 
-        CheckWallDistance();
+        //CheckWallDistance();
 
         timer -= Time.deltaTime;
         UpdateTimerUI();
@@ -89,23 +95,39 @@ public class WallArtGameController : MonoBehaviour
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.WallArtWhirl) return;
+
+        pnlWallColor.SetActive(true);
+        if (!wallToColorCollider.gameObject.activeSelf)
+            wallToColorCollider.gameObject.SetActive(true);
+        wallToColorCollider.enabled=true;
         timerText.transform.parent.gameObject.SetActive(true);
         MainScript.instance.taskPanel.UpdateTask("Smudge the clean wall with your muddy paws. But beware, Grandpa checks in often");
 
         MainScript.instance.pnlInfo.ShowInfo("Make this wall your canvas");
-        wallCanvas.enabled = true;
+        //wallCanvas.enabled = true;
         MainScript.instance.grandPa.StartPatrolOnFirstFloor();
 
         isGameActive = true;
         timer = gameDuration;
 
-        player.transform.SetPositionAndRotation(playerStartPos.position, playerStartPos.rotation);
+        
+        wallCamera.gameObject.SetActive(true);
+        wallCamera.position = playerCamera.transform.position;
+        wallCamera.rotation = playerCamera.transform.rotation;
 
-        player.ShowAndHideDog(2);
+        wallCamera.DOLocalMove(Vector3.zero, 0.5f);
+        wallCamera.DOLocalRotate(Vector3.zero, 0.5f);
+
+        player.transform.SetPositionAndRotation(playerStartPos.position, playerStartPos.rotation);
+        player.DisablePlayer();
+
+        //player.ShowAndHideDog(2);
     }
 
     private void EndMiniGame()
     {
+        pnlWallColor.SetActive(false);
+        wallToColorCollider.enabled = false;
         timerText.transform.parent.gameObject.SetActive(false);
         wallCanvas.enabled = false;
         isGameActive = false;
@@ -117,7 +139,7 @@ public class WallArtGameController : MonoBehaviour
             stareWallCutscene.SetActive(true);
             grandpaAI.transform.SetPositionAndRotation(grandpaPosWithWall.position, grandpaPosWithWall.rotation);
 
-
+            Typewriter.instance.StartTyping("What in the world… is that a paw-painting?! Dog! This wall was clean yesterday!", 2);
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
                 stareWallCutscene.SetActive(false);
@@ -130,6 +152,14 @@ public class WallArtGameController : MonoBehaviour
             //MainScript.instance.pnlInfo.ShowInfo("Art session over!");
             MiniGameManager.Instance.EndMiniGame();
         }
+
+        wallCamera.DOMove(playerCamera.transform.position, 0.5f);
+        wallCamera.DORotate(playerCamera.transform.eulerAngles, 0.5f).OnComplete(() =>
+        {
+            wallCamera.gameObject.SetActive(false);
+            player.EnablePlayer();
+        });
+
         btnDraw.SetActive(false);
     }
 

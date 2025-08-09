@@ -239,14 +239,14 @@ public class GrandpaPeekController : MonoBehaviour
         playerCaught = false;
         isLooking = true;
         timer = 0f;
-        Debug.Log("Grandpa started watching permanently.");
+        //Debug.Log("Grandpa started watching permanently.");
     }
 
 
     private void StopLooking()
     {
         isLooking = false;
-        Debug.Log("Grandpa stopped watching");
+        //Debug.Log("Grandpa stopped watching");
     }
 
     private void MoveLookTarget()

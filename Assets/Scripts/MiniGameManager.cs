@@ -58,13 +58,13 @@ public class MiniGameManager : MonoBehaviour
             Debug.LogWarning("A mini-game is already active!");
             return;
         }
-
+        MainScript.instance.canShowRewardedPopup = false;
         MainScript.instance.HideIndication();
 
         currentTask = MainScript.instance.taskPanel.GetCurrentTask();
 
         ActiveMiniGame = type;
-        Debug.Log($"Starting mini-game: {type}");
+        //Debug.Log($"Starting mini-game: {type}");
         OnMiniGameStart?.Invoke(type);
         for (int i = 0; i < miniGameTriggerZones.Length; i++)
         {
@@ -82,7 +82,7 @@ public class MiniGameManager : MonoBehaviour
             Debug.LogWarning("No mini-game is currently active!");
             return;
         }
-      
+        MainScript.instance.canShowRewardedPopup = true;
         SoundManager.instance.PlaySound(SoundManager.instance.timeOut);
         MainScript.instance.ShowIndication();
         MainScript.instance.taskPanel.UpdateTask(currentTask);
@@ -106,11 +106,14 @@ public class MiniGameManager : MonoBehaviour
     public void MiniGameStarter(MiniGameType miniGameType)
     {
         //Debug.Log(miniGameType);
+
+
+        //Debug.Log("minigamestarted");
     }
     
     public void MiniGameEnded(MiniGameType miniGameType)
     {
-
+        //Debug.Log("ended");
         //Debug.Log(miniGameType);
     }
     
