@@ -213,6 +213,11 @@ public class FirebaseRemoteConfig : MonoBehaviour
                 .DefaultInstance
                 .GetValue("adPriority").DoubleValue;
             
+            if (GlobalConstant.isLogger) print("2");
+            GlobalConstant.UseAdBidding = Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("UseAdBidding").BooleanValue;
+            
 
             if (GlobalConstant.isLogger) print("1");
             if (GlobalConstant.isLogger)

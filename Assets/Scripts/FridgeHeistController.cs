@@ -190,6 +190,7 @@ public class FridgeHeistController : MonoBehaviour
         heistActive = true;
         player.PlayereRevived();
         MainScript.instance.pnlInfo.ShowInfo("Grandpa will not catch you now");
+        MainScript.instance.CloseFailPopup();
     }
 
 

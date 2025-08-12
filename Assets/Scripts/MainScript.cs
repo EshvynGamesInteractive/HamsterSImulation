@@ -205,6 +205,10 @@ public class MainScript : MonoBehaviour
         pnl.GetComponent<Image>().DOFade(0, animTime).SetUpdate(true).OnComplete(() => { pnl.SetActive(false); });
     }
 
+    public void CloseFailPopup()
+    {
+        ClosePopup((pnlLose));
+    }
     public void OnBtnRetry()
     {
         if (Nicko_ADSManager._Instance)

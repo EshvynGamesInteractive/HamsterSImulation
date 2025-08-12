@@ -13,77 +13,77 @@ using UnityEngine.SceneManagement;
 
 public class Nicko_Admob : MonoBehaviour
 {
- [HideInInspector] private string outputMessage = "";
+    [HideInInspector] private string outputMessage = "";
 
 // Ad Unit IDs (Different types of banners and ads)
-public string LowBannerID,
-              bannerIDMed,
-              bannerIDHigh,
-              interstitialID,
-              InterMediumFloorID,
-              InterHighFloorID,
-              rewardedIDHigh,
-              rewardedIDMed,
-              rewardedIDLow,
-              appOpenIDHigh,
-              appOpenIDMed,
-              appOpenIDLow,
-              appId,
-              rectbannerID;
+    public string LowBannerID,
+        bannerIDMed,
+        bannerIDHigh,
+        interstitialID,
+        InterMediumFloorID,
+        InterHighFloorID,
+        rewardedIDHigh,
+        rewardedIDMed,
+        rewardedIDLow,
+        appOpenIDHigh,
+        appOpenIDMed,
+        appOpenIDLow,
+        appId,
+        rectbannerID;
 
 // Flags and Variables for Ads
-public static bool isInterstialAdPresent = false;
+    public static bool isInterstialAdPresent = false;
 
-[HideInInspector]
-public enum RequestFloorType
-{
-    High,
-    Medium, // Fixed typo here
-    Simple,
-    Failed
-}
+    [HideInInspector]
+    public enum RequestFloorType
+    {
+        High,
+        Medium, // Fixed typo here
+        Simple,
+        Failed
+    }
 
 // Floor type, size, and position
-[HideInInspector] public RequestFloorType FloorType;
-[HideInInspector] public BannerSize RectbannerSize;
+    [HideInInspector] public RequestFloorType FloorType;
+    [HideInInspector] public BannerSize RectbannerSize;
 
-private AdPosition adPosition;
-private AdPosition adPositionRect;
-private AdSize adSize;
+    private AdPosition adPosition;
+    private AdPosition adPositionRect;
+    private AdSize adSize;
 
-private AdSize adSizeRect;
-private readonly TimeSpan APPOPEN_TIMEOUT = TimeSpan.FromHours(4);
-private DateTime appOpenExpireTime;
-private AppOpenAd appOpenAd;
+    private AdSize adSizeRect;
+    private readonly TimeSpan APPOPEN_TIMEOUT = TimeSpan.FromHours(4);
+    private DateTime appOpenExpireTime;
+    private AppOpenAd appOpenAd;
 
 // Ad instances for banners and other ads
-private BannerView leftBannerView;
-private BannerView rightBannerView;
-private BannerView RectbannerView;
-private InterstitialAd interstitialAd;
-private RewardedAd rewardedAd;
-private RewardedInterstitialAd rewardedInterstitialAd;
+    private BannerView leftBannerView;
+    private BannerView rightBannerView;
+    private BannerView RectbannerView;
+    private InterstitialAd interstitialAd;
+    private RewardedAd rewardedAd;
+    private RewardedInterstitialAd rewardedInterstitialAd;
 
 // Other ad-related variables
-private float deltaTime;
+    private float deltaTime;
 
 // Unity events for Ad Callbacks
-[HideInInspector] public UnityEvent OnAdLoadedEvent;
-[HideInInspector] public UnityEvent OnAdFailedToLoadEvent;
-[HideInInspector] public UnityEvent OnAdOpeningEvent;
-[HideInInspector] public UnityEvent OnAdFailedToShowEvent;
-[HideInInspector] public UnityEvent OnUserEarnedRewardEvent;
-[HideInInspector] public UnityEvent OnAdClosedEvent;
+    [HideInInspector] public UnityEvent OnAdLoadedEvent;
+    [HideInInspector] public UnityEvent OnAdFailedToLoadEvent;
+    [HideInInspector] public UnityEvent OnAdOpeningEvent;
+    [HideInInspector] public UnityEvent OnAdFailedToShowEvent;
+    [HideInInspector] public UnityEvent OnUserEarnedRewardEvent;
+    [HideInInspector] public UnityEvent OnAdClosedEvent;
 
 // Admob initialization status
-public bool isAdmobInitialized;
+    public bool isAdmobInitialized;
 
 // Banner Position and Size for different types of banners
-public BannerPosition leftBannerPosition;
-public BannerPosition rightBannerPosition;
-[HideInInspector] public BannerSize leftBannerSize;
-[HideInInspector] public BannerPosition rectbannerPosition;
-[HideInInspector] public BannerSize rightBannerSize;
+    public BannerPosition leftBannerPosition;
+    public BannerPosition rightBannerPosition;
+    [HideInInspector] public BannerSize leftBannerSize;
+    [HideInInspector] public BannerPosition rectbannerPosition;
+    [HideInInspector] public BannerSize rightBannerSize;
 
     public void Initialize()
     {
@@ -285,13 +285,10 @@ public BannerPosition rightBannerPosition;
         RequestAndLoadRewardedAd();
         RequestRightBannerAd();
         RequestRecBannerAd();
-        
-        
-        
-       
+
 
         isAdmobInitialized = true;
-        
+
         DOVirtual.DelayedCall(2, () => Application.targetFrameRate = -1);
     }
 
@@ -540,27 +537,24 @@ public BannerPosition rightBannerPosition;
         {
             Nicko_ADSManager._Instance.HideRecBannerAppOpen();
             Nicko_ADSManager._Instance.HideBanner();
-            
-            
-            
-            
         }
 
         appOpenAd.Show();
     }
 
     #endregion
-#region Right BANNER ADS
 
-public RequestFloorType rightBannerAdRequestFloorType;
+    #region Right BANNER ADS
 
-public void RequestRightBannerAd()
-{
-    Debug.Log("Requesting Right banner ad.");
-    string adUnitId = bannerIDMed;
+    public RequestFloorType rightBannerAdRequestFloorType;
+
+    public void RequestRightBannerAd()
+    {
+        Debug.Log("Requesting Right banner ad.");
+        string adUnitId = bannerIDMed;
 
 #if UNITY_EDITOR
-    adUnitId = "unused";
+        adUnitId = "unused";
 #elif UNITY_ANDROID
     adUnitId = bannerIDMed;
 #elif UNITY_IPHONE
@@ -569,99 +563,98 @@ public void RequestRightBannerAd()
     adUnitId = "unexpected_platform";
 #endif
 
-    if (rightBannerView != null)
-    {
-        rightBannerView.Destroy();
-    }
-
-    // ✅ Ad Position is now configurable
-    // AdPosition adPosition = AdPosition.TopRight; // Change as needed
-
-    rightBannerView = new BannerView(adUnitId, AdSize.Banner, adPosition);
-
-    rightBannerView.OnBannerAdLoaded += () =>
-    {
-        PrintStatus("Right banner ad loaded.");
-        OnAdLoadedEvent.Invoke();
-    };
-
-    rightBannerView.OnBannerAdLoadFailed += (LoadAdError error) =>
-    {
-        PrintStatus("Right banner ad failed to load with error: " + error.GetMessage());
-        OnAdFailedToLoadEvent.Invoke();
-
-        if (GlobalConstant.UseAdBidding)
+        if (rightBannerView != null)
         {
-            // ✅ Prevents infinite recursion by clamping the request floor type
-          
+            rightBannerView.Destroy();
         }
-    };
 
-    rightBannerView.OnAdImpressionRecorded += () => { PrintStatus("Right banner ad recorded an impression."); };
-    rightBannerView.OnAdClicked += () => { PrintStatus("Right banner ad recorded a click."); };
-    rightBannerView.OnAdFullScreenContentOpened += () =>
-    {
-        PrintStatus("Right banner ad opening.");
-        OnAdOpeningEvent.Invoke();
-    };
+        // ✅ Ad Position is now configurable
+        // AdPosition adPosition = AdPosition.TopRight; // Change as needed
 
-    rightBannerView.OnAdFullScreenContentClosed += () =>
-    {
-        PrintStatus("Right banner ad closed.");
-        OnAdClosedEvent.Invoke();
-        if (GlobalConstant.UseAdBidding)
-            rightBannerAdRequestFloorType = RequestFloorType.High;
-        DOVirtual.DelayedCall(1, RequestRightBannerAd);
-    };
+        rightBannerView = new BannerView(adUnitId, AdSize.Banner, adPosition);
 
-    rightBannerView.OnAdPaid += (AdValue adValue) =>
-    {
-        Debug.Log($"Right banner view paid {adValue.Value} {adValue.CurrencyCode}.");
-        Nicko_AnalyticalManager.instance?.Revenue_ReportAdmob(adValue, "Banner");
-    };
+        rightBannerView.OnBannerAdLoaded += () =>
+        {
+            PrintStatus("Right banner ad loaded.");
+            OnAdLoadedEvent.Invoke();
+        };
 
-    rightBannerView.LoadAd(CreateAdRequest());
-    HideRightBanner();
-}
+        rightBannerView.OnBannerAdLoadFailed += (LoadAdError error) =>
+        {
+            PrintStatus("Right banner ad failed to load with error: " + error.GetMessage());
+            OnAdFailedToLoadEvent.Invoke();
 
-public void HideRightBanner()
-{
-    if (rightBannerView != null)
-    {
-        rightBannerView.Hide();
+            if (GlobalConstant.UseAdBidding)
+            {
+                // ✅ Prevents infinite recursion by clamping the request floor type
+            }
+        };
+
+        rightBannerView.OnAdImpressionRecorded += () => { PrintStatus("Right banner ad recorded an impression."); };
+        rightBannerView.OnAdClicked += () => { PrintStatus("Right banner ad recorded a click."); };
+        rightBannerView.OnAdFullScreenContentOpened += () =>
+        {
+            PrintStatus("Right banner ad opening.");
+            OnAdOpeningEvent.Invoke();
+        };
+
+        rightBannerView.OnAdFullScreenContentClosed += () =>
+        {
+            PrintStatus("Right banner ad closed.");
+            OnAdClosedEvent.Invoke();
+            if (GlobalConstant.UseAdBidding)
+                rightBannerAdRequestFloorType = RequestFloorType.High;
+            DOVirtual.DelayedCall(1, RequestRightBannerAd);
+        };
+
+        rightBannerView.OnAdPaid += (AdValue adValue) =>
+        {
+            Debug.Log($"Right banner view paid {adValue.Value} {adValue.CurrencyCode}.");
+            Nicko_AnalyticalManager.instance?.Revenue_ReportAdmob(adValue, "Banner");
+        };
+
+        rightBannerView.LoadAd(CreateAdRequest());
+        HideRightBanner();
     }
-}
 
-public void ShowRightBanner()
-{
-    if (!GlobalConstant.AdsON)
+    public void HideRightBanner()
     {
-        return;
+        if (rightBannerView != null)
+        {
+            rightBannerView.Hide();
+        }
     }
 
-    if (rightBannerView != null)
+    public void ShowRightBanner()
     {
-        rightBannerView.Show();
+        if (!GlobalConstant.AdsON)
+        {
+            return;
+        }
+
+        if (rightBannerView != null)
+        {
+            rightBannerView.Show();
+        }
+        else
+        {
+            RequestRightBannerAd();
+        }
     }
-    else
+
+    #endregion
+
+    #region Left BANNER ADS
+
+    public RequestFloorType leftBannerAdRequestFloorType;
+
+    public void RequestLeftBannerAd()
     {
-        RequestRightBannerAd();
-    }
-}
-
-#endregion
-
-#region Left BANNER ADS
-
-public RequestFloorType leftBannerAdRequestFloorType;
-
-public void RequestLeftBannerAd()
-{
-    Debug.Log("Requesting Left banner ad.");
-    string adUnitId = bannerIDHigh;
+        Debug.Log("Requesting Left banner ad.");
+        string adUnitId = bannerIDHigh;
 
 #if UNITY_EDITOR
-    adUnitId = "unused";
+        adUnitId = "unused";
 #elif UNITY_ANDROID
     adUnitId = bannerIDHigh;
 #elif UNITY_IPHONE
@@ -670,83 +663,83 @@ public void RequestLeftBannerAd()
     adUnitId = "unexpected_platform";
 #endif
 
-    if (leftBannerView != null)
-    {
-        leftBannerView.Destroy();
+        if (leftBannerView != null)
+        {
+            leftBannerView.Destroy();
+        }
+
+        // ✅ Ad Position is now configurable
+        AdPosition _adPosition = AdPosition.TopLeft; // Change as needed
+
+        leftBannerView = new BannerView(adUnitId, AdSize.Banner, _adPosition);
+
+        leftBannerView.OnBannerAdLoaded += () =>
+        {
+            PrintStatus("Left banner ad loaded.");
+            OnAdLoadedEvent.Invoke();
+        };
+
+        leftBannerView.OnBannerAdLoadFailed += (LoadAdError error) =>
+        {
+            PrintStatus("Left banner ad failed to load with error: " + error.GetMessage());
+            OnAdFailedToLoadEvent.Invoke();
+
+            // ✅ Prevents infinite recursion by clamping the request floor type
+        };
+
+        leftBannerView.OnAdImpressionRecorded += () => { PrintStatus("Left banner ad recorded an impression."); };
+        leftBannerView.OnAdClicked += () => { PrintStatus("Left banner ad recorded a click."); };
+        leftBannerView.OnAdFullScreenContentOpened += () =>
+        {
+            PrintStatus("Left banner ad opening.");
+            OnAdOpeningEvent.Invoke();
+        };
+
+        leftBannerView.OnAdFullScreenContentClosed += () =>
+        {
+            PrintStatus("Left banner ad closed.");
+            OnAdClosedEvent.Invoke();
+
+            DOVirtual.DelayedCall(1, RequestLeftBannerAd);
+        };
+
+        leftBannerView.OnAdPaid += (AdValue adValue) =>
+        {
+            Debug.Log($"Left banner view paid {adValue.Value} {adValue.CurrencyCode}.");
+            Nicko_AnalyticalManager.instance?.Revenue_ReportAdmob(adValue, "Banner");
+        };
+
+        leftBannerView.LoadAd(CreateAdRequest());
+        HideLeftBanner();
     }
 
-    // ✅ Ad Position is now configurable
-    AdPosition _adPosition = AdPosition.TopLeft; // Change as needed
-
-    leftBannerView = new BannerView(adUnitId, AdSize.Banner, _adPosition);
-
-    leftBannerView.OnBannerAdLoaded += () =>
+    public void HideLeftBanner()
     {
-        PrintStatus("Left banner ad loaded.");
-        OnAdLoadedEvent.Invoke();
-    };
-
-    leftBannerView.OnBannerAdLoadFailed += (LoadAdError error) =>
-    {
-        PrintStatus("Left banner ad failed to load with error: " + error.GetMessage());
-        OnAdFailedToLoadEvent.Invoke();
-
-        // ✅ Prevents infinite recursion by clamping the request floor type
-         
-    };
-
-    leftBannerView.OnAdImpressionRecorded += () => { PrintStatus("Left banner ad recorded an impression."); };
-    leftBannerView.OnAdClicked += () => { PrintStatus("Left banner ad recorded a click."); };
-    leftBannerView.OnAdFullScreenContentOpened += () =>
-    {
-        PrintStatus("Left banner ad opening.");
-        OnAdOpeningEvent.Invoke();
-    };
-
-    leftBannerView.OnAdFullScreenContentClosed += () =>
-    {
-        PrintStatus("Left banner ad closed.");
-        OnAdClosedEvent.Invoke();
-
-        DOVirtual.DelayedCall(1, RequestLeftBannerAd);
-    };
-
-    leftBannerView.OnAdPaid += (AdValue adValue) =>
-    {
-        Debug.Log($"Left banner view paid {adValue.Value} {adValue.CurrencyCode}.");
-        Nicko_AnalyticalManager.instance?.Revenue_ReportAdmob(adValue, "Banner");
-    };
-
-    leftBannerView.LoadAd(CreateAdRequest());
-    HideLeftBanner();
-}
-
-public void HideLeftBanner()
-{
-    if (leftBannerView != null)
-    {
-        leftBannerView.Hide();
-    }
-}
-
-public void ShowLeftBanner()
-{
-    if (!GlobalConstant.AdsON)
-    {
-        return;
+        if (leftBannerView != null)
+        {
+            leftBannerView.Hide();
+        }
     }
 
-    if (leftBannerView != null)
+    public void ShowLeftBanner()
     {
-        leftBannerView.Show();
-    }
-    else
-    {
-        RequestLeftBannerAd();
-    }
-}
+        if (!GlobalConstant.AdsON)
+        {
+            return;
+        }
 
-#endregion
+        if (leftBannerView != null)
+        {
+            leftBannerView.Show();
+        }
+        else
+        {
+            RequestLeftBannerAd();
+        }
+    }
+
+    #endregion
+
     #region REC BANNER ADS
 
     public RequestFloorType RECbannerAdRequestFloorType;
@@ -786,7 +779,7 @@ public void ShowLeftBanner()
             PrintStatus("Banner ad failed to load with error: " + error.GetMessage());
             OnAdFailedToLoadEvent.Invoke();
 
-          
+
             Nicko_ADSManager._Instance._isRecBannerReady = false;
         };
 
@@ -1112,6 +1105,7 @@ public void ShowLeftBanner()
 
                 return;
             }
+
             PrintStatus("Rewarded ad loaded.");
             rewardedAd = ad;
 
