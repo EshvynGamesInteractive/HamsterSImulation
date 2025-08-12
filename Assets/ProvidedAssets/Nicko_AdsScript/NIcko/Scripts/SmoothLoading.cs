@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System;
+using System.Collections;
 
 /// <summary>
 /// Script which animates progress bar in the UI with current loading bar process.
@@ -10,24 +11,29 @@ using System;
 /// </summary>
 public class SmoothLoading : MonoBehaviour
 {
+    [SerializeField] RectTransform[] letters;
+    [SerializeField] float oneLetterTime = 0.5f;
+    [SerializeField] float letterScale = 1.5f;
+    [SerializeField] RectTransform dog;
+
+
     // Reference to the load operation.
     private AsyncOperation loadOperation;
 
     // Reference to the progress bar in the UI.
-    [SerializeField]
-    private Image progressBar;
+    [SerializeField] private Image progressBar;
 
     // Progress values.
     private float currentValue;
     private float targetValue;
 
     // Multiplier for progress animation speed.
-    [SerializeField]
-    [Range(0, 1)]
-    private float progressAnimationMultiplier = 0.25f;
+    [SerializeField] [Range(0, 1)] private float progressAnimationMultiplier = 0.25f;
+
     //public int sceneNum=1;
     public RectTransform rotatingImg;
     public RectTransform bg;
+
     /// <summary>
     /// Unity method called once at the start.
     /// Used here to start the loading progress.
@@ -39,12 +45,78 @@ public class SmoothLoading : MonoBehaviour
         //EmptyLoading();
     }
 
+    private void Start()
+    {
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowBanner("GameStart");
+    }
+
     public GameObject animationPoint;
+
     private void OnEnable()
     {
+        if (Nicko_ADSManager._Instance)
+
+            Nicko_ADSManager._Instance.ShowBanner("LoadingStart");
+        StartCoroutine(TitleAnimation());
         // Set 0 for progress values.
         progressBar.fillAmount = currentValue = targetValue = 0;
+        if (Nicko_ADSManager._Instance)
+
+            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
     }
+
+    private void OnDisable()
+    {
+        if (Nicko_ADSManager._Instance)
+
+            Nicko_ADSManager._Instance.HideRecBanner();
+    }
+
+    private IEnumerator TitleAnimation()
+    {
+        dog.localScale = Vector3.one * letterScale;
+        dog.GetComponent<Image>().DOFade(0, 0);
+
+
+        foreach (var letter in letters)
+        {
+            letter.localScale = Vector3.one * letterScale;
+            letter.GetComponent<Image>().DOFade(0, 0);
+        }
+
+        foreach (var letter in letters)
+        {
+            letter.localScale = Vector3.one * letterScale;
+            letter.GetComponent<Image>().DOFade(1, oneLetterTime);
+            letter.DOScale(Vector3.one, oneLetterTime);
+            yield return new WaitForSeconds(oneLetterTime);
+        }
+
+        dog.DOScale(1, oneLetterTime);
+        dog.GetComponent<Image>().DOFade(1, oneLetterTime);
+        dog.DOPunchScale(new Vector2(0.2f, 0.2f), 1.5f, 4, 5).SetEase(Ease.Linear);
+        if (SoundManager.instance)
+            SoundManager.instance.PlaySound(SoundManager.instance.dogBark);
+    }
+
+    public void StartLoading(string sceneNum)
+    {
+        CanvasScriptSplash.instance.ChangeCanvas(CanvasStats.Loading);
+        //gameObject.SetActive(true);
+        // Load the next scene.
+        //var currentScene = SceneManager.GetActiveScene();
+        bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce);
+        loadOperation = SceneManager.LoadSceneAsync(sceneNum);
+
+        // Don't active the scene when it's fully loaded, let the progress bar finish the animation.
+        // With this flag set, progress will stop at 0.9f.
+        loadOperation.allowSceneActivation = false;
+
+        //AdsManager.Instance.HideBanner();
+        isLoading = true;
+    }
+
     public void StartLoading(int sceneNum)
     {
         CanvasScriptSplash.instance.ChangeCanvas(CanvasStats.Loading);
@@ -53,7 +125,7 @@ public class SmoothLoading : MonoBehaviour
         //var currentScene = SceneManager.GetActiveScene();
         bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce);
         loadOperation = SceneManager.LoadSceneAsync(sceneNum);
-        
+
         // Don't active the scene when it's fully loaded, let the progress bar finish the animation.
         // With this flag set, progress will stop at 0.9f.
         loadOperation.allowSceneActivation = false;
@@ -61,15 +133,17 @@ public class SmoothLoading : MonoBehaviour
         //AdsManager.Instance.HideBanner();
         isLoading = true;
     }
+
     public void UnloadScene(int sceneNum)
     {
         SceneManager.UnloadSceneAsync(sceneNum);
         isLoading = true;
     }
+
     public void RestartScene(int sceneNum)
     {
         if (SceneManager.GetSceneByBuildIndex(sceneNum).isLoaded)
-        { 
+        {
             SceneManager.UnloadSceneAsync(sceneNum).completed += (AsyncOperation op) =>
             {
                 // Reload the scene additively after it's unloaded
@@ -88,7 +162,9 @@ public class SmoothLoading : MonoBehaviour
             Debug.LogWarning($"Scene 1 is not currently loaded!");
         }
     }
+
     Action callback = null;
+
     public void EmptyLoading(Action callBack)
     {
         CanvasScriptSplash.instance.ChangeCanvas(CanvasStats.Loading);
@@ -97,6 +173,7 @@ public class SmoothLoading : MonoBehaviour
         isLoading = true;
         callback = callBack;
     }
+
     /// <summary>
     /// Unity method called every frame.
     /// Used here to animate progress bar.
@@ -113,7 +190,7 @@ public class SmoothLoading : MonoBehaviour
         }
         else
             targetValue = 1;
- 
+
         currentValue = Mathf.MoveTowards(currentValue, targetValue, progressAnimationMultiplier * Time.deltaTime);
         progressBar.fillAmount = currentValue;
         MoveImageAlongLoadingBar();
@@ -125,15 +202,17 @@ public class SmoothLoading : MonoBehaviour
                 loadOperation.allowSceneActivation = true;
                 loadOperation = null;
             }
+
             isLoading = false;
             ShutLoading();
             targetValue = 0;
             Debug.Log("Loading Complete");
-           // gameObject.SetActive(false);
+            // gameObject.SetActive(false);
         }
     }
 
     public GameObject animationOutPoint;
+
     void ShutLoading()
     {
         bg.DOAnchorPos(new Vector3(0, 1450, 0), 0.5f).SetEase(Ease.InBounce).OnComplete(() =>
@@ -143,6 +222,7 @@ public class SmoothLoading : MonoBehaviour
             callback = null;
         });
     }
+
     private void MoveImageAlongLoadingBar()
     {
         // Get the width of the loading bar

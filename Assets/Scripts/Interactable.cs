@@ -6,6 +6,7 @@ public abstract class Interactable : MonoBehaviour
     public Transform indicationPoint;
     [SerializeField] private bool enableAtStart, showIndicationAtStart;
     [SerializeField] GameObject glowingParticle;
+    public string interactionText="Interact";
     public bool isInteractable = true;
     //public GameObject indication;
     [SerializeField] private Outline outline;
@@ -33,12 +34,15 @@ public abstract class Interactable : MonoBehaviour
         //{
         //    glowingParticle.SetActive(true);
         //}
-        ShowOutline();
+       
         //if (indication != null && showIndication)
         //    indication.SetActive(true);
 
         if (showIndication)
+        {
+            ShowOutline();
             MainScript.instance.SetIndicationPosition(transform);
+        }
 
         isInteractable = true;
     }

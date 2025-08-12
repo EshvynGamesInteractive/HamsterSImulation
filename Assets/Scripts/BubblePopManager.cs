@@ -10,6 +10,7 @@ public class BubblePopManager : MonoBehaviour
     [SerializeField] private MiniGameType miniGameType;
     [SerializeField] GameObject gameStartTrigger;
     [SerializeField] Material stinkyBubble, rubberDuck, shampooBottle, goldenBone;
+    [SerializeField] Transform playerEndPos;
     [Header("Mini‑Game Settings")]
     public GameObject bubbleCam;
     public GameObject bubblePrefab;
@@ -75,7 +76,7 @@ public class BubblePopManager : MonoBehaviour
         bubbleCam.transform.DOLocalRotate(Vector3.zero, jumpDuration);
         score = 0;
         UpdateScoreUI();
-
+        player.transform.SetPositionAndRotation(playerEndPos.position, playerEndPos.rotation);
         timer = gameDuration;
         UpdateTimerUI();
 
@@ -171,7 +172,6 @@ public class BubblePopManager : MonoBehaviour
         float jumpDuration = 1;
         bubbleCam.transform.DOJump(player.playerCamera.position, 0.5f, 1, jumpDuration);
         bubbleCam.transform.DORotateQuaternion(player.playerCamera.rotation, jumpDuration);
-
         DOVirtual.DelayedCall(jumpDuration, () => {
             MiniGameManager.Instance.EndMiniGame();
             gameStartTrigger.SetActive(true);

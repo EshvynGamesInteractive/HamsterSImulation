@@ -17,7 +17,7 @@ public class WallArtGameController : MonoBehaviour
     [SerializeField] Collider wallToColorCollider;
     [SerializeField] float cutsceneDuration;
     [SerializeField] Transform wallCamera;
-  
+
     public float drawDistance = 3f;
     private Camera playerCamera;
     private PlayerScript player;
@@ -27,7 +27,7 @@ public class WallArtGameController : MonoBehaviour
 
     private void Start()
     {
-        
+
         wallToColorCollider.enabled = false;
         player = MainScript.instance.player;
         playerCamera = player.playerCamera.GetComponent<Camera>();
@@ -99,18 +99,19 @@ public class WallArtGameController : MonoBehaviour
         pnlWallColor.SetActive(true);
         if (!wallToColorCollider.gameObject.activeSelf)
             wallToColorCollider.gameObject.SetActive(true);
-        wallToColorCollider.enabled=true;
+        wallToColorCollider.enabled = true;
         timerText.transform.parent.gameObject.SetActive(true);
         MainScript.instance.taskPanel.UpdateTask("Smudge the clean wall with your muddy paws. But beware, Grandpa checks in often");
 
         MainScript.instance.pnlInfo.ShowInfo("Make this wall your canvas");
         //wallCanvas.enabled = true;
-        MainScript.instance.grandPa.StartPatrolOnFirstFloor();
+        //if (!MainScript.instance.grandPa.isSitting)
+        //    MainScript.instance.grandPa.StartPatrolOnFirstFloor();
 
         isGameActive = true;
         timer = gameDuration;
 
-        
+
         wallCamera.gameObject.SetActive(true);
         wallCamera.position = playerCamera.transform.position;
         wallCamera.rotation = playerCamera.transform.rotation;
@@ -137,27 +138,34 @@ public class WallArtGameController : MonoBehaviour
             GrandpaAI grandpaAI = MainScript.instance.grandPa;
             //grandpaAI.gameObject.SetActive(false);
             stareWallCutscene.SetActive(true);
-            grandpaAI.transform.SetPositionAndRotation(grandpaPosWithWall.position, grandpaPosWithWall.rotation);
+            if (!grandpaAI.isSitting)
+                grandpaAI.transform.SetPositionAndRotation(grandpaPosWithWall.position, grandpaPosWithWall.rotation);
 
             Typewriter.instance.StartTyping("What in the world… is that a paw-painting?! Dog! This wall was clean yesterday!", 2);
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
+                MiniGameManager.Instance.EndMiniGame();
                 stareWallCutscene.SetActive(false);
-
-
-                DOVirtual.DelayedCall(4, () => { grandpaAI.ChasePlayerForDuration(30); });
+                player.EnablePlayer();
+                if (!grandpaAI.isSitting)
+                {
+                    DOVirtual.DelayedCall(4, () =>
+                {
+                    grandpaAI.ChasePlayerForDuration(30);
+                });
+                }
             });
 
             //gameStartTrigger.SetActive(true);
             //MainScript.instance.pnlInfo.ShowInfo("Art session over!");
-            MiniGameManager.Instance.EndMiniGame();
+            //MiniGameManager.Instance.EndMiniGame();
         }
 
         wallCamera.DOMove(playerCamera.transform.position, 0.5f);
         wallCamera.DORotate(playerCamera.transform.eulerAngles, 0.5f).OnComplete(() =>
         {
             wallCamera.gameObject.SetActive(false);
-            player.EnablePlayer();
+            //player.EnablePlayer();
         });
 
         btnDraw.SetActive(false);

@@ -23,6 +23,7 @@ public class MiniGameManager : MonoBehaviour
     public FridgeHeistController fridgeLevel;
     public BubblePopManager bubbleLevel;
     public CushionTrampolineManager cushionTrampoline;
+    public BallFetchGameController ballFetchGameController;
     private string currentTask;
 
     public MiniGameType ActiveMiniGame { get; private set; } = MiniGameType.None;
@@ -58,6 +59,10 @@ public class MiniGameManager : MonoBehaviour
             Debug.LogWarning("A mini-game is already active!");
             return;
         }
+
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowInterstitial("MiniGameStart");
+        MainScript.instance.grandPa.StopTheChase();
         MainScript.instance.canShowRewardedPopup = false;
         MainScript.instance.HideIndication();
 
@@ -82,6 +87,9 @@ public class MiniGameManager : MonoBehaviour
             Debug.LogWarning("No mini-game is currently active!");
             return;
         }
+
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowInterstitial("MiniGameEnd");
         MainScript.instance.canShowRewardedPopup = true;
         SoundManager.instance.PlaySound(SoundManager.instance.timeOut);
         MainScript.instance.ShowIndication();
@@ -100,7 +108,6 @@ public class MiniGameManager : MonoBehaviour
                 miniGameTriggerZones[i].gameObject.SetActive(true);
             }
         });
-
     }
 
     public void MiniGameStarter(MiniGameType miniGameType)
@@ -110,13 +117,13 @@ public class MiniGameManager : MonoBehaviour
 
         //Debug.Log("minigamestarted");
     }
-    
+
     public void MiniGameEnded(MiniGameType miniGameType)
     {
         //Debug.Log("ended");
         //Debug.Log(miniGameType);
     }
-    
+
     public bool IsPlaying(MiniGameType type)
     {
         return ActiveMiniGame == type;

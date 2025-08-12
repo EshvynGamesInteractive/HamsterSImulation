@@ -65,7 +65,7 @@ public class LevelSelection : MonoBehaviour
 
     //    float targetY = Mathf.Abs(localPos.y);
 
-    //    // Clamp targetY so you don’t scroll beyond bounds
+    //    // Clamp targetY so you donï¿½t scroll beyond bounds
     //    float contentHeight = content.rect.height;
     //    float viewportHeight = scrollRect.viewport.rect.height;
     //    float maxScroll = contentHeight - viewportHeight;
@@ -99,9 +99,14 @@ public class LevelSelection : MonoBehaviour
 
     public void OnBtnPlaylevel()
     {
+        if (Nicko_ADSManager._Instance)
+        
+        Nicko_ADSManager._Instance.ShowInterstitial("PlayButtonAd");
         GlobalValues.currentLevel = selectedLevel;
-        GlobalValues.sceneTOLoad = "Gameplay";
-        SceneManager.LoadScene("Loading");
+        //GlobalValues.sceneTOLoad = "Gameplay";
+        //Debug.Log("gameplay");
+        CanvasScriptSplash.instance.LoadScene("Gameplay");
+        //SceneManager.LoadScene("Loading");
     }
 
     public void OnBtnBack()

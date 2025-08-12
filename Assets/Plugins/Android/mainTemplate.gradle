@@ -6,6 +6,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:12
+    implementation 'androidx.recyclerview:recyclerview:1.2.1' // Assets/MaxSdk/Mediation/Mintegral/Editor/Dependencies.xml:9
+    implementation 'com.applovin.mediation:google-adapter:[24.5.0.0]' // Assets/MaxSdk/Mediation/Google/Editor/Dependencies.xml:5
+    implementation 'com.applovin.mediation:google-ad-manager-adapter:[24.5.0.0]' // Assets/MaxSdk/Mediation/GoogleAdManager/Editor/Dependencies.xml:5
+    implementation 'com.applovin.mediation:mintegral-adapter:16.9.91.0' // Assets/MaxSdk/Mediation/Mintegral/Editor/Dependencies.xml:8
+    implementation 'com.applovin.mediation:unityads-adapter:4.16.0.0' // Assets/MaxSdk/Mediation/UnityAds/Editor/Dependencies.xml:4
+    implementation 'com.applovin.mediation:vungle-adapter:7.5.1.0' // Assets/MaxSdk/Mediation/Vungle/Editor/Dependencies.xml:4
     implementation 'com.applovin:applovin-sdk:13.3.1' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:4
     implementation 'com.google.android.gms:play-services-ads:24.1.0' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7
     implementation 'com.google.android.gms:play-services-appset:16.0.2' // Assets/GameAnalytics/Editor/Android/Dependencies.xml:4
@@ -25,7 +31,6 @@ dependencies {
 
 // Android Resolver Exclusions Start
 android {
-    ndkVersion "**NDKVERSION**"
   packaging {
       exclude ('/lib/armeabi/*' + '*')
       exclude ('/lib/mips/*' + '*')

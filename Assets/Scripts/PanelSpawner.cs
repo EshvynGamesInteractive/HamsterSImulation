@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PanelSpawner : MonoBehaviour
 {
     public bool isTesting;
+
     //[SerializeField] private GameObject[] panelsToOpen;
     [SerializeField] GameObject timerAdPanel;
     [SerializeField] private float openInterval = 10f;
@@ -17,6 +18,7 @@ public class PanelSpawner : MonoBehaviour
 
     private bool isWaiting = false;
     private int selectedCutscene;
+    public static int previousOpenedPanel = 0;
 
     private void Start()
     {
@@ -36,39 +38,64 @@ public class PanelSpawner : MonoBehaviour
         }
     }
 
-    public void StartPanelTimer()
-    {
-        if (!isWaiting)
+    private Coroutine panelCoroutine;
 
-            StartCoroutine(OpenPanelAfterDelay());
+    public void StartPanelTimer() //reset the curent rutine. play from start
+    {
+        if (panelCoroutine != null)
+            StopCoroutine(panelCoroutine); // cancel current countdown
+
+        panelCoroutine = StartCoroutine(OpenPanelAfterDelay());
     }
 
     private IEnumerator OpenPanelAfterDelay()
     {
-        //Debug.Log("nooooooooooooooo");
         isWaiting = true;
-        yield return new WaitForSeconds(openInterval);
+        float elapsed = 0f;
+
+        while (elapsed < openInterval)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
         isWaiting = false;
         Debug.Log("can show popup = " + MainScript.instance.canShowRewardedPopup);
+
         if (MainScript.instance.canShowRewardedPopup)
         {
             isWaiting = true;
-            if (isTesting)
-                selectedCutscene = selected;
-            else
-                selectedCutscene = Random.Range(0, cutscenes.Length);
-            //GameObject chosenPanel = panelsToOpen[selectedCutscene];
 
+            if (isTesting)
+            {
+                selectedCutscene = selected;
+            }
+            else
+            {
+                do
+                {
+                    selectedCutscene = Random.Range(0, cutscenes.Length);
+                } while (selectedCutscene == previousOpenedPanel && cutscenes.Length > 1);
+            }
+
+            previousOpenedPanel = selectedCutscene;
             panelBG.sprite = panelSprites[selectedCutscene];
 
             if (!timerAdPanel.activeSelf)
                 MainScript.instance.OpenPopup(timerAdPanel);
         }
 
-
+        panelCoroutine = null;
     }
 
     public void OnBtnPlayRewardedCutscene()
+    {
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowRewardedAd(() => ShowRewardedCutscene(), "RewardedPrankCutsceneAd");
+    }
+
+
+    private void ShowRewardedCutscene()
     {
         MainScript.instance.ClosePopup(timerAdPanel);
         cutscenes[selectedCutscene].SetActive(true);
@@ -82,37 +109,11 @@ public class PanelSpawner : MonoBehaviour
         });
     }
 
-
     public void CrossAdPanel()
     {
         isWaiting = false;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //using DG.Tweening;

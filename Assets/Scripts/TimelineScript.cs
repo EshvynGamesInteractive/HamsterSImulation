@@ -8,6 +8,7 @@ public class TimelineScript : MonoBehaviour
 
     private void OnEnable()
     {
+        MainScript.instance.RestartRewardedTimer();
         MainScript.instance.canShowRewardedPopup = false;
         for (int i = 0; i < itemsToHide.Length; i++)
         {

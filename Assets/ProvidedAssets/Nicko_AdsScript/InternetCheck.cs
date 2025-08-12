@@ -39,7 +39,7 @@ public class InternetCheck : MonoBehaviour
         else if (PrivacyPolicy == 1)
         {
             Init();
-            CanvasScriptSplash.instance.LoadScene(1);
+            CanvasScriptSplash.instance.LoadScene("MainMenu");
         }
         isInitialize = true;
     }

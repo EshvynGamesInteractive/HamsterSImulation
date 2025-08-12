@@ -119,7 +119,8 @@ public class BallLauncher : Interactable
         if (timer <= 0)
             MainScript.instance.pnlInfo.ShowInfo("You are late");
         else
-            MainScript.instance.PointScored(1);
+            MiniGameManager.Instance.ballFetchGameController.AddScore(5);
+            //MainScript.instance.PointScored(1);
 
 
         Invoke(nameof(LaunchNewBall), 1);
@@ -146,6 +147,8 @@ public class BallLauncher : Interactable
             OnBallReturned();
             DisableForInteraction(true);
         }
+        else
+            MainScript.instance.pnlInfo.ShowInfo("Fetch the ball and bring it back");
     }
 
     private void HideBall()

@@ -37,6 +37,7 @@ public class CutsceneTrigger : MonoBehaviour
             player.DisablePlayer();
             //Debug.Log(cutsceneTOPlay + "ssssssssssssssssssssssssssssssssssssssssssss");
             cutsceneTOPlay.SetActive(true);
+            MainScript.instance.RestartRewardedTimer();
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
                 cutsceneTOPlay.SetActive(false);

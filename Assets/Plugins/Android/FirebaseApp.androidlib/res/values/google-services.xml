@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id">
-  <string name="gcm_defaultSenderId" translatable="false">801085310949</string>
-  <string name="google_storage_bucket" translatable="false">gangster-game-67883.firebasestorage.app</string>
-  <string name="project_id" translatable="false">gangster-game-67883</string>
-  <string name="google_api_key" translatable="false">AIzaSyAAslblVGNeTpTbg1joY5cXjv4RI4uXPMU</string>
-  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAAslblVGNeTpTbg1joY5cXjv4RI4uXPMU</string>
-  <string name="google_app_id" translatable="false">1:801085310949:android:c1336eb41742c45f47d10c</string>
+  <string name="gcm_defaultSenderId" translatable="false">53612982262</string>
+  <string name="google_storage_bucket" translatable="false">grandpa-vs-dog.firebasestorage.app</string>
+  <string name="project_id" translatable="false">grandpa-vs-dog</string>
+  <string name="google_api_key" translatable="false">AIzaSyDLSGYlA2lAt-_rDjlA7RZUDqih8wj5lUg</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDLSGYlA2lAt-_rDjlA7RZUDqih8wj5lUg</string>
+  <string name="google_app_id" translatable="false">1:53612982262:android:1b9a5ef742a6bcfb90e1d7</string>
 </resources>

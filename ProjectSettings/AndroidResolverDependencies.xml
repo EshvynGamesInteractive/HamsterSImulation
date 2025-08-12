@@ -1,6 +1,12 @@
 <dependencies>
   <packages>
     <package>androidx.constraintlayout:constraintlayout:2.1.4</package>
+    <package>androidx.recyclerview:recyclerview:1.2.1</package>
+    <package>com.applovin.mediation:google-adapter:[24.5.0.0]</package>
+    <package>com.applovin.mediation:google-ad-manager-adapter:[24.5.0.0]</package>
+    <package>com.applovin.mediation:mintegral-adapter:16.9.91.0</package>
+    <package>com.applovin.mediation:unityads-adapter:4.16.0.0</package>
+    <package>com.applovin.mediation:vungle-adapter:7.5.1.0</package>
     <package>com.applovin:applovin-sdk:13.3.1</package>
     <package>com.google.android.gms:play-services-ads:24.1.0</package>
     <package>com.google.android.gms:play-services-appset:16.0.2</package>
@@ -28,7 +34,7 @@
   </files>
   <settings>
     <setting name="androidAbis" value="arm64-v8a,armeabi-v7a" />
-    <setting name="bundleId" value="com.DefaultCompany.GrandpavsDog" />
+    <setting name="bundleId" value="com.nickogames.bad.dog.sim" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />
     <setting name="gradlePropertiesTemplateEnabled" value="True" />

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class PlayerInteraction : MonoBehaviour
     public LayerMask interactableLayer;
 
     [Header("UI")]
+    [SerializeField] Text txtInteraction;
     public GameObject interactButton;
 
     private Interactable currentInteractable;
@@ -22,7 +24,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         CheckForInteractable();
 
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             TryInteract();
         }
@@ -50,7 +52,10 @@ public class PlayerInteraction : MonoBehaviour
             if (interactable != null && interactable.isInteractable)
             {
                 currentInteractable = interactable;
+                if (txtInteraction.text != interactable.interactionText)
+                    txtInteraction.text = interactable.interactionText;
                 interactButton?.SetActive(true);
+
                 //currentInteractable.ShowOutline();
                 return;
             }

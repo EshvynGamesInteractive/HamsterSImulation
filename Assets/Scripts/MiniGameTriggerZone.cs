@@ -88,7 +88,7 @@ public class MiniGameTriggerZone : MonoBehaviour
     public void StartMiniGame()
     {
         MainScript.instance?.CloseAdPopup();
-
+       
         if (miniGameBtn != null)
             miniGameBtn.gameObject.SetActive(false);
 

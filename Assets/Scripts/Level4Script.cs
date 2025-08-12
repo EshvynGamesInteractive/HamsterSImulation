@@ -12,20 +12,32 @@ public class Level4Script : LevelScript
     [SerializeField] GameObject catTimeline, hensTimeline;
     [SerializeField] float catTimelineDuration, hensTimelineDuration;
     [SerializeField] GameObject squirrelCage;
+    private bool isSittingForSquirrel=true;
 
 
     private void Start()
     {
-        //base.Start();
-        DOVirtual.DelayedCall(1, () =>
-            {
+        //DOVirtual.DelayedCall(1, () =>
+        //    {
 
-                grandpa.MakeGrandpaSit(sitPos);
-            });
+        //        grandpa.MakeGrandpaSit(sitPos);
+        //    });
+
+
+        //grandpa.StopTheChase();
+        MakeGrandpaSitForSquirrel();
+    }
+
+    private void MakeGrandpaSitForSquirrel()
+    {
+        grandpa.MakeGrandpaSit(sitPos);
+        DOVirtual.DelayedCall(1, () =>
+        {
+            grandpa.MakeGrandpaSit(sitPos);
+        });
 
         //TaskCompleted(MainScript.currentTaskNumber);
         grandpa.StopTheChase();
-
     }
     private new void OnEnable()
     {
@@ -53,12 +65,32 @@ public class Level4Script : LevelScript
         }
         else
         {
-
+            //if (taskNumber == 0)
+            //{
+            //    //DOVirtual.DelayedCall(1, () => MakeGrandpaSitForSquirrel());
+                
+            //    //isSittingForSquirrel = true;
+            //}
+            //else
+            //{
+            //    //isSittingForSquirrel = false;
+            //    //grandpa.isSitting = false;
+            //}
             items[taskNumber].EnableForInteraction(true);
             MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
 
-            if (taskNumber >1)
+            if (taskNumber > 1)
+            {
+                isSittingForSquirrel = false;
+                grandpa.isSitting = false;
                 squirrelCage.SetActive(false);
+            }
+            else
+            {
+                DOVirtual.DelayedCall(1, () => MakeGrandpaSitForSquirrel());
+
+                isSittingForSquirrel = true;
+            }
 
             //if (taskNumber == 1)
             //    grandpa.StopTheChase();
@@ -83,7 +115,7 @@ public class Level4Script : LevelScript
 
             if (taskNumber == 4)   // when scare hens
             {
-                Typewriter.instance.StartTyping("What’s all that cluckin’?! Dog, stop botherin’ the hens!", 4);
+                Typewriter.instance.StartTyping("Whatï¿½s all that cluckinï¿½?! Dog, stop botherinï¿½ the hens!", 4);
                 hensTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(hensTimelineDuration, () =>
@@ -102,7 +134,8 @@ public class Level4Script : LevelScript
 
     public override void MiniGameEnded()
     {
-
+        if (isSittingForSquirrel)
+            MakeGrandpaSitForSquirrel();
     }
 
 
@@ -118,6 +151,7 @@ public class Level4Script : LevelScript
             cutsceneCamera.DORotate(player.playerCamera.eulerAngles, 0.1f).SetDelay(0.2f).OnComplete(() =>
             {
                 player.EnablePlayer();
+                grandpa.transform.SetPositionAndRotation(sitPos.position, sitPos.rotation);
                 grandpa.gameObject.SetActive(true);
                 grandpa.ChasePlayerForDuration(30);
                 squirrelCutscene.SetActive(false);

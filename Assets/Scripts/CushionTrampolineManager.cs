@@ -17,6 +17,7 @@ public class CushionTrampolineManager : MonoBehaviour
     [SerializeField] private GameObject jumpPowerUI;
     [SerializeField] private Text txtTimer;
     [SerializeField] float cushionHeight;
+    public bool jarPicked = false;
 
     private PlayerScript playerScript;
     private FP_Controller player;
@@ -87,17 +88,20 @@ public class CushionTrampolineManager : MonoBehaviour
             Debug.Log("Success! You escaped with food!");
             EndMiniGame();
         }
-        //timer -= Time.deltaTime;
-        //txtTimer.text = timer.ToString("f0");
+        if (!jarPicked)
+        {
+            timer -= Time.deltaTime;
+            txtTimer.text = timer.ToString("f0");
 
-        //if (timer <= 0f)
-        //    EndMiniGame();
+            if (timer <= 0f)
+                EndMiniGame();
+        }
     }
 
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.CushionTrampoline) return;
-
+        jarPicked = false;
         MainScript.instance.taskPanel.UpdateTask("Stack cushions on the marked spot and jump to reach the cookie jar!");
 
 
@@ -122,14 +126,14 @@ public class CushionTrampolineManager : MonoBehaviour
         });
 
 
-        for (int i = 0; i < cushionPositions.Length; i++)
-        {
-            cushions[i].position = cushionPositions[i].position;
-            cushions[i].rotation = cushionPositions[i].rotation;
-            cushions[i].GetComponent<Interactable>().EnableForInteraction(false);
-            cushions[i].gameObject.SetActive(true);
-        }
-
+        //for (int i = 0; i < cushionPositions.Length; i++)
+        //{
+        //    cushions[i].position = cushionPositions[i].position;
+        //    cushions[i].rotation = cushionPositions[i].rotation;
+        //    cushions[i].GetComponent<Interactable>().EnableForInteraction(false);
+        //    cushions[i].gameObject.SetActive(true);
+        //}
+        PlaceCushionsOnOriginalPosition();
 
         cookieJar.transform.position = cookieJarPosition.position;
         cookieJar.transform.rotation = cookieJarPosition.rotation;
@@ -159,6 +163,12 @@ public class CushionTrampolineManager : MonoBehaviour
         stackedCushions.Add(cushion);
     }
 
+
+    public void CookieJarPicked()
+    {
+        txtTimer.transform.parent.gameObject.SetActive(false);
+        jarPicked = true;
+    }
     public void StartJumpSequence()
     {
         player.DoTrampolineJump(CalculateBounceForce());
@@ -186,10 +196,28 @@ public class CushionTrampolineManager : MonoBehaviour
         MiniGameManager.Instance.EndMiniGame();
         MainScript.instance.pnlInfo.ShowInfo("Mini-game over! Try again anytime.");
 
-        for (int i = 0; i < cushions.Length; i++)
-        {
-            cushions[i].gameObject.SetActive(false);
-        }
+        //for (int i = 0; i < cushions.Length; i++)
+        //{
+        //    cushions[i].gameObject.SetActive(false);
+        //}
+      
+        PlaceCushionsOnOriginalPosition();
         stackedCushions.Clear();
+    }
+
+    private void PlaceCushionsOnOriginalPosition()
+    {
+        if (playerScript.pickedObject != null && playerScript.pickedObject.TryGetComponent<Cushion>(out _))
+        {
+            //playerScript.PlaceObject(cushions[0].position);
+            playerScript.ThrowObject();
+        }
+        for (int i = 0; i < cushionPositions.Length; i++)
+        {
+            cushions[i].position = cushionPositions[i].position;
+            cushions[i].rotation = cushionPositions[i].rotation;
+            cushions[i].GetComponent<Interactable>().EnableForInteraction(false);
+            cushions[i].gameObject.SetActive(true);
+        }
     }
 }

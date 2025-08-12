@@ -7,6 +7,7 @@ public class Level1Script : LevelScript
     [SerializeField] GameObject levelCompleteCutscene;
     [SerializeField] GameObject televisionTimeline, ketchupTimeline;
     [SerializeField] float tvTimelineDuration, ketchupTimelineDuration;
+    [SerializeField] GameObject tvScreen;
     private bool watchingTV, drinkingTea;
     [SerializeField] GameObject bucket, spilledWater;
 
@@ -56,7 +57,7 @@ public class Level1Script : LevelScript
         }
         else
         {
-            Debug.Log(taskNumber);
+         
             if (taskNumber == 0)
             {
                 bucket.GetComponent<Interactable>().EnableForInteraction(true);
@@ -74,21 +75,28 @@ public class Level1Script : LevelScript
             //MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
             if(taskNumber == 1)
             {
+                grandpa.isSitting = false;
                 DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(30));
             }
-            if (taskNumber == 2)   //when bury book
+
+            if (taskNumber == 2) //when bury book
+            {
+                MakeGrandpaWatchTV();
                 DOVirtual.DelayedCall(1, () => MakeGrandpaWatchTV());
+            }
             else
                 watchingTV = false;
 
             if (taskNumber == 3)    // when turn tv off
             {
-                Typewriter.instance.StartTyping("Hey! Who turned off my TV? I was watchin’ that! Dog? Was that you again? Come back here, you little rascal!", 2);
+                grandpa.isSitting = false;
+                Typewriter.instance.StartTyping("Hey! Who turned off my TV? I was watching that! Dog? Was that you again? Come back here, you little rascal!", 2);
                 waitDuration = tvTimelineDuration;
                 televisionTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(tvTimelineDuration, () =>
                 {
+                    tvScreen.SetActive(false);
                     televisionTimeline.SetActive(false);
                     player.EnablePlayer();
                     DOVirtual.DelayedCall(4, () =>
@@ -99,14 +107,18 @@ public class Level1Script : LevelScript
                 });
             }
 
-            if (taskNumber == 4)    // when toss blanket in tub
+            if (taskNumber == 4) // when toss blanket in tub
+            {
+                MakeGrandpaDrinkTea();
                 DOVirtual.DelayedCall(1, () => MakeGrandpaDrinkTea());
+            }
             else
                 drinkingTea = false;
 
             if (taskNumber == 5)    // pour ketchup
             {
-                Typewriter.instance.StartTyping("Blegh! What in tarnation—this ain’t tea! Who put ketchup in my cup?! Dog?!", 3);
+                grandpa.isSitting = false;
+                Typewriter.instance.StartTyping("Blegh! What in tarnationï¿½this ainï¿½t tea! Who put ketchup in my cup?! Dog?!", 3);
                 waitDuration = ketchupTimelineDuration;
                 ketchupTimeline.SetActive(true);
                 player.DisablePlayer();

@@ -47,8 +47,7 @@ public class SquirrelAI : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(isActivated);
-        Debug.Log(agent.pathPending);
+        
         if (!isActivated || agent.pathPending) return;
         if (agent.remainingDistance <= reachThreshold)
         {

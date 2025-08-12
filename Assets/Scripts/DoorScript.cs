@@ -21,7 +21,7 @@ public class DoorScript : Interactable
         door.DOLocalRotate(new Vector3(0, openAngle, 0), animationDuration);
     }
 
-    protected void CloseDoor()
+    public void CloseDoor()
     {
         isOpen = false;
         door.DOLocalRotate(new Vector3(0, closeAngle, 0), animationDuration);

@@ -6,7 +6,7 @@ public class Level2Script : LevelScript
     [SerializeField] GameObject levelCompleteCutscene;
     [SerializeField] GameObject shutDoorTimeline, saltTimeline, toyThrowTimeline;
     [SerializeField] float shutDoorTimelineDuration, saltTimelineDuration, throwTimelineDuration;
-
+    [SerializeField] LaundaryDoor laundaryDoor;
     private void Start()
     {
         //base.Start();
@@ -86,7 +86,10 @@ public class Level2Script : LevelScript
             }
             if (taskNumber == 4)    // when door shut
             {
-                Typewriter.instance.StartTyping("Waaah! We’re locked in! Somebody help!", 1);
+        if (Nicko_ADSManager._Instance)
+                
+                Nicko_ADSManager._Instance.ShowInterstitial("LockKids");
+                Typewriter.instance.StartTyping("Waaah! Weï¿½re locked in! Somebody help!", 1);
                 shutDoorTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(shutDoorTimelineDuration, () =>
@@ -95,6 +98,13 @@ public class Level2Script : LevelScript
                     player.EnablePlayer();
                     grandpa.ChasePlayerForDuration(30);
                 });
+            }
+
+            if (taskNumber > 4)
+            {
+                laundaryDoor.kidsLocked = true;
+                laundaryDoor.CloseDoor();
+                laundaryDoor.EnableForInteraction(false);
             }
 
 

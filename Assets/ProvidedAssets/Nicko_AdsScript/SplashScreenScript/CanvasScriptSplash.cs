@@ -19,6 +19,10 @@ public class CanvasScriptSplash : MonoBehaviour
         canvasState[(int)currentStats].SetActive(true);
         
     }
+    public void LoadScene(string i)
+    {
+        loading.StartLoading(i);
+    }
     public void LoadScene(int i)
     {
         loading.StartLoading(i);

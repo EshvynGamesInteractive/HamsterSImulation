@@ -49,7 +49,7 @@ public class Level3Script : LevelScript
             player.DisablePlayer();
             DOVirtual.DelayedCall(balloonTimelineDuration, () =>
             {
-                Typewriter.instance.StartTyping("What the—!? Water on the floor?! Dog! I’m gonna slip and break somethin’!", 2);
+                Typewriter.instance.StartTyping("What theï¿½!? Water on the floor?! Dog! Iï¿½m gonna slip and break somethinï¿½!", 2);
                 balloonTimeline.SetActive(false);
                 player.EnablePlayer();
 
@@ -69,6 +69,7 @@ public class Level3Script : LevelScript
 
             if (taskNumber >=1)
             {
+                grandpa.isSitting = false;
                 tableCloth.SetActive(false);
                 //DOVirtual.DelayedCall(1, () =>
                 //{
@@ -86,6 +87,9 @@ public class Level3Script : LevelScript
             if (taskNumber == 3)   // when licking cutlery
             {
                 grandpa.StopTheChase();
+        if (Nicko_ADSManager._Instance)
+                
+                Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
                 DOVirtual.DelayedCall(5, () =>
                 {
                     grandpa.ChasePlayerForDuration(30);

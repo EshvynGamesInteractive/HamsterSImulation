@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "801085310949",
-    "project_id": "gangster-game-67883",
-    "storage_bucket": "gangster-game-67883.firebasestorage.app"
+    "project_number": "53612982262",
+    "project_id": "grandpa-vs-dog",
+    "storage_bucket": "grandpa-vs-dog.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:801085310949:android:c1336eb41742c45f47d10c",
+        "mobilesdk_app_id": "1:53612982262:android:1b9a5ef742a6bcfb90e1d7",
         "android_client_info": {
-          "package_name": "com.nickogames.mafia.crime.city.gangster.game"
+          "package_name": "com.nickogames.bad.dog.sim"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAAslblVGNeTpTbg1joY5cXjv4RI4uXPMU"
+          "current_key": "AIzaSyDLSGYlA2lAt-_rDjlA7RZUDqih8wj5lUg"
         }
       ],
       "services": {

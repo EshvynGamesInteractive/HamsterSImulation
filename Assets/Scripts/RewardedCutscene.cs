@@ -21,7 +21,7 @@ public class RewardedCutscene : MonoBehaviour
         }
         MainScript.instance.HideIndication();
         grandpa.gameObject.SetActive(false);
-
+        MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(false);
         if (grandpaDialogue != null)
             Typewriter.instance.StartTyping(grandpaDialogue, dialogueDelay);
     }
@@ -30,13 +30,9 @@ public class RewardedCutscene : MonoBehaviour
     private void OnDisable()
     {
         MainScript.instance.canShowRewardedPopup = true;
-        if (repositionGrandpaAfterTImeline && MainScript.instance.grandPa)
-            MainScript.instance.grandPa.transform.SetPositionAndRotation(grandpaPosTOSet.position, grandpaPosTOSet.rotation);
+        MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
         if (grandpa.gameObject)
             grandpa.gameObject.SetActive(true);
-
-        DOVirtual.DelayedCall(3, () =>
-        { grandpa.ChasePlayerForDuration(30); });
 
         for (int i = 0; i < itemsToHide.Length; i++)
         {
@@ -44,6 +40,15 @@ public class RewardedCutscene : MonoBehaviour
                 itemsToHide[i].SetActive(true);
         }
         MainScript.instance.ShowIndication();
+        if (MainScript.instance.grandPa.isSitting) // there is no need to chase player while sitting
+            return;
+        if (repositionGrandpaAfterTImeline && MainScript.instance.grandPa)
+            MainScript.instance.grandPa.transform.SetPositionAndRotation(grandpaPosTOSet.position, grandpaPosTOSet.rotation);
+
+        DOVirtual.DelayedCall(3, () =>
+        { grandpa.ChasePlayerForDuration(30); });
+
+
     }
 }
 

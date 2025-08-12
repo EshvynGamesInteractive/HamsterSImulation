@@ -159,6 +159,7 @@ public class FridgeHeistController : MonoBehaviour
 
     private void FailHeist()
     {
+        grandpaAI.isSitting = false;
         grandpaPeekController.GameEnd();
         heistActive = false;
         stealthUI?.SetActive(false);
@@ -172,16 +173,29 @@ public class FridgeHeistController : MonoBehaviour
 
     public void RevivePlayer()
     {
+        if (Nicko_ADSManager._Instance)
+        Nicko_ADSManager._Instance.ShowRewardedAd(() => WatchedAdForRevive(), "RewardedReviveAd");
+    }
+
+    private void WatchedAdForRevive()
+    {
+        grandpaPeekController.GameEnd();
         grandpaAI.dogInHand.SetActive(false);
         grandpaPeekController.dogInHand.SetActive(false);
+        grandpaPeekController.enabled = false;
+        grandpaAI.enabled = true;
+        grandpaAI.StartPatrolOnGroundFloor();
+        stealthUI?.SetActive(false);
         btnRevive.SetActive(false);
         heistActive = true;
         player.PlayereRevived();
-        MainScript.instance.pnlInfo.ShowInfo("Grandpa cannot see you now");
+        MainScript.instance.pnlInfo.ShowInfo("Grandpa will not catch you now");
     }
+
 
     private void EndHeist()
     {
+        grandpaAI.isSitting = false;
         grandpaPeekController.GameEnd();
         heistActive = false;
         stealthUI?.SetActive(false);

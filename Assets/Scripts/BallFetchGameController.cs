@@ -1,5 +1,6 @@
-using UnityEngine;
 using DG.Tweening;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class BallFetchGameController : MonoBehaviour
@@ -7,10 +8,11 @@ public class BallFetchGameController : MonoBehaviour
     
     [SerializeField] private BallLauncher ballLauncher;
     [SerializeField] private float gameduration = 60f;
-    [SerializeField] Text txtTimer;
+    [SerializeField] Text txtTimer, scoreText;
     [SerializeField] GameObject gameStartTrigger;
+    private int score;
     private float timer;
-    private bool isGameActive;
+    private bool gameActive;
 
     private void OnEnable()
     {
@@ -31,7 +33,7 @@ public class BallFetchGameController : MonoBehaviour
     }
     private void Update()
     {
-        if (!isGameActive) return;
+        if (!gameActive) return;
 
         timer -= Time.deltaTime;
         txtTimer.text = timer.ToString("f0");
@@ -40,13 +42,24 @@ public class BallFetchGameController : MonoBehaviour
             EndMiniGame();
         }
     }
-
+    public void AddScore(int amount)
+    {
+        if (!gameActive) return;
+        score += amount;
+        UpdateScoreUI();
+    }
+    private void UpdateScoreUI()
+    {
+        if (scoreText) scoreText.text = $"Score: {score}";
+    }
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.FetchFrenzy) return;
-
+        scoreText.transform.parent.gameObject.SetActive(true);
+        score = 0;
+        UpdateScoreUI();
         MainScript.instance.taskPanel.UpdateTask("Fetch the balls launched and bring them back before time runs out");
-        isGameActive = true;
+        gameActive = true;
         txtTimer.transform.parent.gameObject.SetActive(true);
         timer = gameduration;
         //Debug.Log("Ball Fetch Frenzy started!");
@@ -70,11 +83,11 @@ public class BallFetchGameController : MonoBehaviour
         gameStartTrigger.SetActive(true);
         MainScript.instance.pnlInfo.ShowInfo("Game session ended. You can play it anytime");
         Debug.Log("Ball Fetch Frenzy ended!");
-        isGameActive = false;
+        gameActive = false;
         txtTimer.transform.parent.gameObject.SetActive(false);
         //launcherCamera?.SetActive(false);
         ballLauncher?.StopLaunching();
-
+        scoreText.transform.parent.gameObject.SetActive(false);
         MiniGameManager.Instance.EndMiniGame();
     }
 }

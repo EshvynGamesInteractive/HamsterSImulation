@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class GrandpaAI : MonoBehaviour
 {
     public GameObject dogInHand;
+    public bool isSitting;
     [SerializeField] private Transform chaseEndPoint;
     public float chaseEndThreshold = 1f;
     [SerializeField] ParticleSystem angryEmote;
@@ -308,6 +309,7 @@ public class GrandpaAI : MonoBehaviour
 
     public void MakeGrandpaSit(Transform sitPos)
     {
+        isSitting = true;
         transform.position = sitPos.position;
         transform.rotation = sitPos.rotation;
         EnableWalking(false);
@@ -315,11 +317,13 @@ public class GrandpaAI : MonoBehaviour
         agent.enabled = false;
         StopTheChase();
         animator.SetTrigger("Sit");
+        StopTheChase();
         DOVirtual.DelayedCall(2, () =>
         {
+            StopTheChase();
             EnableWalking(false);
             stopWalking = true;
-            animator.SetTrigger("Sit");
+            animator.SetTrigger("Sit");  // force sit
         });
     }
 
@@ -372,7 +376,7 @@ public class GrandpaAI : MonoBehaviour
 
     public void StopTheChase()
     {
-        Debug.Log("stopChase");
+       
         if (shouldCatchPlayer || isChasingForDuration)
             MainScript.instance.pnlInfo.ShowInfo("Grandpa gave up the chase.");
         shouldCatchPlayer = false;
@@ -384,12 +388,31 @@ public class GrandpaAI : MonoBehaviour
 
     public void ChasePlayerForDuration(float duration)
     {
-        MainScript.instance.pnlInfo.ShowInfo("Grandpa is coming to catch you");
-        isChasingForDuration = true;
+        if (isSitting)
+        {
+            Debug.Log(isSitting);
+            return;
+        }
+        MainScript.instance.pnlInfo.ShowInfo("Grandpa’s on the move, better stay out of sight!");
+        //isChasingForDuration = true;
         chaseTimer = duration;
-        EnableWalking(true);
+        //EnableWalking(true);
+        //stopWalking = false;
+        //agent.enabled = true;
+        StartChase();
+        DOVirtual.DelayedCall(2.2f, () =>
+        {
+            StartChase();
+        });
+    }
+
+    private void StartChase()
+    {
+        isChasingForDuration = true;
+       
         stopWalking = false;
         agent.enabled = true;
+        EnableWalking(true);   //force walk
     }
 }
 
