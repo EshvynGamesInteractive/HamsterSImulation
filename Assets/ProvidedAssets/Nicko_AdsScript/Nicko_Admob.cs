@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 public class Nicko_Admob : MonoBehaviour
 {
     [HideInInspector] private string outputMessage = "";
-
+    
 // Ad Unit IDs (Different types of banners and ads)
     public string LowBannerID,
         bannerIDMed,
@@ -513,35 +513,104 @@ public class Nicko_Admob : MonoBehaviour
             });
     }
 
+    // public void ShowAppOpenAd()
+    // {
+    //     if (!GlobalConstant.AdsON)
+    //     {
+    //         return;
+    //     }
+    //
+    //     if (GlobalConstant.isLogger)
+    //     {
+    //         print(GlobalConstant.AdsON);
+    //     }
+    //
+    //     if (GlobalConstant.isLogger)
+    //         print(IsAppOpenAdAvailable);
+    //     if (!IsAppOpenAdAvailable)
+    //     {
+    //         RequestAndLoadAppOpenAd();
+    //         return;
+    //     }
+    //
+    //     if (Nicko_ADSManager._Instance)
+    //     {
+    //         Nicko_ADSManager._Instance.HideRecBannerAppOpen();
+    //         Nicko_ADSManager._Instance.HideBanner();
+    //     }
+    //
+    //     appOpenAd.Show();
+    // }
+    // public void ShowAppOpenAd()
+    // {
+    //     if (!GlobalConstant.AdsON)
+    //     {
+    //         return;
+    //     }
+    //
+    //     if (GlobalConstant.isLogger)
+    //     {
+    //         print(GlobalConstant.AdsON);
+    //         print(IsAppOpenAdAvailable);
+    //     }
+    //
+    //     if (!IsAppOpenAdAvailable)
+    //     {
+    //         // Fallback to Max if AdMob app open ad not available
+    //         if (Nicko_ADSManager._Instance != null && Nicko_ADSManager._Instance.appLovinMax != null)
+    //         {
+    //             Nicko_ADSManager._Instance.appLovinMax.ShowAppOpenAd();
+    //             Debug.Log("[ADS] Showing Max App Open Ad fallback.");
+    //             return;
+    //         }
+    //
+    //         // If Max not available, request AdMob app open ad
+    //         RequestAndLoadAppOpenAd();
+    //         return;
+    //     }
+    //
+    //     if (Nicko_ADSManager._Instance != null)
+    //     {
+    //         Nicko_ADSManager._Instance.HideRecBannerAppOpen();
+    //         Nicko_ADSManager._Instance.HideBanner();
+    //     }
+    //
+    //     appOpenAd.Show();
+    // }
     public void ShowAppOpenAd()
     {
+        Debug.Log("showing appopen");
         if (!GlobalConstant.AdsON)
         {
+            Debug.Log("[ADS] Ads disabled or removed, skipping App Open ad.");
             return;
         }
 
         if (GlobalConstant.isLogger)
         {
-            print(GlobalConstant.AdsON);
+            Debug.Log($"[ADS] AdsON: {GlobalConstant.AdsON}, IsAppOpenAdAvailable: {IsAppOpenAdAvailable}, MaxAppOpenReady: {Nicko_ADSManager._Instance?.appLovinMax?.IsAppOpenReady()}");
         }
 
-        if (GlobalConstant.isLogger)
-            print(IsAppOpenAdAvailable);
-        if (!IsAppOpenAdAvailable)
+        if (Nicko_ADSManager._Instance != null && Nicko_ADSManager._Instance.appLovinMax != null && Nicko_ADSManager._Instance.appLovinMax.IsAppOpenReady())
         {
-            RequestAndLoadAppOpenAd();
-            return;
+            Nicko_ADSManager._Instance?.HideRecBannerAppOpen();
+            Nicko_ADSManager._Instance?.HideBanner();
+            Nicko_ADSManager._Instance.appLovinMax.ShowAppOpen();
+            Debug.Log("[ADS] Showing Max App Open ad.");
         }
-
-        if (Nicko_ADSManager._Instance)
+        else if (IsAppOpenAdAvailable)
         {
-            Nicko_ADSManager._Instance.HideRecBannerAppOpen();
-            Nicko_ADSManager._Instance.HideBanner();
+            Nicko_ADSManager._Instance?.HideRecBannerAppOpen();
+            Nicko_ADSManager._Instance?.HideBanner();
+            appOpenAd.Show();
+            Debug.Log("[ADS] Max App Open not available, showing AdMob App Open ad.");
         }
-
-        appOpenAd.Show();
+        else
+        {
+            Debug.LogWarning("[ADS] No App Open ad available (Max or AdMob).");
+            RequestAndLoadAppOpenAd(); // Retry AdMob
+        }
     }
-
     #endregion
 
     #region Right BANNER ADS
@@ -627,6 +696,7 @@ public class Nicko_Admob : MonoBehaviour
 
     public void ShowRightBanner()
     {
+        Debug.Log("showing asdnasdkllmsadna");
         if (!GlobalConstant.AdsON)
         {
             return;
@@ -821,6 +891,7 @@ public class Nicko_Admob : MonoBehaviour
 
     public void ShowRecBanner()
     {
+        Debug.Log("showing asdnasdkllmsadna");
         if (!GlobalConstant.AdsON)
         {
             return;

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class MainScript : MonoBehaviour
 {
     public static MainScript instance;
+    [SerializeField] Sprite soundOn, soundOff;
+    [SerializeField] Image btnSound;
     public InfoPanelScript pnlInfo;
     public TaskPanelScript taskPanel;
 
@@ -59,8 +61,40 @@ public class MainScript : MonoBehaviour
 
         levels[activeLevelIndex].gameObject.SetActive(true);
         activeLevel = levels[activeLevelIndex];
+        CheckSound();
+    }
+    
+    private void CheckSound()
+    {
+        if (GlobalValues.Effects == 1)
+        {
+            btnSound.sprite = soundOn;
+            SoundManager.instance.SoundOn();
+        }
+        else
+        {
+            btnSound.sprite = soundOff;
+            SoundManager.instance.SoundOff();
+        }
     }
 
+    public void OnBtnSound()
+    {
+        if (GlobalValues.Effects == 1)
+        {
+            btnSound.sprite = soundOff;
+            GlobalValues.Effects = 0;
+            GlobalValues.Music = 0;
+            SoundManager.instance.SoundOff();
+        }
+        else
+        {
+            btnSound.sprite = soundOn;
+            GlobalValues.Effects = 1;
+            GlobalValues.Music = 1;
+            SoundManager.instance.SoundOn();
+        }
+    }
     public void RestartRewardedTimer()
     {
         timerAd.StartPanelTimer();

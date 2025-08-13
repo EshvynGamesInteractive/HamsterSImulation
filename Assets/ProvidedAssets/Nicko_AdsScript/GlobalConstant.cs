@@ -9,6 +9,9 @@ public static class GlobalConstant
     public static bool ShowAppOpen = false;
     public static bool ISMAXON = false;
     public static string MoreGamesLink;
+    public static string BannerMax;
+    public static string Mrecmax;
+    public static string Appopenmax;
     public static string Nicko_Admob_Inter_IdHigh =
         "ca-app-pub-3940256099942544~3347511713";
 

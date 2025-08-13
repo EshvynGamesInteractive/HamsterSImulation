@@ -65,7 +65,7 @@ public class MiniGameManager : MonoBehaviour
         MainScript.instance.grandPa.StopTheChase();
         MainScript.instance.canShowRewardedPopup = false;
         MainScript.instance.HideIndication();
-
+        MainScript.instance.RestartRewardedTimer();
         currentTask = MainScript.instance.taskPanel.GetCurrentTask();
 
         ActiveMiniGame = type;

@@ -18,8 +18,9 @@ public class FirebaseRemoteConfig : MonoBehaviour
     {
         if (Application.isMobilePlatform)
             FirebaseApp.LogLevel = LogLevel.Error;
-        GameAnalytics.Initialize();
         OnFireBase();
+       // GameAnalytics.Initialize();
+        
     }
 
     void OnFireBase()
@@ -218,25 +219,35 @@ public class FirebaseRemoteConfig : MonoBehaviour
                 .DefaultInstance
                 .GetValue("UseAdBidding").BooleanValue;
             
+            
+            
+            
+            GlobalConstant.BannerMax  =  Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("BannerMax").StringValue ;
+            print( GlobalConstant.BannerMax+Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("BannerMax").StringValue );
+            
+            
+            
+            GlobalConstant.Mrecmax  =  Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("Mrecmax").StringValue ;
+            print( GlobalConstant.Mrecmax);
+             
+            GlobalConstant.Appopenmax   =  Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("Appopenmax").StringValue ;
+            print( GlobalConstant.Appopenmax);
+            
+            print("GlobalConstant.adPriority");
+
 
             if (GlobalConstant.isLogger) print("1");
             if (GlobalConstant.isLogger)
             {
-                print(GlobalConstant.Nicko_Admob_Inter_IdHigh);
-                print(GlobalConstant.Nicko_Admob_Inter_IdMid);
-                print(GlobalConstant.Nicko_Admob_Inter_IdLow);
-
-                print(GlobalConstant.Nicko_Admob_AppOpen_Id_Low);
-                print(GlobalConstant.Nicko_Admob_AppOpen_Id_Mid);
-                print(GlobalConstant.Nicko_Admob_AppOpen_IdHigh);
-
-                print(GlobalConstant.Nicko_Admob_Banner_Simple);
-                print(GlobalConstant.Nicko_Admob_Banner_MID);
-                print(GlobalConstant.Nicko_Admob_Banner_HIGH);
-
-                print(GlobalConstant.Nicko_Admob_Rewarded_Id_High);
-                print(GlobalConstant.Nicko_Admob_Rewarded_Id_Mid);
-                print(GlobalConstant.Nicko_Admob_Rewarded_Id_Simple);
+    
             }
 
             adsManager.Init();
@@ -342,7 +353,28 @@ public class FirebaseRemoteConfig : MonoBehaviour
             GlobalConstant.adPriority = (Nicko_ADSManager.AdPriority)(int)Firebase.RemoteConfig.FirebaseRemoteConfig
                 .DefaultInstance
                 .GetValue("adPriorityIOS").DoubleValue;
+            print("2");
+            
+            
+            GlobalConstant.BannerMax  =  Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("BannerMax").StringValue ;
+            print( GlobalConstant.BannerMax+Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("Bannermax").StringValue );
+            
+            
+            
+            GlobalConstant.Mrecmax  =  Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("Mrecmax").StringValue ;
+            print( GlobalConstant.Mrecmax);
              
+            GlobalConstant.Appopenmax   =  Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                .GetValue("Appopenmax").StringValue ;
+            print( GlobalConstant.Appopenmax);
+            
                 print("GlobalConstant.adPriority");
 
             adsManager.Init();
