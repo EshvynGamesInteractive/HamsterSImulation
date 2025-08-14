@@ -4,7 +4,7 @@ public abstract class LevelScript : MonoBehaviour
 {
     [SerializeField]protected Interactable[] items;
     [SerializeField]protected string[] tasks;
-
+    protected bool miniGameisActive;
     protected GrandpaAI grandpa;
     protected PlayerScript player;
 
@@ -24,6 +24,10 @@ public abstract class LevelScript : MonoBehaviour
 
     public abstract void TaskCompleted(int taskNumber);
     public abstract void MiniGameEnded();
+    public void MiniGameStarted()
+    {
+        miniGameisActive = true;
+    }
 
     //public void TaskCompleted(int taskNumber)
     //{

@@ -36,7 +36,11 @@ public class MainScript : MonoBehaviour
     private void Start()
     {
         //GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
-
+        if (Nicko_ADSManager._Instance)
+        {
+            Nicko_ADSManager._Instance.HideRecBanner();
+            Nicko_ADSManager._Instance.ShowBanner("GameStart");
+        }
 
         Time.timeScale = 1;
         if (GlobalValues.currentLevel > levels.Length)
@@ -141,11 +145,11 @@ public class MainScript : MonoBehaviour
             indication.SetActive(true);
     }
 
-    public void PlayerCaught()
+    public void PlayerCaught(bool caughtWhileMinigame)
     {
         if (gameover)
             return;
-        if (currentTaskNumber > 0 &&
+        if (currentTaskNumber > 0 && !caughtWhileMinigame &&
             currentTaskNumber != decrementedNumber) // so it does not decrement when caught on same task
         {
             currentTaskNumber--;
@@ -208,6 +212,8 @@ public class MainScript : MonoBehaviour
 
     public void OpenPopup(GameObject pnl)
     {
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.HideBanner();
         canShowRewardedPopup = false;
 
         Time.timeScale = 0.001f;
@@ -229,6 +235,8 @@ public class MainScript : MonoBehaviour
 
     public void ClosePopup(GameObject pnl)
     {
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowBanner("Popup close");
         canShowRewardedPopup = true;
         Time.timeScale = 1;
         float animTime = 1;

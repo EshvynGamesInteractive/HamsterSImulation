@@ -75,7 +75,7 @@ public class Level1Script : LevelScript
             //MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
             if(taskNumber == 1)
             {
-                grandpa.isSitting = false;
+                // grandpa.isSitting = false;
                 DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(30));
             }
 
@@ -152,12 +152,11 @@ public class Level1Script : LevelScript
 
     }
 
-
+   
 
     public override void MiniGameEnded()
     {
-        //Debug.Log(drinkingTea);
-        //Debug.Log(watchingTV);
+        miniGameisActive = false;
         if (drinkingTea)
             MakeGrandpaDrinkTea();
         if (watchingTV)

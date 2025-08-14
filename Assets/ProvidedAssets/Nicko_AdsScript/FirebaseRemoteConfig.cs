@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 using Firebase.Crashlytics;
 using GameAnalyticsSDK;
 
-public class FirebaseRemoteConfig : MonoBehaviour
+public class FirebaseRemoteConfig : MonoBehaviour   //commented by Khubaib
 {
     DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
     public static bool firebaseInitialized = false;
 
     public void InternetAvailable()
     {
+        print("InternetAvailable");
         if (Application.isMobilePlatform)
             FirebaseApp.LogLevel = LogLevel.Error;
+       
         OnFireBase();
        // GameAnalytics.Initialize();
         
@@ -30,6 +32,7 @@ public class FirebaseRemoteConfig : MonoBehaviour
             dependencyStatus = task.Result;
             if (dependencyStatus == DependencyStatus.Available)
             {
+                print("FirebaseInitialized+GOGO");
                 InitializeFirebase();
             }
             else
@@ -63,7 +66,7 @@ public class FirebaseRemoteConfig : MonoBehaviour
         Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(defaults)
             .ContinueWithOnMainThread(task =>
             {
-                Crashlytics.ReportUncaughtExceptionsAsFatal = true;
+             print("FGOOOOOO");
                 FetchDataAsync();
             });
         CheckInternet();

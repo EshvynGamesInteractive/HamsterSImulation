@@ -57,7 +57,7 @@ public class MaxSdkLogger
     {
         if (MaxSdk.DisableAllLogs) return;
 
-        Debug.LogError("Error [" + SdkTag + "] " + message);
+        Debug.LogWarning("Error [" + SdkTag + "] " + message);
     }
 
     /// <summary>

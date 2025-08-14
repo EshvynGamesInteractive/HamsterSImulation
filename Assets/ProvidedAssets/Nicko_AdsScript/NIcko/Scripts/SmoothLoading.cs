@@ -11,6 +11,7 @@ using System.Collections;
 /// </summary>
 public class SmoothLoading : MonoBehaviour
 {
+    [SerializeField] private GameObject bgForPrivacy;
     [SerializeField] RectTransform[] letters;
     [SerializeField] float oneLetterTime = 0.5f;
     [SerializeField] float letterScale = 1.5f;
@@ -47,22 +48,21 @@ public class SmoothLoading : MonoBehaviour
 
     private void Start()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowBanner("GameStart");
+      //  if (Nicko_ADSManager._Instance)
+        //    Nicko_ADSManager._Instance.ShowBanner("GameStart");
     }
 
     public GameObject animationPoint;
 
     private void OnEnable()
     {
-        if (Nicko_ADSManager._Instance)
+      //  if (Nicko_ADSManager._Instance)
 
-            Nicko_ADSManager._Instance.ShowBanner("LoadingStart");
+   //         Nicko_ADSManager._Instance.ShowBanner("LoadingStart");
         StartCoroutine(TitleAnimation());
         // Set 0 for progress values.
         progressBar.fillAmount = currentValue = targetValue = 0;
         if (Nicko_ADSManager._Instance)
-
             Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
     }
 
@@ -215,6 +215,11 @@ public class SmoothLoading : MonoBehaviour
 
     void ShutLoading()
     {
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.HideRecBanner();
+        Debug.Log("shut");
+        if(bgForPrivacy!=null)
+            bgForPrivacy.SetActive(false);
         bg.DOAnchorPos(new Vector3(0, 1450, 0), 0.5f).SetEase(Ease.InBounce).OnComplete(() =>
         {
             CanvasScriptSplash.instance.ChangeCanvas(CanvasStats.MainScreen);

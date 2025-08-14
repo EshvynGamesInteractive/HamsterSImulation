@@ -126,6 +126,8 @@ public class PanelSpawner : MonoBehaviour
     public void CrossAdPanel()
     {
         isWaiting = false;
+        if(Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowInterstitial("CloseCutscenePanel");
     }
 }
 

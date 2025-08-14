@@ -50,6 +50,7 @@ public class AppLovinMax : MonoBehaviour
 
     public void Init()
     {
+        
         Debug.Log("Application.version " + Application.version);
         DontDestroyOnLoad(this.gameObject);
         if (!GlobalConstant.ISMAXON)
@@ -91,15 +92,15 @@ public class AppLovinMax : MonoBehaviour
 
     public void LoadRecBanner()
     {
-        MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft); // Adjust position if needed
+        MaxSdk.CreateMRec(GlobalConstant.Mrecmax, MaxSdkBase.AdViewPosition.TopLeft); // Adjust position if needed
         MaxSdk.LoadMRec(recBannerAdUnitId);
         Debug.Log("[Max] Requested MREC banner load");
     }
     public void LoadBanner()
     {
-        MaxSdk.CreateMRec(adBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft); // Adjust position if needed
+        MaxSdk.CreateMRec(GlobalConstant.BannerMax, MaxSdkBase.AdViewPosition.BottomCenter); // Adjust position if needed
         MaxSdk.LoadMRec(recBannerAdUnitId);
-        Debug.Log("[Max] Requested MREC banner load");
+        Debug.Log("[Max] Requested banner load");
     }
 
     private void OnMRecLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -146,6 +147,7 @@ public class AppLovinMax : MonoBehaviour
 
     public void ShowBanner()
     {
+        Debug.Log("[Max] bannner shown");
         MaxSdk.ShowBanner(adBannerAdUnitId);
     }
 

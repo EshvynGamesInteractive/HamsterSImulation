@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using System.Collections;
 using UnityEngine;
@@ -14,17 +15,19 @@ public class LevelSelection : MonoBehaviour
     [SerializeField] private float scrollDuration = 0.3f;
 
 
-
     private void Start()
     {
-
         LockLevels();
-
     }
+
     private void OnEnable()
     {
         if (GlobalValues.UnlockedLevels > levels.Length)
             GlobalValues.UnlockedLevels = levels.Length;
+
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.HideBanner();
+
         float moveTO = 300;
         float moveDuration = 0.2f;
         switch (GlobalValues.UnlockedLevels)
@@ -45,12 +48,17 @@ public class LevelSelection : MonoBehaviour
         content.DOAnchorPosY(moveTO, moveDuration);
         Debug.Log(GlobalValues.UnlockedLevels);
 
-        
-        levels[GlobalValues.UnlockedLevels - 1].transform.DOPunchScale(new Vector2(0.1f, 0.1f), 0.5f, 1, 1).SetDelay(moveDuration);
-        //StartCoroutine(FocusOnUnlockedLevel());
 
+        levels[GlobalValues.UnlockedLevels - 1].transform.DOPunchScale(new Vector2(0.1f, 0.1f), 0.5f, 1, 1)
+            .SetDelay(moveDuration);
+        //StartCoroutine(FocusOnUnlockedLevel());
     }
 
+    private void OnDisable()
+    {
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowBanner("Level selection close");
+    }
     //IEnumerator FocusOnUnlockedLevel()
     //{
     //    yield return new WaitForEndOfFrame(); // Wait for layout to build
@@ -99,14 +107,13 @@ public class LevelSelection : MonoBehaviour
 
     public void OnBtnPlaylevel()
     {
-        if (Nicko_ADSManager._Instance)
-        
-        Nicko_ADSManager._Instance.ShowInterstitial("PlayButtonAd");
         GlobalValues.currentLevel = selectedLevel;
         //GlobalValues.sceneTOLoad = "Gameplay";
         //Debug.Log("gameplay");
         CanvasScriptSplash.instance.LoadScene("Gameplay");
         //SceneManager.LoadScene("Loading");
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowInterstitial("PlayButtonAd");
     }
 
     public void OnBtnBack()
@@ -114,11 +121,3 @@ public class LevelSelection : MonoBehaviour
         gameObject.SetActive(false);
     }
 }
-
-
-
-
-
-
-
-

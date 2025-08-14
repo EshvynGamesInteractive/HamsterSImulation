@@ -451,7 +451,7 @@ public class GrandpaAI : MonoBehaviour
 
         transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
         animator.SetTrigger("attack");
-        player.GetComponent<PlayerScript>()?.PlayerCaught();
+        player.GetComponent<PlayerScript>()?.PlayerCaught(false);
         dogInHand.SetActive(true);
 
         yield return new WaitForSeconds(4f);

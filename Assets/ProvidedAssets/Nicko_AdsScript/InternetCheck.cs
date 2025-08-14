@@ -27,7 +27,7 @@ public class InternetCheck : MonoBehaviour
     public void Initlize()
     {
         Application.targetFrameRate = 90;
-        remoteConfig.InternetAvailable();
+       remoteConfig.InternetAvailable();  //commented by Khubaib
         if (PrivacyPolicy == 0)
         {
             CanvasScriptSplash.instance.EmptyLoading(() =>
@@ -100,7 +100,7 @@ public class InternetCheck : MonoBehaviour
         CanvasScriptSplash.instance.ChangeCanvas(CanvasStats.InternetNotAvailable);
     }
 
-    public FirebaseRemoteConfig remoteConfig;
+     public FirebaseRemoteConfig remoteConfig;  //commented by Khubaib
 
     public void HidePanel()
     {

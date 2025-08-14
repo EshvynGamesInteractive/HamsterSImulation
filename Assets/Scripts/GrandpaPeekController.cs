@@ -202,7 +202,7 @@ public class GrandpaPeekController : MonoBehaviour
 
         MiniGameManager.Instance.fridgeLevel.btnRevive.SetActive(true);
         dogInHand.SetActive(true);
-        MainScript.instance.player.PlayerCaught();
+        MainScript.instance.player.PlayerCaught(true);
 
     }
 

@@ -199,9 +199,9 @@ public class PlayerScript : MonoBehaviour
         return IsObjectPicked && pickedObject != null;
     }
 
-    public void PlayerCaught()
+    public void PlayerCaught(bool caughtWhileMinigame)
     {
-        MainScript.instance.PlayerCaught();
+        MainScript.instance.PlayerCaught(caughtWhileMinigame);
         cinematicCamera.gameObject.SetActive(true);
         GetComponent<FP_Controller>().StopPlayerMovement();
         playerHead.gameObject.SetActive(false);
@@ -212,6 +212,7 @@ public class PlayerScript : MonoBehaviour
 
     public void PlayereRevived()
     {
+        GetComponent<FP_Controller>().OnEnable();
         MainScript.instance.PlayerRevived();
         HideDogModel();
     }

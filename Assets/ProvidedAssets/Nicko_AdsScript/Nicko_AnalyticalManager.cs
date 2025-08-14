@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Firebase.Analytics;
+using Firebase.Analytics;  //commented by Khubaib
 using GameAnalyticsSDK;
 using GoogleMobileAds.Api;
 using UnityEngine;
@@ -22,33 +22,33 @@ public class Nicko_AnalyticalManager : MonoBehaviour
 
     #region Events
 
-    public void Revenue_ReportMax(string adUnitId, MaxSdkBase.AdInfo impressionData)
-    {
-        double revenue = impressionData.Revenue;
-        // AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAppLovinMAX);
-        // // set revenue and currency
-        // adjustAdRevenue.setRevenue(revenue, "USD");
-        //
-        //
-        // adjustAdRevenue.setAdRevenueNetwork(impressionData.NetworkName);
-        // adjustAdRevenue.setAdRevenueUnit(impressionData.AdUnitIdentifier);
-        //
-        // // track ad revenue
-        // Adjust.trackAdRevenue(adjustAdRevenue);
-        Debug.Log("EnterMax" + impressionData);
-
-        var impressionParameters = new[]
-        {
-            new Firebase.Analytics.Parameter("ad_platform", "AppLovin"),
-            new Firebase.Analytics.Parameter("ad_source", impressionData.NetworkName),
-            new Firebase.Analytics.Parameter("ad_unit_name", impressionData.AdUnitIdentifier),
-            new Firebase.Analytics.Parameter("ad_format", impressionData.AdFormat),
-            new Firebase.Analytics.Parameter("value", revenue),
-            new Firebase.Analytics.Parameter("currency", "USD"), // All AppLovin revenue is sent in USD
-        };
-        Firebase.Analytics.FirebaseAnalytics.LogEvent("ad_impression", impressionParameters);
-        Firebase.Analytics.FirebaseAnalytics.LogEvent("paid_ad_impression", impressionParameters);
-    }
+    // public void Revenue_ReportMax(string adUnitId, MaxSdkBase.AdInfo impressionData)
+    // {
+    //     double revenue = impressionData.Revenue;
+    //     // AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAppLovinMAX);
+    //     // // set revenue and currency
+    //     // adjustAdRevenue.setRevenue(revenue, "USD");
+    //     //
+    //     //
+    //     // adjustAdRevenue.setAdRevenueNetwork(impressionData.NetworkName);
+    //     // adjustAdRevenue.setAdRevenueUnit(impressionData.AdUnitIdentifier);
+    //     //
+    //     // // track ad revenue
+    //     // Adjust.trackAdRevenue(adjustAdRevenue);
+    //     Debug.Log("EnterMax" + impressionData);
+    //
+    //     var impressionParameters = new[]   //commented by Khubaib
+    //     { 
+    //         new Firebase.Analytics.Parameter("ad_platform", "AppLovin"),
+    //         new Firebase.Analytics.Parameter("ad_source", impressionData.NetworkName),
+    //         new Firebase.Analytics.Parameter("ad_unit_name", impressionData.AdUnitIdentifier),
+    //         new Firebase.Analytics.Parameter("ad_format", impressionData.AdFormat),
+    //         new Firebase.Analytics.Parameter("value", revenue),
+    //         new Firebase.Analytics.Parameter("currency", "USD"), // All AppLovin revenue is sent in USD
+    //     };
+    //     Firebase.Analytics.FirebaseAnalytics.LogEvent("ad_impression", impressionParameters);
+    //     Firebase.Analytics.FirebaseAnalytics.LogEvent("paid_ad_impression", impressionParameters);
+    // }
 
 
     public void ProgressionEvent(int Id, int LevelNumber)
@@ -113,35 +113,35 @@ public class Nicko_AnalyticalManager : MonoBehaviour
 
     public void FB_ProgressionEvent(string msg, int LevelNumber)
     {
-        FirebaseAnalytics.LogEvent(msg + LevelNumber);
+        FirebaseAnalytics.LogEvent(msg + LevelNumber);  //commented by Khubaib
         if (GlobalConstant.isLogger)
             print("FB_ProgressionEvent :" + msg + LevelNumber);
     }
 
     public void FB_VideoEvent(string placement)
     {
-        FirebaseAnalytics.LogEvent("ADS_REWARDED_" + placement);
+        FirebaseAnalytics.LogEvent("ADS_REWARDED_" + placement); //commented by Khubaib
         if (GlobalConstant.isLogger)
             print("FB_ADS_REWARDED_" + placement);
     }
 
     public void FB_InterstitialEvent(string placement)
     {
-        FirebaseAnalytics.LogEvent("ADS_INTER_" + placement);
+        FirebaseAnalytics.LogEvent("ADS_INTER_" + placement); //commented by Khubaib
         if (GlobalConstant.isLogger)
             print("FB_ADS_INTER_" + placement);
     }
 
     public void FB_CustomScreenEvent(string placement)
     {
-        FirebaseAnalytics.LogEvent("GD_SCREEN_" + placement);
+        FirebaseAnalytics.LogEvent("GD_SCREEN_" + placement); //commented by Khubaib
         if (GlobalConstant.isLogger)
             print("FB_GD_SCREEN_" + placement);
     }
 
     public void FB_CustomBtnEvent(string placement)
     {
-        FirebaseAnalytics.LogEvent("GD_BTN_" + placement);
+        FirebaseAnalytics.LogEvent("GD_BTN_" + placement); //commented by Khubaib
 
         if (GlobalConstant.isLogger)
             print("FB_GD_BTN_" + placement);
@@ -149,14 +149,14 @@ public class Nicko_AnalyticalManager : MonoBehaviour
 
     public void FB_CustomOtherEvent(string placement)
     {
-        FirebaseAnalytics.LogEvent("GD_Other_" + placement);
+        FirebaseAnalytics.LogEvent("GD_Other_" + placement); //commented by Khubaib
         if (GlobalConstant.isLogger)
             print("FB_GD_Other_" + placement);
     }
 
     public void FB_IAPEvent(string sku)
     {
-        FirebaseAnalytics.LogEvent("IAP_" + sku);
+        FirebaseAnalytics.LogEvent("IAP_" + sku);  //commented by Khubaib
         if (GlobalConstant.isLogger)
             print("FB_IAP_" + sku);
     }
@@ -232,7 +232,7 @@ public class Nicko_AnalyticalManager : MonoBehaviour
         if (GlobalConstant.isLogger)
             Debug.Log("EnterAdmob" + revenue);
 
-        var impressionParameters = new[]
+        var impressionParameters = new[]   //commented by Khubaib
         {
             new Firebase.Analytics.Parameter("ad_platform", "Admob"),
             new Firebase.Analytics.Parameter("ad_source", "Simple Admob"),
@@ -248,37 +248,37 @@ public class Nicko_AnalyticalManager : MonoBehaviour
 
     #region Max Paid Event
 
-//    public void Revenue_ReportMax(string adUnitId, MaxSdkBase.AdInfo impressionData)
-//    {
-//        double revenue = impressionData.Revenue;
-//        AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAppLovinMAX);
-//        // set revenue and currency
-//        adjustAdRevenue.setRevenue(revenue, "USD");
+    public void Revenue_ReportMax(string adUnitId, MaxSdkBase.AdInfo impressionData)
+    {
+         double revenue = impressionData.Revenue;
+        // AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAppLovinMAX);
+        // // set revenue and currency
+        // adjustAdRevenue.setRevenue(revenue, "USD");
+        //
+        //
+        // adjustAdRevenue.setAdRevenueNetwork(impressionData.NetworkName);
+        // adjustAdRevenue.setAdRevenueUnit(impressionData.AdUnitIdentifier);
+        //
+        // // track ad revenue
+        // Adjust.trackAdRevenue(adjustAdRevenue);
+        // Debug.Log("EnterMax" + impressionData);
+        if (impressionData.NetworkName == "AdMob" || impressionData.NetworkName == "Google Ad Manager Native")
+        {
+            return;
+        }
 
-
-//        adjustAdRevenue.setAdRevenueNetwork(impressionData.NetworkName);
-//        adjustAdRevenue.setAdRevenueUnit(impressionData.AdUnitIdentifier);
-
-//        // track ad revenue
-//        Adjust.trackAdRevenue(adjustAdRevenue);
-//        Debug.Log("EnterMax" + impressionData);
-//        if (impressionData.NetworkName == "AdMob" || impressionData.NetworkName == "Google Ad Manager Native")
-//        {
-//            return;
-//        }
-//        var impressionParameters = new[] {
-//  new Firebase.Analytics.Parameter("ad_platform", "AppLovin"),
-//  new Firebase.Analytics.Parameter("ad_source", impressionData.NetworkName),
-//  new Firebase.Analytics.Parameter("ad_unit_name", impressionData.AdUnitIdentifier),
-//  new Firebase.Analytics.Parameter("ad_format", impressionData.AdFormat),
-//  new Firebase.Analytics.Parameter("value", revenue),
-//  new Firebase.Analytics.Parameter("currency", "USD"), // All AppLovin revenue is sent in USD
-//};
-//        Firebase.Analytics.FirebaseAnalytics.LogEvent("ad_impression", impressionParameters);
-//        Firebase.Analytics.FirebaseAnalytics.LogEvent("paid_ad_impression", impressionParameters);
-
-
-//    }
+        var impressionParameters = new[]
+        {
+            new Firebase.Analytics.Parameter("ad_platform", "AppLovin"),
+            new Firebase.Analytics.Parameter("ad_source", impressionData.NetworkName),
+            new Firebase.Analytics.Parameter("ad_unit_name", impressionData.AdUnitIdentifier),
+            new Firebase.Analytics.Parameter("ad_format", impressionData.AdFormat),
+            new Firebase.Analytics.Parameter("value", revenue),
+            new Firebase.Analytics.Parameter("currency", "USD"), // All AppLovin revenue is sent in USD
+        };
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("ad_impression", impressionParameters);
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("paid_ad_impression", impressionParameters);
+    }
 
     #endregion
 }

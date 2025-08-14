@@ -64,7 +64,7 @@ public class FP_Controller : MonoBehaviour
         footSteps = GetComponent<FP_FootSteps>();
     }
 
-    private void OnEnable()
+    public void OnEnable()
     {
         moveDirection = Vector3.zero;
         inputX = 0f;

@@ -328,15 +328,17 @@ public class Nicko_ADSManager : MonoBehaviour
     }
     public void HideRecBanner()
     {
+        Debug.Log("HideMREC1");
         if (!_isBannerShowing)
             return;
     
+        Debug.Log("HideMREC2");
         if (admobInstance != null)
         {
             admobInstance.HideRecBanner(); // Ensure AdMob has this method
             Debug.Log("[ADS] Hiding Admob rectangular banner.");
         }
-        else if (appLovinMax != null && appLovinMax._isRecBannerReady)
+        if (appLovinMax != null)
         {
             appLovinMax.HideRecBanner();
             Debug.Log("[ADS] Hiding Max MREC banner.");
@@ -348,13 +350,14 @@ public class Nicko_ADSManager : MonoBehaviour
     }
     public void HideBanner()
     {
+        Debug.Log("HideBanner");
         if (admobInstance != null)
         {
             admobInstance.HideLeftBanner();
             admobInstance.HideRightBanner();
             Debug.Log("[ADS] Hiding Admob banner.");
         }
-        else if (appLovinMax != null && appLovinMax._isRecBannerReady)
+        if (appLovinMax != null )
         {
             appLovinMax.HideBanner();
             Debug.Log("[ADS] Hiding Max banner.");
@@ -365,6 +368,31 @@ public class Nicko_ADSManager : MonoBehaviour
         // admobInstance.HideRightBanner();
     }
 
+    public void ShowAppOpenAd()
+    {
+        Debug.Log("showing appopen");
+        if (!GlobalConstant.AdsON)
+        {
+            Debug.Log("[ADS] Ads disabled or removed, skipping App Open ad.");
+            return;
+        }
+
+       
+
+        if (appLovinMax != null && appLovinMax.IsAppOpenReady())
+        {
+            HideRecBanner();
+            HideBanner();
+            appLovinMax.ShowAppOpen();
+            Debug.Log("[ADS] Showing Max App Open ad.");
+        }
+        else
+        {
+            HideRecBanner();
+            HideBanner();
+            admobInstance.ShowAppOpenAd();
+        }
+    }
     // public void HideRecBanner()
     // {
     //     _isBannerReady = false;

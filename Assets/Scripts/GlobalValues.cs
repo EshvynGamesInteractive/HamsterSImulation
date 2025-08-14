@@ -18,7 +18,12 @@ public static class GlobalValues
         get { return PlayerPrefs.GetInt("Effects", 1); }
         set { PlayerPrefs.SetInt("Effects", value); }
     }
+    public static int ShowAppOpen
+    {
 
+        get { return PlayerPrefs.GetInt("ShowAppOpen", 0); }
+        set { PlayerPrefs.SetInt("ShowAppOpen", value); }
+    }
     public static int UnlockedLevels
     {
 

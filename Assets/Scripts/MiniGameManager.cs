@@ -41,14 +41,14 @@ public class MiniGameManager : MonoBehaviour
         // Optional: Subscribe to global events here
         //Debug.Log("MiniGameManager enabled");
 
-        OnMiniGameStart += MiniGameStarter;
-        OnMiniGameEnd += MiniGameEnded;
+        // OnMiniGameStart += MiniGameStarter;
+        // OnMiniGameEnd += MiniGameEnded;
     }
 
     private void OnDisable()
     {
-        OnMiniGameStart -= MiniGameStarter;
-        OnMiniGameEnd -= MiniGameEnded;
+        // OnMiniGameStart -= MiniGameStarter;
+        // OnMiniGameEnd -= MiniGameEnded;
         //Debug.Log("MiniGameManager disabled");
     }
 
@@ -66,6 +66,7 @@ public class MiniGameManager : MonoBehaviour
         MainScript.instance.canShowRewardedPopup = false;
         MainScript.instance.HideIndication();
         MainScript.instance.RestartRewardedTimer();
+        MainScript.instance.activeLevel.MiniGameEnded();
         currentTask = MainScript.instance.taskPanel.GetCurrentTask();
 
         ActiveMiniGame = type;
@@ -113,8 +114,8 @@ public class MiniGameManager : MonoBehaviour
     public void MiniGameStarter(MiniGameType miniGameType)
     {
         //Debug.Log(miniGameType);
-
-
+    
+    
         //Debug.Log("minigamestarted");
     }
 
