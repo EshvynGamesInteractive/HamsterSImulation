@@ -89,8 +89,7 @@ public class MiniGameManager : MonoBehaviour
             return;
         }
 
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowInterstitial("MiniGameEnd");
+       
         MainScript.instance.canShowRewardedPopup = true;
         SoundManager.instance.PlaySound(SoundManager.instance.timeOut);
         MainScript.instance.ShowIndication();
@@ -109,6 +108,8 @@ public class MiniGameManager : MonoBehaviour
                 miniGameTriggerZones[i].gameObject.SetActive(true);
             }
         });
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowInterstitial("MiniGameEnd");
     }
 
     public void MiniGameStarter(MiniGameType miniGameType)

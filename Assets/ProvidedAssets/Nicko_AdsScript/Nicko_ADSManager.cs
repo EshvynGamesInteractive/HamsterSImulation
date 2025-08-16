@@ -83,7 +83,7 @@ public class Nicko_ADSManager : MonoBehaviour
         appLovinMax.MaxSdkKey = MaxSdkKey;
         appLovinMax.InterstitialAdUnitId = GlobalConstant.InterstitialAdUnitId;
         appLovinMax.RewardedAdUnitId = GlobalConstant.RewardedAdUnitId;
-     
+
         appLovinMax.adBannerAdUnitId = GlobalConstant.BannerMax;
         appLovinMax.recBannerAdUnitId = GlobalConstant.Mrecmax;
         appLovinMax.appOpenAdUnitId = GlobalConstant.Appopenmax;
@@ -98,6 +98,7 @@ public class Nicko_ADSManager : MonoBehaviour
 
     public void ShowInterstitial(string placement)
     {
+        // return;
         Nicko_Admob.isInterstialAdPresent = true;
         if (isAdsRemove)
         {
@@ -211,8 +212,8 @@ public class Nicko_ADSManager : MonoBehaviour
     //         Nicko_AnalyticalManager.instance.CustomScreenEvent(placement);
     //     }
     // }
-    
-    
+
+
     public void ShowBanner(string placement)
     {
         if (isAdsRemove || !GlobalConstant.AdsON)
@@ -244,7 +245,7 @@ public class Nicko_ADSManager : MonoBehaviour
 
         Nicko_AnalyticalManager.instance?.CustomScreenEvent(placement);
     }
-    
+
 
     // public void RecShowBanner(string placement) //by khubaib
     // {
@@ -303,12 +304,10 @@ public class Nicko_ADSManager : MonoBehaviour
             return;
         }
 
-        if (_isBannerShowing)
-            HideRecBanner(); // Hide existing banner
-
+       
         _isBannerShowing = true;
 
-        if (appLovinMax != null && appLovinMax.IsRecBannerReady())
+        if (appLovinMax)
         {
             appLovinMax.ShowRecBanner();
             Debug.Log("[ADS] Showing Max rectangular banner.");
@@ -316,6 +315,7 @@ public class Nicko_ADSManager : MonoBehaviour
         else if (admobInstance != null)
         {
             admobInstance.ShowRecBanner();
+            appLovinMax.LoadRecBanner();
             Debug.Log("[ADS] Max not ready, showing AdMob rectangular banner.");
         }
         else
@@ -326,28 +326,30 @@ public class Nicko_ADSManager : MonoBehaviour
 
         Nicko_AnalyticalManager.instance?.CustomScreenEvent(placement);
     }
+
     public void HideRecBanner()
     {
         Debug.Log("HideMREC1");
         if (!_isBannerShowing)
             return;
-    
+
         Debug.Log("HideMREC2");
         if (admobInstance != null)
         {
             admobInstance.HideRecBanner(); // Ensure AdMob has this method
             Debug.Log("[ADS] Hiding Admob rectangular banner.");
         }
+
         if (appLovinMax != null)
         {
             appLovinMax.HideRecBanner();
             Debug.Log("[ADS] Hiding Max MREC banner.");
         }
-    
+
         _isBannerShowing = false;
         _isBannerReady = false;
-       
     }
+
     public void HideBanner()
     {
         Debug.Log("HideBanner");
@@ -357,11 +359,13 @@ public class Nicko_ADSManager : MonoBehaviour
             admobInstance.HideRightBanner();
             Debug.Log("[ADS] Hiding Admob banner.");
         }
-        if (appLovinMax != null )
+
+        if (appLovinMax != null)
         {
             appLovinMax.HideBanner();
             Debug.Log("[ADS] Hiding Max banner.");
         }
+
         _isBannerReady = false;
         _isBannerShowing = false;
         // admobInstance.HideLeftBanner();
@@ -377,18 +381,17 @@ public class Nicko_ADSManager : MonoBehaviour
             return;
         }
 
-       
 
         if (appLovinMax != null && appLovinMax.IsAppOpenReady())
         {
-            HideRecBanner();
+         //   HideRecBanner();
             HideBanner();
             appLovinMax.ShowAppOpen();
             Debug.Log("[ADS] Showing Max App Open ad.");
         }
         else
         {
-            HideRecBanner();
+        //    HideRecBanner();
             HideBanner();
             admobInstance.ShowAppOpenAd();
         }
@@ -418,6 +421,8 @@ public class Nicko_ADSManager : MonoBehaviour
 
     public bool IsMaxRecBannerReady()
     {
+        print(appLovinMax._isRecBannerReady);
+        appLovinMax.LoadRecBanner();
         return appLovinMax != null && appLovinMax.IsRecBannerReady();
     }
 

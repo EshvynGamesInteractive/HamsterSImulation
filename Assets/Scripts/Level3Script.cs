@@ -49,7 +49,7 @@ public class Level3Script : LevelScript
             player.DisablePlayer();
             DOVirtual.DelayedCall(balloonTimelineDuration, () =>
             {
-                Typewriter.instance.StartTyping("What the�!? Water on the floor?! Dog! I�m gonna slip and break somethin�!", 2);
+                Typewriter.instance.StartTyping("What the!? Water on the floor?! Dog! I�m gonna slip and break something!", 2);
                 balloonTimeline.SetActive(false);
                 player.EnablePlayer();
 

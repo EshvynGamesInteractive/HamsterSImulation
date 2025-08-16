@@ -62,15 +62,14 @@ public class SmoothLoading : MonoBehaviour
         StartCoroutine(TitleAnimation());
         // Set 0 for progress values.
         progressBar.fillAmount = currentValue = targetValue = 0;
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+ 
     }
 
     private void OnDisable()
     {
-        if (Nicko_ADSManager._Instance)
-
-            Nicko_ADSManager._Instance.HideRecBanner();
+        // if (Nicko_ADSManager._Instance)
+        //
+        //     Nicko_ADSManager._Instance.HideRecBanner();
     }
 
     private IEnumerator TitleAnimation()
@@ -215,8 +214,8 @@ public class SmoothLoading : MonoBehaviour
 
     void ShutLoading()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.HideRecBanner();
+        // if (Nicko_ADSManager._Instance)
+        //     Nicko_ADSManager._Instance.HideRecBanner();
         Debug.Log("shut");
         if(bgForPrivacy!=null)
             bgForPrivacy.SetActive(false);

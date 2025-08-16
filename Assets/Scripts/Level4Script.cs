@@ -115,7 +115,7 @@ public class Level4Script : LevelScript
 
             if (taskNumber == 4)   // when scare hens
             {
-                Typewriter.instance.StartTyping("What�s all that cluckin�?! Dog, stop botherin� the hens!", 4);
+                Typewriter.instance.StartTyping("What's all that clucking?! Dog, stop bothering the hens!", 4);
                 hensTimeline.SetActive(true);
                 player.DisablePlayer();
                 DOVirtual.DelayedCall(hensTimelineDuration, () =>

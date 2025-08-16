@@ -35,10 +35,11 @@ public class MainScript : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("tasknumberg = "  +currentTaskNumber);
         //GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
         if (Nicko_ADSManager._Instance)
         {
-            Nicko_ADSManager._Instance.HideRecBanner();
+           Nicko_ADSManager._Instance.HideRecBanner();
             Nicko_ADSManager._Instance.ShowBanner("GameStart");
         }
 
@@ -254,7 +255,11 @@ public class MainScript : MonoBehaviour
     public void OnBtnRetry()
     {
         if (Nicko_ADSManager._Instance)
+        {
             Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryONPauseAD");
+            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+        }
+
         Time.timeScale = 1;
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");
@@ -264,7 +269,11 @@ public class MainScript : MonoBehaviour
     public void OnBtnRetryAfterLevelCompleted()
     {
         if (Nicko_ADSManager._Instance)
+        {
             Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryAfterWinAD");
+            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+        }
+
         GlobalValues.retryAfterLevelCompleted = true;
         Time.timeScale = 1;
         //GlobalValues.sceneTOLoad = "Gameplay";
@@ -275,7 +284,11 @@ public class MainScript : MonoBehaviour
     public void OnBtnHome()
     {
         if (Nicko_ADSManager._Instance)
+        {
             Nicko_ADSManager._Instance.ShowInterstitial("HomeButtonAD");
+            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+        }
+
         currentTaskNumber = 0;
         decrementedNumber = 0;
         Time.timeScale = 1;
@@ -288,7 +301,11 @@ public class MainScript : MonoBehaviour
     public void OnBtnNext()
     {
         if (Nicko_ADSManager._Instance)
+        {
             Nicko_ADSManager._Instance.ShowInterstitial("NextButtonAD");
+            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+        }
+
         Time.timeScale = 1;
 
         //GlobalValues.sceneTOLoad = "Gameplay";

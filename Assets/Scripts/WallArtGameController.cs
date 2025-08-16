@@ -141,7 +141,7 @@ public class WallArtGameController : MonoBehaviour
             if (!grandpaAI.isSitting)
                 grandpaAI.transform.SetPositionAndRotation(grandpaPosWithWall.position, grandpaPosWithWall.rotation);
 
-            Typewriter.instance.StartTyping("What in the world… is that a paw-painting?! Dog! This wall was clean yesterday!", 2);
+            Typewriter.instance.StartTyping("What in the world, is that a paw-painting?! Dog! This wall was clean yesterday!", 2);
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
                 MiniGameManager.Instance.EndMiniGame();

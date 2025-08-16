@@ -113,7 +113,11 @@ public class LevelSelection : MonoBehaviour
         CanvasScriptSplash.instance.LoadScene("Gameplay");
         //SceneManager.LoadScene("Loading");
         if (Nicko_ADSManager._Instance)
+        {
             Nicko_ADSManager._Instance.ShowInterstitial("PlayButtonAd");
+
+            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+        }
     }
 
     public void OnBtnBack()

@@ -118,7 +118,7 @@ public class Level1Script : LevelScript
             if (taskNumber == 5)    // pour ketchup
             {
                 grandpa.isSitting = false;
-                Typewriter.instance.StartTyping("Blegh! What in tarnation�this ain�t tea! Who put ketchup in my cup?! Dog?!", 3);
+                Typewriter.instance.StartTyping("Blegh! What in tarnation, this ain't tea! Who put ketchup in my cup?! Dog?!", 3);
                 waitDuration = ketchupTimelineDuration;
                 ketchupTimeline.SetActive(true);
                 player.DisablePlayer();
