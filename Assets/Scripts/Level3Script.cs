@@ -49,7 +49,7 @@ public class Level3Script : LevelScript
             player.DisablePlayer();
             DOVirtual.DelayedCall(balloonTimelineDuration, () =>
             {
-                Typewriter.instance.StartTyping("What the!? Water on the floor?! Dog! I�m gonna slip and break something!", 2);
+                Typewriter.instance.StartTyping("What the!? Water on the floor?! Dog! I am gonna slip and break something!", 2);
                 balloonTimeline.SetActive(false);
                 player.EnablePlayer();
 
@@ -67,7 +67,7 @@ public class Level3Script : LevelScript
             items[taskNumber].EnableForInteraction(true);
             MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
 
-            if (taskNumber >=1)
+            if (taskNumber >=1)  
             {
                 grandpa.isSitting = false;
                 tableCloth.SetActive(false);
@@ -78,7 +78,7 @@ public class Level3Script : LevelScript
                 //});
             }
 
-            if (taskNumber == 1)
+            if (taskNumber == 1)  //when bury cloth
                 grandpa.StopTheChase();
 
             if (taskNumber == 2)   // when topple dishes

@@ -67,25 +67,37 @@ public class AppLovinMax : MonoBehaviour
 
     #region recBanner //by Khubaib
 
+    // public void InitializeRecBanner()  //commented by Khubaib
+    // {
+    //     if (!GlobalConstant.AdsON)
+    //         return;
+    //
+    //     // Attach callbacks for MREC
+    //     MaxSdkCallbacks.MRec.OnAdLoadedEvent += OnMRecLoadedEvent;
+    //     MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecFailedEvent;
+    //     MaxSdkCallbacks.MRec.OnAdClickedEvent += OnMRecClickedEvent;
+    //     MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += Nicko_AnalyticalManager.instance.Revenue_ReportMax;
+    //
+    //     LoadRecBanner();
+    // }
     public void InitializeRecBanner()
     {
         if (!GlobalConstant.AdsON)
             return;
 
-        // Attach callbacks for MREC
         MaxSdkCallbacks.MRec.OnAdLoadedEvent += OnMRecLoadedEvent;
         MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecFailedEvent;
         MaxSdkCallbacks.MRec.OnAdClickedEvent += OnMRecClickedEvent;
         MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += Nicko_AnalyticalManager.instance.Revenue_ReportMax;
 
-        LoadRecBanner();
+        // Create once
+        MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft);
     }
-
     public void InitializeBanner()
     {
         if (!GlobalConstant.AdsON)
             return;
-
+        
         // Attach callbacks for MREC
         MaxSdkCallbacks.Banner.OnAdLoadedEvent += OnBannerLoadedEvent;
         MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += OnBannerFailedEvent;
@@ -100,7 +112,7 @@ public class AppLovinMax : MonoBehaviour
     {
         MaxSdk.CreateMRec(GlobalConstant.Mrecmax, MaxSdkBase.AdViewPosition.TopLeft); // Adjust position if needed
         MaxSdk.LoadMRec(recBannerAdUnitId);
-        _isRecBannerReady = true;
+         _isRecBannerReady = true;
         Debug.Log("[Max] Requested MREC banner load");
     }
 
@@ -112,6 +124,14 @@ public class AppLovinMax : MonoBehaviour
         Debug.Log("[Max] Requested banner load");
     }
 
+    // private void OnMRecLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)  //commented by Khubaib
+    // {
+    //     if (adUnitId == recBannerAdUnitId)
+    //     {
+    //         _isRecBannerReady = true;
+    //         Debug.Log("[Max] MREC banner loaded");
+    //     }
+    // }
     private void OnMRecLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
         if (adUnitId == recBannerAdUnitId)
@@ -120,13 +140,18 @@ public class AppLovinMax : MonoBehaviour
             Debug.Log("[Max] MREC banner loaded");
         }
     }
-
+    // private void OnMRecFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)//commented by Khubaib
+    // {
+    //     _isRecBannerReady = false;
+    //     Debug.LogWarning($"[Max] MREC banner failed to load: {errorInfo.Message}");
+    //     // Retry loading after a delay
+    //     Invoke(nameof(LoadRecBanner), 5f);
+    // }
+    
     private void OnMRecFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
     {
         _isRecBannerReady = false;
         Debug.LogWarning($"[Max] MREC banner failed to load: {errorInfo.Message}");
-        // Retry loading after a delay
-        Invoke(nameof(LoadRecBanner), 5f);
     }
 
     private void OnMRecClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -156,22 +181,38 @@ public class AppLovinMax : MonoBehaviour
         Debug.Log("[Max]   banner clicked");
     }
 
+    // public void ShowRecBanner()  //commented by Khubaib
+    // {
+    //     Debug.Log("recBannerReady = "+_isRecBannerReady);
+    //     if (_isRecBannerReady)
+    //     {
+    //         MaxSdk.ShowMRec(recBannerAdUnitId);
+    //         Debug.Log("[Max] MREC banner shown");
+    //         _isRecBannerReady = false;
+    //         Debug.Log("recBannerReady = "+_isRecBannerReady);
+    //         LoadRecBanner(); // reload after showing}
+    //     }
+    //     else
+    //     {
+    //         LoadRecBanner();
+    //         Nicko_ADSManager._Instance.admobInstance.ShowRecBanner();
+    //     }
+    // }
     public void ShowRecBanner()
     {
+        Debug.Log("recBannerReady = " + _isRecBannerReady);
+
         if (_isRecBannerReady)
         {
             MaxSdk.ShowMRec(recBannerAdUnitId);
             Debug.Log("[Max] MREC banner shown");
-            _isRecBannerReady = false;
-            LoadRecBanner(); // reload after showing}
         }
         else
         {
-            LoadRecBanner();
+            Debug.LogWarning("[Max] MREC not ready, falling back to AdMob...");
             Nicko_ADSManager._Instance.admobInstance.ShowRecBanner();
         }
     }
-
     public void ShowBanner()
     {
         Debug.Log("[Max] bannner shown");
@@ -181,7 +222,7 @@ public class AppLovinMax : MonoBehaviour
     public void HideRecBanner()
     {
         MaxSdk.HideMRec(recBannerAdUnitId);
-        _isRecBannerReady = false;
+        // _isRecBannerReady = false;
         Debug.Log("[Max] MREC banner hidden");
     }
 

@@ -153,6 +153,7 @@ public class Level4Script : LevelScript
                 player.EnablePlayer();
                 grandpa.transform.SetPositionAndRotation(sitPos.position, sitPos.rotation);
                 grandpa.gameObject.SetActive(true);
+                grandpa.isSitting = false;
                 grandpa.ChasePlayerForDuration(30);
                 squirrelCutscene.SetActive(false);
                 squirrel.RunTowardsCage();

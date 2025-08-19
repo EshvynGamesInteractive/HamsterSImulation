@@ -12,10 +12,11 @@ public class NewspaperScript : Pickable
         if (startGrandpaChase)
         {
             DOVirtual.DelayedCall(3, () =>
-        {
-            MainScript.instance.grandPa.ChasePlayerForDuration(30);
-        });
+            {
+                if (MainScript.instance.grandPa.isSitting)
+                    MainScript.instance.grandPa.isSitting = false;
+                MainScript.instance.grandPa.ChasePlayerForDuration(30);
+            });
         }
-
     }
 }
