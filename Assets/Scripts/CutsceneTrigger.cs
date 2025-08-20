@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CutsceneTrigger : MonoBehaviour
 {
-    [SerializeField] GameObject cutsceneTOPlay;
+    [SerializeField] GameObject cutsceneTOPlay, particle;
     [SerializeField] float cutsceneDuration = 5;
     [SerializeField] Transform placementPos;
     [SerializeField] int taskNumber = 2;
@@ -11,13 +11,14 @@ public class CutsceneTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<PlayerScript>(out PlayerScript player))
+        if (other.TryGetComponent<PlayerScript>(out PlayerScript player))
         {
             if (player.pickedObject == null)
             {
                 MainScript.instance.pnlInfo.ShowInfo(txtTOShow);
                 return;
             }
+
             MainScript.instance.grandPa.StopTheChase();
 
             Pickable itemTODrop = player.pickedObject;
@@ -37,6 +38,8 @@ public class CutsceneTrigger : MonoBehaviour
             player.DisablePlayer();
             //Debug.Log(cutsceneTOPlay + "ssssssssssssssssssssssssssssssssssssssssssss");
             cutsceneTOPlay.SetActive(true);
+            if (particle != null)
+                particle.SetActive(false);
             MainScript.instance.RestartRewardedTimer();
             DOVirtual.DelayedCall(cutsceneDuration, () =>
             {
@@ -45,24 +48,23 @@ public class CutsceneTrigger : MonoBehaviour
 
                 placementPos.gameObject.SetActive(false);
 
-                if (taskNumber == -1)  // means no need to increment task for level. just continue the ongoing task
+                if (taskNumber == -1) // means no need to increment task for level. just continue the ongoing task
                 {
                     MainScript.instance.activeLevel.TaskCompleted(MainScript.currentTaskNumber);
                     return;
                 }
 
                 MainScript.instance.activeLevel.TaskCompleted(taskNumber);
-
             });
         }
     }
-
 
 
     private void OnEnable()
     {
         MainScript.instance.HideIndication();
     }
+
     private void OnDisable()
     {
         MainScript.instance.ShowIndication();

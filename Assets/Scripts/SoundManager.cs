@@ -7,7 +7,8 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField]private AudioSource musicSource, effectsSource, loopSource;
     public AudioClip buttonClick, levelFail, levelComplete, taskComplete, ballLaunch, timeOut, dogBark, eat, interact, bubblePop, dogPawPrint, 
-        dropBucket, spillWater, lightSwitch, throwBlanket, pour, fireAlarm, spillTrash, throwItem, toppleDishes, lick, hens, goat, cageOpen, catMeow;
+        dropBucket, spillWater, lightSwitch, throwBlanket, pour, fireAlarm, spillTrash, 
+        throwItem, toppleDishes, lick, hens, goat, cageOpen, catMeow, balloonPop;
 
     private void Awake()
     {

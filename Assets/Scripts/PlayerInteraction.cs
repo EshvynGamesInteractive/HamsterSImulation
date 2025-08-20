@@ -56,11 +56,11 @@ public class PlayerInteraction : MonoBehaviour
                     txtInteraction.text = interactable.interactionText;
                 interactButton?.SetActive(true);
 
-                //currentInteractable.ShowOutline();
+                currentInteractable.ShowOutline();
                 return;
             }
         }
-        //currentInteractable?.HideOutline();
+        currentInteractable?.HideOutline();
         currentInteractable = null;
         interactButton?.SetActive(false);
     }

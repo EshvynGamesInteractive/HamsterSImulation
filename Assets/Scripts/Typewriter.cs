@@ -22,7 +22,8 @@ public class Typewriter : MonoBehaviour
     public void StartTyping(string message, float delay)
     {
         if (typingCoroutine != null)
-            StopCoroutine(typingCoroutine);
+            return;
+            // StopCoroutine(typingCoroutine);
         
         typingCoroutine = StartCoroutine(TypeText(message, delay));
     }
@@ -39,5 +40,6 @@ public class Typewriter : MonoBehaviour
         }
         yield return new WaitForSeconds(3);
         bg.DOFade(0, 0.1f);
+        typingCoroutine = null;
     }
 }

@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -18,7 +21,8 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private Transform animRightPaw; // Animation right paw, parented to camera
     [SerializeField] private Transform animLeftPaw; // Animation left paw, parented to camera
     [SerializeField] private float pawCenterDistance = 0.5f;
-
+    [SerializeField] private Image pawAttackImg;
+        
     public bool IsObjectPicked { get; private set; }
     public Pickable pickedObject;
 
@@ -46,6 +50,14 @@ public class PlayerScript : MonoBehaviour
         if (!playerCamera || !rightPaw || !leftPaw || !animRightPaw || !animLeftPaw)
         {
             Debug.LogError("Camera or paws missing.");
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            OnAttack();
         }
     }
 
@@ -84,6 +96,85 @@ public class PlayerScript : MonoBehaviour
             rightPaw.gameObject.SetActive(true);
             animRightPaw.gameObject.SetActive(false);
             isPicking = false;
+        });
+    }
+
+
+
+    public void AnimatePawAttack()
+    {
+        if (isPicking) return;
+        isPicking = true;
+
+
+        pawAttackImg.fillAmount = 0;
+        pawAttackImg.fillOrigin = (int)Image.OriginHorizontal.Right; // or Top, depending on UI setup
+
+        // Fill forward
+        pawAttackImg.DOFillAmount(1, 0.3f).OnComplete(() =>
+        {
+            // Switch origin, so it starts hiding from the same side
+            pawAttackImg.fillOrigin = (int)Image.OriginHorizontal.Left;
+            pawAttackImg.DOFillAmount(0, 0.2f);
+        });
+        
+        bool useRight = Random.value > 0.5f; // 50% chance
+        Transform walkPaw = useRight ? rightPaw : leftPaw;
+        Transform animPaw = useRight ? animRightPaw : animLeftPaw;
+
+        // Disable walking paw, enable attack paw
+        walkPaw.gameObject.SetActive(false);
+        animPaw.gameObject.SetActive(true);
+
+        float attackDown = -150f;  // swing down
+        float attackReturn = -20f; // reset
+        float rotTowardMid = 20f; // paw rotation towards mid screen
+
+
+        if (useRight)
+            rotTowardMid = -20;
+       
+        
+        Sequence attackSeq = DOTween.Sequence();
+
+        // Quick strike down
+        attackSeq.Append(animPaw.DOLocalRotate(
+            new Vector3(attackDown, rotTowardMid, 0),
+            moveDuration * 0.6f
+        ).SetEase(Ease.OutQuad));
+
+        // Snap back
+        attackSeq.Append(animPaw.DOLocalRotate(
+            new Vector3(attackReturn, rotTowardMid, 0),
+            moveDuration * 0.4f
+        ).SetEase(Ease.InQuad));
+
+        attackSeq.OnComplete(() =>
+        {
+            walkPaw.gameObject.SetActive(true);
+            animPaw.gameObject.SetActive(false);
+            isPicking = false;
+        });
+    }
+
+    public void OnAttack()
+    {
+        AnimatePawAttack();
+
+        // Example: do hit check right when paw swings down
+        DOVirtual.DelayedCall(0.15f, () =>
+        {
+            if (Physics.Raycast(playerCamera.position, playerCamera.forward, out RaycastHit hit, 1f))
+            {
+                if (hit.collider.TryGetComponent<GrandpaAI>(out GrandpaAI grandpa))
+                {
+                    grandpa.MakeGrandpaAngry();
+                }
+                if (hit.collider.TryGetComponent<BalloonScript>(out BalloonScript balloon))
+                {
+                    balloon.PopBalloon();
+                }
+            }
         });
     }
 
@@ -158,12 +249,16 @@ public class PlayerScript : MonoBehaviour
         Rigidbody rb = pickedObject.gameObject.AddComponent<Rigidbody>();
         rb.AddForce(playerHead.forward * throwForce, ForceMode.Impulse);
 
+        float angularVel = Random.Range(30f, 50f);
+        Vector3 randomDir = Random.onUnitSphere;
+        rb.angularVelocity = randomDir * angularVel;
+
         Transform objectThrown = pickedObject.transform;
-        DOVirtual.DelayedCall(moveDuration + 0.2f, () =>
-        {
+        // DOVirtual.DelayedCall(moveDuration + 0.2f, () =>
+        // {
             ChangeObjectLayer(objectThrown, "Default");  //added delay so object doesnt collide with player
 
-        });
+        // });
 
         if (pickedObject.TryGetComponent<WaterBalloon>(out WaterBalloon balloon))
             MainScript.instance.activeLevel.TaskCompleted(5);

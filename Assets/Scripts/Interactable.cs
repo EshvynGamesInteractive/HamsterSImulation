@@ -14,10 +14,13 @@ public abstract class Interactable : MonoBehaviour
 
     private void Awake()
     {
-        if (outline == null)
-            outline = TryGetComponent<Outline>(out var outl) ? outl : null;
+        if (outline == null && TryGetComponent<Outline>(out var outl))
+        {
+            outl.enabled = false;
+            outline = outl;
+        }
 
-      
+        
         if (enableAtStart)
         {
             EnableForInteraction(showIndicationAtStart);

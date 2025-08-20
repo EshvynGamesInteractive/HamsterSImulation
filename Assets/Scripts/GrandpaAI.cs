@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,16 +8,18 @@ using UnityEngine.AI;
 public class GrandpaAI : MonoBehaviour
 {
     #region Inspector Fields
-    [Header("General References")]
-    public GameObject dogInHand;
+
+    [Header("General References")] public GameObject dogInHand;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform grandPaCamera;
     [SerializeField] private Material faceMat;
     [SerializeField] private ParticleSystem angryEmote;
+    [SerializeField] private ParticleSystem hitParticle;
 
-    [Header("Chase Settings")]
-    [SerializeField] private Transform chaseEndPoint;
+    [Header("Chase Settings")] [SerializeField]
+    private Transform chaseEndPoint;
+
     public float chaseEndThreshold = 1f;
     [SerializeField] private bool scoldPlayerWhenSee;
     [SerializeField] private bool shouldCatchPlayer = true;
@@ -24,23 +27,27 @@ public class GrandpaAI : MonoBehaviour
     public float catchRange = 2.5f;
     [Range(0, 180)] public float viewAngle = 180;
 
-    [Header("Patrol Settings")]
-    [SerializeField] private List<Transform> waypointsGroundFloor;
+    [Header("Patrol Settings")] [SerializeField]
+    private List<Transform> waypointsGroundFloor;
+
     [SerializeField] private List<Transform> waypointsFirstFloor;
+    [SerializeField] private List<Transform> waypointsGroundToFirstFloor;
     public List<Transform> waypoints;
     public float[] waitDurations;
     public float reachThreshold = 0.5f;
 
-    [Header("Floor Settings")]
-    [SerializeField] private float floorHeightThreshold = 3f;
+    [Header("Floor Settings")] [SerializeField]
+    private float floorHeightThreshold = 3f;
 
     #endregion
 
     #region Private State
+
     private PlayerScript player;
     private int currentIndex = 0;
     private int direction = 1;
     private bool isWaiting = false;
+    private bool isRunning = false;
     private bool isChasing = false;
     private bool stopWalking = false;
     public bool isSitting = false;
@@ -48,16 +55,18 @@ public class GrandpaAI : MonoBehaviour
     // Duration-based chase
     private bool isChasingForDuration;
     private float chaseTimer;
-    
-    
+
+
     [SerializeField] private float chaseRange = 10f;
     [SerializeField] private float checkInterval = 0.2f;
     [SerializeField] private float navMeshSearchRadius = 2f;
 
     private float checkTimer;
+
     #endregion
 
     #region Unity Methods
+
     private void Start()
     {
         player = MainScript.instance.player;
@@ -102,14 +111,14 @@ public class GrandpaAI : MonoBehaviour
                 EnableWalking(true);
                 MoveToCurrentWaypoint();
             }
+
             Patrol();
         }
 
         if (scoldPlayerWhenSee && CanSeePlayer())
             ChasePlayer(playerDistance);
-        
-       
     }
+
     private void ChasePlayer()
     {
         if (Vector3.Distance(transform.position, player.transform.position) <= chaseRange)
@@ -130,9 +139,11 @@ public class GrandpaAI : MonoBehaviour
             }
         }
     }
+
     #endregion
 
     #region Patrol Logic
+
     public void StartPatrolOnFirstFloor()
     {
         waypoints = waypointsFirstFloor;
@@ -161,13 +172,17 @@ public class GrandpaAI : MonoBehaviour
     private IEnumerator WaitAtWaypoint()
     {
         isWaiting = true;
+
         EnableWalking(false);
 
         float waitTime = waitDurations.Length > currentIndex ? waitDurations[currentIndex] : 1f;
+        if (isRunning)
+            waitTime = 0;
         yield return new WaitForSeconds(waitTime);
 
         GetNextWaypoint();
         MoveToCurrentWaypoint();
+
         EnableWalking(true);
         isWaiting = false;
     }
@@ -196,13 +211,15 @@ public class GrandpaAI : MonoBehaviour
                 currentIndex = waypoints.Count - 1;
 
             agent.SetDestination(waypoints[currentIndex].position);
+
             EnableWalking(true);
         }
     }
+
     #endregion
 
     #region Chase Logic
-    
+
     private void ChasePlayer(float distance)
     {
         if (!agent.enabled) return;
@@ -215,8 +232,10 @@ public class GrandpaAI : MonoBehaviour
         if (distance <= catchRange && CanSeePlayer())
             StartCoroutine(ScoldPlayer());
     }
+
     private float updateTimer;
     [SerializeField] private float updateInterval = 0.25f; // 4 times a second
+
     private void HandleChaseDuration()
     {
         chaseTimer -= Time.deltaTime;
@@ -258,8 +277,8 @@ public class GrandpaAI : MonoBehaviour
     /// snapping to nearest NavMesh point if the player is off-navmesh.
     /// </summary>
     private Vector3? lastSampledPoint = null; // store for gizmos
-    private bool lastSampledSuccess = false;
 
+    private bool lastSampledSuccess = false;
 
 
     private void SetDestinationToPlayer()
@@ -420,9 +439,11 @@ public class GrandpaAI : MonoBehaviour
         agent.enabled = true;
         EnableWalking(true);
     }
+
     #endregion
 
     #region Interaction Logic
+
     private bool CanSeePlayer()
     {
         Vector3 origin = transform.position + Vector3.up * 1.3f;
@@ -440,6 +461,7 @@ public class GrandpaAI : MonoBehaviour
             // Debug.DrawRay(origin, directionToPlayer * detectionRange, Color.red);
             return hit.collider.CompareTag("Player");
         }
+
         return false;
     }
 
@@ -508,15 +530,140 @@ public class GrandpaAI : MonoBehaviour
             grandPaCamera.DOMove(player.playerCamera.position, 0.2f);
             grandPaCamera.DORotate(player.playerCamera.eulerAngles, 0.2f).OnComplete(() =>
             {
+                GetComponent<Collider>().enabled = true;
                 grandPaCamera.gameObject.SetActive(false);
                 player.EnablePlayer();
                 MainScript.instance.activeLevel.TaskCompleted(1);
             });
         });
     }
+
+    private void GrandpaSlip()
+    {
+        MainScript.instance.RestartRewardedTimer();
+
+
+        animator.SetTrigger("Slip");
+        EnableWalking(false);
+        stopWalking = true;
+        agent.enabled = false;
+        GetComponent<Collider>().enabled = false;
+
+        if (faceMat != null) faceMat.color = Color.red;
+
+        Typewriter.instance.StartTyping("Dang it! Slipped again?! This dog's gonna be the end of me!", 3);
+
+        DOVirtual.DelayedCall(4, angryEmote.Play);
+
+        MainScript.instance.pnlInfo.ShowInfo("Grandpa's down. Run while you can");
+
+        DOVirtual.DelayedCall(3.5f, () =>
+        {
+            if (faceMat != null) faceMat.color = Color.white;
+
+            GetComponent<Collider>().enabled = true;
+            
+            ChasePlayerForDuration(10);
+        });
+    }
+
+    public void MakeGrandpaAngry()
+    {
+        if (isSitting)
+        {
+            MainScript.instance.pnlInfo.ShowInfo("Don't disturb grandpa when he is resting");
+            return;
+        }
+
+        if (isChasing)
+            StopTheChase();
+        transform.LookAt(player.transform);
+        MainScript.instance.RestartRewardedTimer();
+        Debug.Log("Angryyyyy");
+
+        animator.SetTrigger("Angry");
+        EnableWalking(false);
+        stopWalking = true;
+        agent.enabled = false;
+        GetComponent<Collider>().enabled = false;
+
+        if (faceMat != null) faceMat.color = Color.red;
+
+        Typewriter.instance.StartTyping("Ouch! You naughty dog, I’ll catch you!", 1);
+
+        DOVirtual.DelayedCall(4, angryEmote.Play);
+
+        MainScript.instance.pnlInfo.ShowInfo("You made Grandpa angry, he’s coming after you!");
+
+        DOVirtual.DelayedCall(3, () =>
+        {
+            if (faceMat != null) faceMat.color = Color.white;
+            GetComponent<Collider>().enabled = true;
+            ChasePlayerForDuration(10);
+        });
+    }
+
+    public void ElectrocuteGrandpa()
+    {
+        if (isSitting)
+        {
+            MainScript.instance.pnlInfo.ShowInfo("Don't disturb grandpa when he is resting");
+            return;
+        }
+
+        if (isChasing)
+            StopTheChase();
+        transform.LookAt(player.transform);
+        MainScript.instance.RestartRewardedTimer();
+        Debug.Log("electrocuted");
+
+        animator.SetTrigger("Electrocuted");
+        EnableWalking(false);
+        stopWalking = true;
+        agent.enabled = false;
+        GetComponent<Collider>().enabled = false; //so no other thing get hit and exeuted
+
+        if (faceMat != null) faceMat.color = Color.red;
+
+        Typewriter.instance.StartTyping("Ouch! You naughty dog, I’ll catch you!", 1);
+
+        DOVirtual.DelayedCall(8, angryEmote.Play);
+
+        MainScript.instance.pnlInfo.ShowInfo("You made Grandpa angry, he’s coming after you!");
+
+        DOVirtual.DelayedCall(3, () =>
+        {
+            if (faceMat != null) faceMat.color = Color.white;
+            GetComponent<Collider>().enabled = true;
+            ChasePlayerForDuration(10);
+        });
+    }
+
+    private void MakeGrandpaRun()
+    {
+        if (isChasing)
+            StopTheChase();
+        isRunning = true;
+        animator.SetBool("isRunning", true);
+        float runDuration = 3;
+        EnableWalking(false);
+        waypoints = waypointsGroundToFirstFloor;
+        agent.speed = 2.5f;
+        DOVirtual.DelayedCall(6, () =>
+        {
+            waypoints = waypointsGroundFloor;
+            isRunning = false;
+            agent.speed = 0.7f;
+            EnableWalking(true);
+            animator.SetBool("isRunning", false);
+            ChasePlayerForDuration(10);
+        });
+    }
+
     #endregion
 
     #region Helpers & Triggers
+
     public bool IsOnFirstFloor() => transform.position.y > floorHeightThreshold;
     public bool IsOnGroundFloor() => transform.position.y <= floorHeightThreshold;
 
@@ -524,63 +671,51 @@ public class GrandpaAI : MonoBehaviour
     {
         if (other.CompareTag("Water"))
             GrandpaFall();
+        // if (other.gameObject.TryGetComponent<Pickable>(out Pickable pickable))
+        // {
+        //     MakeGrandpaAngry();
+        //     StopTheChase();
+        // }
     }
 
-    private void EnableWalking(bool enable) => animator.SetBool("isWalking", enable);
-    public void NotifyPlayerHasThrown() { }
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.TryGetComponent<Pickable>(out Pickable pickable))
+        {
+            ContactPoint contact = other.contacts[0];
+
+            // Place particle a tiny bit outward along the surface normal
+            hitParticle.transform.position = contact.point + contact.normal * 0.01f;
+            hitParticle.transform.rotation = Quaternion.LookRotation(contact.normal);
+
+            hitParticle.Play();
+
+            // MakeGrandpaAngry();
+
+            // MakeGrandpaRun();
+
+            // ElectrocuteGrandpa();
+
+            // GrandpaFall();
+            
+            GrandpaSlip();
+            
+        }
+    }
+
+    private void EnableWalking(bool enable)
+    {
+        Debug.Log(enable + " Walking");
+
+        animator.SetBool("isWalking", enable);
+    }
+
+    public void NotifyPlayerHasThrown()
+    {
+    }
+
     #endregion
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // using DG.Tweening;
@@ -1024,39 +1159,6 @@ public class GrandpaAI : MonoBehaviour
 //
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //using DG.Tweening;
 //using System.Collections;
 //using System.Collections.Generic;
@@ -1240,7 +1342,6 @@ public class GrandpaAI : MonoBehaviour
 //            //Collider[] hits = Physics.OverlapSphere(sphereCenter, catchRange, playerLayerMask);
 
 
-
 //            //foreach (var hit in hits)
 //            //{
 //            //    Debug.Log(hit.transform.name);
@@ -1311,8 +1412,6 @@ public class GrandpaAI : MonoBehaviour
 //    //}
 
 
-
-
 //    IEnumerator ScoldPlayer()
 //    {
 //        stopWalking = true;
@@ -1332,7 +1431,6 @@ public class GrandpaAI : MonoBehaviour
 //        //MoveToCurrentWaypoint();
 //        //animator.SetBool("isWalking", true);
 //    }
-
 
 
 //    public void NotifyPlayerHasThrown()
