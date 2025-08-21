@@ -14,17 +14,24 @@ public class DoorScript : Interactable
     {
         if(door == null)
             door = transform;
+        
+        // if(isOpen)
+        //     OpenDoor();
+        // else
+        //     CloseDoor();
     }
     protected void OpenDoor()
     {
         isOpen = true;
         door.DOLocalRotate(new Vector3(0, openAngle, 0), animationDuration);
+        SoundManager.instance.PlaySound(SoundManager.instance.doorOpen);
     }
 
     public void CloseDoor()
     {
         isOpen = false;
         door.DOLocalRotate(new Vector3(0, closeAngle, 0), animationDuration);
+        SoundManager.instance.PlaySound(SoundManager.instance.doorClose);
     }
 
     public override void Interact(PlayerScript player)

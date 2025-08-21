@@ -424,7 +424,7 @@ public class AppLovinMax : MonoBehaviour
         Debug.Log("Interstitial dismissed");
         LoadInterstitial();
     }
-
+  
     #endregion
 
     #region Rewarded Ad Methods
@@ -464,6 +464,42 @@ public class AppLovinMax : MonoBehaviour
             Nicko_Admob.isInterstialAdPresent = true;
             MaxSdk.ShowRewardedAd(RewardedAdUnitId);
         }
+    }
+    
+    
+    public void ShowRewardedOrInterstitialAd(Action ac)//added by Khubaib
+    {
+        if (isAdsRemove || !GlobalConstant.AdsON)
+            return;
+
+        action = ac;
+
+        if (MaxSdk.IsRewardedAdReady(RewardedAdUnitId))
+        {
+            MaxSdk.ShowRewardedAd(RewardedAdUnitId);
+            
+        }
+        else if (MaxSdk.IsInterstitialReady(InterstitialAdUnitId))
+        {
+            MaxSdk.ShowInterstitial(InterstitialAdUnitId);
+
+            // Listen for interstitial close → reward after ad closes
+            MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += OnRewardedInterstitialClosedd;
+
+            if (Nicko_AnalyticalManager.instance)
+                Nicko_AnalyticalManager.instance.VideoEvent("InterstitialReviveFallback");
+        }
+        else
+        {
+            // No ads at all → give reward immediately
+            ac?.Invoke();
+        }
+    }
+
+    private void OnRewardedInterstitialClosedd(string adUnitId, MaxSdkBase.AdInfo adInfo) //added by Khubaib
+    {
+        action?.Invoke(); // Give revive reward
+        MaxSdkCallbacks.Interstitial.OnAdHiddenEvent -= OnRewardedInterstitialClosedd; // Unsubscribe
     }
 
     public bool IsRewardedLoaded;
@@ -524,7 +560,7 @@ public class AppLovinMax : MonoBehaviour
         // Rewarded ad was displayed and user should receive the reward
         Debug.Log("Rewarded ad received reward");
     }
-
+  
     #endregion
 }
 

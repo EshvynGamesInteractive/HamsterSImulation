@@ -97,7 +97,7 @@ public class FP_Controller : MonoBehaviour
 
     public void EnterHeistMode()
     {
-        GetComponent<FP_CameraLook>().headBob.BobHeight = 0.1f;
+        GetComponent<FP_CameraLook>().headBob.BobHeight = 0.06f;
         walkSpeed = 0.7f;
         runSpeed = 1f;
         crouchSpeed = 0.5f;
@@ -105,7 +105,7 @@ public class FP_Controller : MonoBehaviour
 
     public void ExitHeistMode()
     {
-        GetComponent<FP_CameraLook>().headBob.BobHeight = 0.3f;
+        GetComponent<FP_CameraLook>().headBob.BobHeight = 0.1f;
         walkSpeed = 1f;
         runSpeed = 1.5f;
         crouchSpeed = 1f;

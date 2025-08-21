@@ -53,6 +53,7 @@ public class CatAI : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Sock"))
         {
+            collision.gameObject.GetComponent<Interactable>().DisableForInteraction(true);
             SoundManager.instance.PlaySound(SoundManager.instance.catMeow);
             MainScript.instance.activeLevel.TaskCompleted(3);
             Invoke(nameof(OnSockHit), 6);
@@ -71,6 +72,7 @@ public class CatAI : MonoBehaviour
 
     private void MoveToNextWaypoint()
     {
+        animator.SetTrigger(runAnimation);
         currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length; // Loop through waypoints
         agent.SetDestination(waypoints[currentWaypointIndex].position);
     }

@@ -11,7 +11,9 @@ public enum MiniGameType
     BubblePopBlitz,
     CushionTrampoline,
     WallArtWhirl,
-    BubblePopBlitzGround
+    BubblePopBlitzGround,
+    Piano,
+    Drum
 }
 
 public class MiniGameManager : MonoBehaviour

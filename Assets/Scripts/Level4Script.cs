@@ -12,7 +12,7 @@ public class Level4Script : LevelScript
     [SerializeField] GameObject catTimeline, hensTimeline;
     [SerializeField] float catTimelineDuration, hensTimelineDuration;
     [SerializeField] GameObject squirrelCage;
-    private bool isSittingForSquirrel=true;
+    private bool isSittingForSquirrel = true;
 
 
     private void Start()
@@ -31,24 +31,19 @@ public class Level4Script : LevelScript
     private void MakeGrandpaSitForSquirrel()
     {
         grandpa.MakeGrandpaSit(sitPos);
-        DOVirtual.DelayedCall(1, () =>
-        {
-            grandpa.MakeGrandpaSit(sitPos);
-        });
+        DOVirtual.DelayedCall(1, () => { grandpa.MakeGrandpaSit(sitPos); });
 
         //TaskCompleted(MainScript.currentTaskNumber);
         grandpa.StopTheChase();
     }
+
     private new void OnEnable()
     {
         base.OnEnable();
         if (MainScript.currentTaskNumber < 0)
             MainScript.currentTaskNumber = 0;
 
-        DOVirtual.DelayedCall(1, () =>
-        {
-            TaskCompleted(MainScript.currentTaskNumber);
-        });
+        DOVirtual.DelayedCall(1, () => { TaskCompleted(MainScript.currentTaskNumber); });
     }
 
     public override void TaskCompleted(int taskNumber)
@@ -68,7 +63,7 @@ public class Level4Script : LevelScript
             //if (taskNumber == 0)
             //{
             //    //DOVirtual.DelayedCall(1, () => MakeGrandpaSitForSquirrel());
-                
+
             //    //isSittingForSquirrel = true;
             //}
             //else
@@ -95,41 +90,47 @@ public class Level4Script : LevelScript
             //if (taskNumber == 1)
             //    grandpa.StopTheChase();
 
-            if (taskNumber == 2)   // when release squirrel
+            if (taskNumber == 2) // when release squirrel
                 PlaySquirrelCutscene();
 
-            if (taskNumber == 3)   // when throw cat at sock
+            if (taskNumber == 3) // when throw cat at sock
             {
-                catTimeline.SetActive(true);
-                player.DisablePlayer();
-                DOVirtual.DelayedCall(catTimelineDuration, () =>
+                if (catTimelineDuration > 0)
                 {
-                    catTimeline.SetActive(false);
-                    player.EnablePlayer();
-                    grandpa.ChasePlayerForDuration(30);
+                    catTimeline.SetActive(true);
+                    player.DisablePlayer();
 
-                });
+                    DOVirtual.DelayedCall(catTimelineDuration, () =>
+                    {
+                        catTimeline.SetActive(false);
+                        player.EnablePlayer();
+                        grandpa.ChasePlayerForDuration(30);
+                        catTimelineDuration = 0; //so it only runs the cutscene once in one scene load
+                    });
+                }
+
                 grandpa.StopTheChase();
-
             }
 
-            if (taskNumber == 4)   // when scare hens
+            if (taskNumber == 4) // when scare hens
             {
-                Typewriter.instance.StartTyping("What's all that clucking?! Dog, stop bothering the hens!", 4);
-                hensTimeline.SetActive(true);
-                player.DisablePlayer();
-                DOVirtual.DelayedCall(hensTimelineDuration, () =>
+                if (hensTimelineDuration > 0)
                 {
-                    hensTimeline.SetActive(false);
-                    player.EnablePlayer();
-                    grandpa.ChasePlayerForDuration(30);
-
-                });
-
+                    Typewriter.instance.StartTyping("What's all that clucking?! Dog, stop bothering the hens!", 4);
+                    hensTimeline.SetActive(true);
+                    player.DisablePlayer();
+                    DOVirtual.DelayedCall(hensTimelineDuration, () =>
+                    {
+                        hensTimeline.SetActive(false);
+                        player.EnablePlayer();
+                        grandpa.ChasePlayerForDuration(30);
+                        hensTimelineDuration = 0; //so it only runs the cutscene once in one scene load
+                    });
+                }
             }
+            MainScript.instance.TaskCompleted(taskNumber, tasks.Length);
             MainScript.currentTaskNumber = taskNumber;
         }
-
     }
 
     public override void MiniGameEnded()
@@ -141,7 +142,6 @@ public class Level4Script : LevelScript
 
     public void PlaySquirrelCutscene()
     {
-
         squirrelCutscene.SetActive(true);
         player.DisablePlayer();
         grandpa.gameObject.SetActive(false);
@@ -158,7 +158,6 @@ public class Level4Script : LevelScript
                 squirrelCutscene.SetActive(false);
                 squirrel.RunTowardsCage();
             });
-
         });
     }
 }

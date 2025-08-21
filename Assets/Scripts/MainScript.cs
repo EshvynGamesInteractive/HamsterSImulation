@@ -6,23 +6,26 @@ using UnityEngine.UI;
 public class MainScript : MonoBehaviour
 {
     public static MainScript instance;
+    [SerializeField] private bool isTesting = false;
+    [SerializeField] int activeLevelIndex;
     [SerializeField] Sprite soundOn, soundOff;
     [SerializeField] Image btnSound;
+    [SerializeField] private Text txtLevel;
+    [SerializeField] private Image levelFillBar;
     public InfoPanelScript pnlInfo;
     public TaskPanelScript taskPanel;
 
     [SerializeField] GameObject btnRetry, btnNext, pnlPause, pnlWin, pnlLose, pnlAd;
 
     //[SerializeField] Text txtScore;
-    [SerializeField] int activeLevelIndex;
     [SerializeField] LevelScript[] levels;
     [SerializeField] PanelSpawner timerAd;
     public PlayerScript player;
     public GrandpaAI grandPa;
     private int scoreCount;
     [HideInInspector] public LevelScript activeLevel;
+    [HideInInspector]public bool gameover;
     public GameObject indication;
-    public bool gameover;
     public NavmeshPathDraw pathDraw;
     public static int currentTaskNumber;
     public static int decrementedNumber;
@@ -35,11 +38,13 @@ public class MainScript : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("tasknumberg = "  +currentTaskNumber);
-        //GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
+        if (isTesting)
+            GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
+        txtLevel.text ="Level "+ GlobalValues.currentLevel;
+        
         if (Nicko_ADSManager._Instance)
         {
-           Nicko_ADSManager._Instance.HideRecBanner();
+            Nicko_ADSManager._Instance.HideRecBanner();
             Nicko_ADSManager._Instance.ShowBanner("GameStart");
         }
 
@@ -68,7 +73,7 @@ public class MainScript : MonoBehaviour
         activeLevel = levels[activeLevelIndex];
         CheckSound();
     }
-    
+
     private void CheckSound()
     {
         if (GlobalValues.Effects == 1)
@@ -100,6 +105,7 @@ public class MainScript : MonoBehaviour
             SoundManager.instance.SoundOn();
         }
     }
+
     public void RestartRewardedTimer()
     {
         timerAd.StartPanelTimer();
@@ -168,10 +174,16 @@ public class MainScript : MonoBehaviour
         ClosePopup(pnlLose);
     }
 
+    public void TaskCompleted(int completedTasks, int totalTasks)
+    {
+        float taskPercentage = (float)completedTasks / totalTasks;
+        levelFillBar.DOFillAmount(taskPercentage, 0.2f).SetUpdate(true);
+    }
     public void AllTasksCompleted()
     {
         if (gameover)
             return;
+        levelFillBar.DOFillAmount(1, 0.2f).SetUpdate(true);
         player.DisablePlayer();
         player.gameObject.SetActive(true);
         gameover = true;
@@ -252,6 +264,7 @@ public class MainScript : MonoBehaviour
     {
         ClosePopup((pnlLose));
     }
+
     public void OnBtnRetry()
     {
         if (Nicko_ADSManager._Instance)

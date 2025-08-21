@@ -24,19 +24,16 @@ public class Level1Script : LevelScript
         base.OnEnable();
         if (MainScript.currentTaskNumber < 0)
             MainScript.currentTaskNumber = 0;
-      
-        DOVirtual.DelayedCall(1, () =>
-        {
-            TaskCompleted(MainScript.currentTaskNumber);
-        });
+
+        DOVirtual.DelayedCall(1, () => { TaskCompleted(MainScript.currentTaskNumber); });
     }
 
     private void MakeGrandpaWatchTV()
     {
         watchingTV = true;
         MainScript.instance.grandPa.MakeGrandpaSit(grandpaTvPos);
-
     }
+
     private void MakeGrandpaDrinkTea()
     {
         drinkingTea = true;
@@ -53,11 +50,11 @@ public class Level1Script : LevelScript
             if (levelCompleteCutscene != null)
                 levelCompleteCutscene.SetActive(true);
             grandpa.StopTheChase();
+           
             MainScript.instance.AllTasksCompleted();
         }
         else
         {
-         
             if (taskNumber == 0)
             {
                 bucket.GetComponent<Interactable>().EnableForInteraction(true);
@@ -73,7 +70,7 @@ public class Level1Script : LevelScript
             //Debug.Log(items[taskNumber].name);
             //items[taskNumber].EnableForInteraction(true);
             //MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
-            if(taskNumber == 1)
+            if (taskNumber == 1)
             {
                 // grandpa.isSitting = false;
                 DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(30));
@@ -87,24 +84,27 @@ public class Level1Script : LevelScript
             else
                 watchingTV = false;
 
-            if (taskNumber == 3)    // when turn tv off
+            if (taskNumber == 3) // when turn tv off
             {
                 grandpa.isSitting = false;
-                Typewriter.instance.StartTyping("Hey! Who turned off my TV? I was watching that! Dog? Was that you again? Come back here, you little rascal!", 2);
-                waitDuration = tvTimelineDuration;
-                televisionTimeline.SetActive(true);
-                player.DisablePlayer();
-                DOVirtual.DelayedCall(tvTimelineDuration, () =>
+                if (tvTimelineDuration > 0)
                 {
-                    tvScreen.SetActive(false);
-                    televisionTimeline.SetActive(false);
-                    player.EnablePlayer();
-                    DOVirtual.DelayedCall(4, () =>
+                    Typewriter.instance.StartTyping(
+                        "Hey! Who turned off my TV? I was watching that! Dog? Was that you again? Come back here, you little rascal!",
+                        2);
+                    waitDuration = tvTimelineDuration;
+                    televisionTimeline.SetActive(true);
+                    player.DisablePlayer();
+                    DOVirtual.DelayedCall(tvTimelineDuration, () =>
                     {
-                        grandpa.ChasePlayerForDuration(30);
-                    });
+                        tvScreen.SetActive(false);
+                        televisionTimeline.SetActive(false);
+                        player.EnablePlayer();
+                        DOVirtual.DelayedCall(4, () => { grandpa.ChasePlayerForDuration(30); });
 
-                });
+                        tvTimelineDuration = 0; //so it only runs the cutscene once in one scene load
+                    });
+                }
             }
 
             if (taskNumber == 4) // when toss blanket in tub
@@ -115,25 +115,25 @@ public class Level1Script : LevelScript
             else
                 drinkingTea = false;
 
-            if (taskNumber == 5)    // pour ketchup
+            if (taskNumber == 5) // pour ketchup
             {
                 grandpa.isSitting = false;
-                Typewriter.instance.StartTyping("Blegh! What in tarnation, this ain't tea! Who put ketchup in my cup?! Dog?!", 3);
-                waitDuration = ketchupTimelineDuration;
-                ketchupTimeline.SetActive(true);
-                player.DisablePlayer();
-                DOVirtual.DelayedCall(ketchupTimelineDuration, () =>
+                if (ketchupTimelineDuration > 0)
                 {
-                    ketchupTimeline.SetActive(false);
-                    player.EnablePlayer();
-                    DOVirtual.DelayedCall(3, () =>
+                    Typewriter.instance.StartTyping(
+                        "Blegh! What in tarnation, this ain't tea! Who put ketchup in my cup?! Dog?!", 3);
+                    waitDuration = ketchupTimelineDuration;
+                    ketchupTimeline.SetActive(true);
+                    player.DisablePlayer();
+                    DOVirtual.DelayedCall(ketchupTimelineDuration, () =>
                     {
-                        grandpa.ChasePlayerForDuration(30);
+                        ketchupTimeline.SetActive(false);
+                        player.EnablePlayer();
+                        DOVirtual.DelayedCall(3, () => { grandpa.ChasePlayerForDuration(30); });
+                        ketchupTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
-
-                });
+                }
             }
-
 
 
             DOVirtual.DelayedCall(waitDuration, () =>
@@ -141,18 +141,12 @@ public class Level1Script : LevelScript
                 //Debug.Log(items[taskNumber].name);
                 items[taskNumber].EnableForInteraction(true);
                 MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
-                MainScript.currentTaskNumber = taskNumber;
             });
-
+                MainScript.currentTaskNumber = taskNumber;
+          MainScript.instance.TaskCompleted(taskNumber, tasks.Length);
         }
-
-
-
-
-
     }
 
-   
 
     public override void MiniGameEnded()
     {
@@ -162,8 +156,4 @@ public class Level1Script : LevelScript
         if (watchingTV)
             MakeGrandpaWatchTV();
     }
-
-
-
-
 }

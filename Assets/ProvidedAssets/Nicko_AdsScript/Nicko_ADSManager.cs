@@ -150,7 +150,8 @@ public class Nicko_ADSManager : MonoBehaviour
         action = ac;
         if (adPriority == AdPriority.Max)
         {
-            appLovinMax.ShowRewardedAd(ac);
+            // appLovinMax.ShowRewardedAd(ac);  // replaced by Khubaib
+            appLovinMax.ShowRewardedOrInterstitialAd(ac);
         }
         else
             admobInstance.ShowRewardedAdmob(ac);
@@ -177,7 +178,8 @@ public class Nicko_ADSManager : MonoBehaviour
             print("Nicko_Admob.Instance");
         if (adPriority == AdPriority.Max)
         {
-            appLovinMax.ShowRewardedAd(action);
+            // appLovinMax.ShowRewardedAd(action);  // replaced by Khubaib
+            appLovinMax.ShowRewardedOrInterstitialAd(action);
         }
         else
             admobInstance.ShowRewardedAdmob(action);

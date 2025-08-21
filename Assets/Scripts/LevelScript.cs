@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class LevelScript : MonoBehaviour
 {
     [SerializeField]protected Interactable[] items;
     [SerializeField]protected string[] tasks;
+ 
     protected bool miniGameisActive;
     protected GrandpaAI grandpa;
     protected PlayerScript player;

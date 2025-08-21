@@ -57,7 +57,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            OnAttack();
+            OnBtnAttack();
         }
     }
 
@@ -157,7 +157,7 @@ public class PlayerScript : MonoBehaviour
         });
     }
 
-    public void OnAttack()
+    public void OnBtnAttack()
     {
         AnimatePawAttack();
 

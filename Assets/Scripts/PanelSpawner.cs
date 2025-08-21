@@ -95,6 +95,8 @@ public class PanelSpawner : MonoBehaviour
     {
         if (Nicko_ADSManager._Instance)
             Nicko_ADSManager._Instance.ShowRewardedAd(() => ShowRewardedCutscene(), "RewardedPrankCutsceneAd");
+        else 
+            ShowRewardedCutscene();
     }
 
 

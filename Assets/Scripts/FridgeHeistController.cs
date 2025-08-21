@@ -1,6 +1,6 @@
 using DG.Tweening;
 using System.Collections;
-     using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class FridgeHeistController : MonoBehaviour
@@ -10,7 +10,7 @@ public class FridgeHeistController : MonoBehaviour
     [SerializeField] private GameObject stealthUI;
     [SerializeField] private float movementFreezeRadius = 0.1f;
     [SerializeField] Transform sitPosition;
-    [SerializeField]  Transform foorCamera;
+    [SerializeField] Transform foorCamera;
     [SerializeField] GameObject foodTOPick;
     [SerializeField] private Image stealthMeterImage;
     public GameObject btnRevive;
@@ -39,12 +39,10 @@ public class FridgeHeistController : MonoBehaviour
     private void OnEnable()
     {
         stealthMeterImage.gameObject.SetActive(false);
-        
+
         MiniGameManager.Instance.OnMiniGameStart += OnMiniGameStarted;
     }
 
-
-   
 
     private void OnDisable()
     {
@@ -54,7 +52,7 @@ public class FridgeHeistController : MonoBehaviour
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.FridgeHeist) return;
-        
+
         StartCoroutine(StartHeist());
     }
 
@@ -74,15 +72,14 @@ public class FridgeHeistController : MonoBehaviour
 
         Instantiate(foodTOPick, foodTOPick.transform.position, Quaternion.identity).SetActive(true);
         foorCamera.transform.DOMove(player.playerCamera.position, camMoveDuration).SetEase(Ease.Linear);
-        foorCamera.transform.DORotate(player.playerCamera.eulerAngles, camMoveDuration / 4).SetDelay(camMoveDuration - (camMoveDuration / 4));
+        foorCamera.transform.DORotate(player.playerCamera.eulerAngles, camMoveDuration / 4)
+            .SetDelay(camMoveDuration - (camMoveDuration / 4));
 
-        DOVirtual.DelayedCall(camMoveDuration, () => {
+        DOVirtual.DelayedCall(camMoveDuration, () =>
+        {
             foorCamera.gameObject.SetActive(false);
             player.EnablePlayer();
         });
-
-
-
 
 
         grandpaAI.gameObject.SetActive(true);
@@ -92,7 +89,7 @@ public class FridgeHeistController : MonoBehaviour
         grandpaPeekController.enabled = true;
 
         grandpaPeekController.GameStarted();
-        
+
         player = MainScript.instance.player;
         fP_Controller = player.GetComponent<FP_Controller>();
         if (player == null) yield break;
@@ -108,18 +105,19 @@ public class FridgeHeistController : MonoBehaviour
     }
 
     float maxSpeed = 0.5f;
+
     private void Update()
     {
         if (!heistActive || player == null) return;
-        if (Vector3.Distance(player.transform.position, exitPoint.position) < 1f 
-            && player.pickedObject!=null && player.pickedObject.TryGetComponent<FoodItemScript>(out _ )  )
+        if (Vector3.Distance(player.transform.position, exitPoint.position) < 1f
+            && player.pickedObject != null && player.pickedObject.TryGetComponent<FoodItemScript>(out _))
         {
             //Debug.Log("Success! You escaped with food!");
             EndHeist();
         }
+
         float speed = fP_Controller.controller.velocity.magnitude;
         stealthMeterImage.fillAmount = 1f - (speed / maxSpeed); // 0 = full stealth
-
     }
 
     private void HandleGrandpaPeek(bool isLooking)
@@ -174,7 +172,9 @@ public class FridgeHeistController : MonoBehaviour
     public void RevivePlayer()
     {
         if (Nicko_ADSManager._Instance)
-        Nicko_ADSManager._Instance.ShowRewardedAd(() => WatchedAdForRevive(), "RewardedReviveAd");
+            Nicko_ADSManager._Instance.ShowRewardedAd(() => WatchedAdForRevive(), "RewardedReviveAd");
+        else
+            WatchedAdForRevive();
     }
 
     private void WatchedAdForRevive()
@@ -204,18 +204,17 @@ public class FridgeHeistController : MonoBehaviour
         grandpaPeekController.enabled = false;
         grandpaAI.enabled = true;
         grandpaAI.StartPatrolOnGroundFloor();
-        var movement = player.GetComponent<FP_Controller>(); 
+        var movement = player.GetComponent<FP_Controller>();
         if (movement != null)
             movement.ExitHeistMode();
         MainScript.instance.pnlInfo.ShowInfo("Heist completed");
         //Debug.Log("Heist completed successfully!");
         MiniGameManager.Instance.EndMiniGame();
-
     }
 
     private void SlowDownPlayer(bool slow)
     {
-        var movement = player.GetComponent<FP_Controller>(); 
+        var movement = player.GetComponent<FP_Controller>();
         if (movement != null)
             movement.EnterHeistMode();
     }

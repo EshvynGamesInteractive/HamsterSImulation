@@ -31,7 +31,7 @@ public class GrandpaAI : MonoBehaviour
     private List<Transform> waypointsGroundFloor;
 
     [SerializeField] private List<Transform> waypointsFirstFloor;
-    [SerializeField] private List<Transform> waypointsGroundToFirstFloor;
+    [SerializeField] private List<Transform> waypointsGroundFloor2;
     public List<Transform> waypoints;
     public float[] waitDurations;
     public float reachThreshold = 0.5f;
@@ -155,7 +155,10 @@ public class GrandpaAI : MonoBehaviour
 
     public void StartPatrolOnGroundFloor()
     {
-        waypoints = waypointsGroundFloor;
+        if (GlobalValues.currentLevel == 1)
+            waypoints = waypointsGroundFloor;
+        else
+            waypoints = waypointsGroundFloor2;
         EnableWalking(true);
         stopWalking = false;
         agent.enabled = true;
@@ -413,11 +416,14 @@ public class GrandpaAI : MonoBehaviour
     {
         if (shouldCatchPlayer || isChasingForDuration)
             MainScript.instance.pnlInfo.ShowInfo("Grandpa gave up the chase.");
-
+        isChasing = false;
         shouldCatchPlayer = false;
         chaseTimer = 0;
         isChasingForDuration = false;
-        waypoints = waypointsGroundFloor;
+        if (GlobalValues.currentLevel == 1)
+            waypoints = waypointsGroundFloor;
+        else
+            waypoints = waypointsGroundFloor2;
         MoveToCurrentWaypoint();
     }
 
@@ -434,6 +440,7 @@ public class GrandpaAI : MonoBehaviour
 
     private void StartChase()
     {
+        isChasing = true;
         isChasingForDuration = true;
         stopWalking = false;
         agent.enabled = true;
@@ -557,12 +564,12 @@ public class GrandpaAI : MonoBehaviour
 
         MainScript.instance.pnlInfo.ShowInfo("Grandpa's down. Run while you can");
 
-        DOVirtual.DelayedCall(3.5f, () =>
+        DOVirtual.DelayedCall(6, () =>
         {
             if (faceMat != null) faceMat.color = Color.white;
 
             GetComponent<Collider>().enabled = true;
-            
+
             ChasePlayerForDuration(10);
         });
     }
@@ -641,20 +648,24 @@ public class GrandpaAI : MonoBehaviour
 
     private void MakeGrandpaRun()
     {
+        Debug.Log("isChasing = " + isChasing);
         if (isChasing)
             StopTheChase();
         isRunning = true;
         animator.SetBool("isRunning", true);
         float runDuration = 3;
         EnableWalking(false);
-        waypoints = waypointsGroundToFirstFloor;
+        waypoints = waypointsGroundFloor2;
         agent.speed = 2.5f;
         DOVirtual.DelayedCall(6, () =>
         {
-            waypoints = waypointsGroundFloor;
+            if (GlobalValues.currentLevel == 1)
+                waypoints = waypointsGroundFloor;
+            else
+                waypoints = waypointsGroundFloor2;
             isRunning = false;
             agent.speed = 0.7f;
-            EnableWalking(true);
+            EnableWalking(true);                                                                                                                                                        
             animator.SetBool("isRunning", false);
             ChasePlayerForDuration(10);
         });
@@ -689,23 +700,21 @@ public class GrandpaAI : MonoBehaviour
             hitParticle.transform.rotation = Quaternion.LookRotation(contact.normal);
 
             hitParticle.Play();
-
-            // MakeGrandpaAngry();
-
-            // MakeGrandpaRun();
-
-            // ElectrocuteGrandpa();
-
-            // GrandpaFall();
-            
-            GrandpaSlip();
-            
+            MainScript.instance.RestartRewardedTimer();
+            if (other.gameObject.CompareTag("Lizard") || other.gameObject.CompareTag("Beehive"))
+                MakeGrandpaRun();
+            else if (other.gameObject.CompareTag("ShockGun"))
+                ElectrocuteGrandpa();
+            else if (other.gameObject.CompareTag("BananaPeel"))
+                GrandpaSlip();
+            else
+                MakeGrandpaAngry();
         }
     }
 
     private void EnableWalking(bool enable)
     {
-        Debug.Log(enable + " Walking");
+        // Debug.Log(enable + " Walking");
 
         animator.SetBool("isWalking", enable);
     }
