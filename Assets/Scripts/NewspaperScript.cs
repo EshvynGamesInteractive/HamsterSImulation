@@ -15,7 +15,7 @@ public class NewspaperScript : Pickable
             {
                 if (MainScript.instance.grandPa.isSitting)
                     MainScript.instance.grandPa.isSitting = false;
-                MainScript.instance.grandPa.ChasePlayerForDuration(30);
+                MainScript.instance.grandPa.ChasePlayerForDuration(2);
             });
         }
     }

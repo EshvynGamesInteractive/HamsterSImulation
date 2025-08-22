@@ -10,8 +10,6 @@ public class Level2Script : LevelScript
 
     private void Start()
     {
-        //base.Start();
-        //TaskCompleted(MainScript.currentTaskNumber);
         grandpa.StopTheChase();
         MainScript.instance.pnlInfo.ShowInfo("Player spawned");
     }
@@ -20,35 +18,32 @@ public class Level2Script : LevelScript
     {
         base.OnEnable();
 
-        if (MainScript.currentTaskNumber < 0)
-            MainScript.currentTaskNumber = 0;
-
-        DOVirtual.DelayedCall(1, () => { TaskCompleted(MainScript.currentTaskNumber); });
+        if (GetCurrentStageCompletedTaskNumber() < 0)
+            SetCurrentStageTaskNumber(0);
+        MainScript.instance.UpdateLevelText(GetCurrentStageUnlockedLevels());
+        DOVirtual.DelayedCall(1, () => { UpdateTask(GetCurrentStageCompletedTaskNumber()); });
     }
 
-    //private void Awake()
-    //{
-    //    MainScript.instance.grandPa.gameObject.SetActive(false);
-    //}
+
     public override void TaskCompleted(int taskNumber)
     {
-        if (taskNumber < MainScript.currentTaskNumber)
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
             return;
         Debug.Log(taskNumber);
         if (taskNumber >= tasks.Length)
         {
             if (levelCompleteCutscene != null)
                 levelCompleteCutscene.SetActive(true);
-            //grandpa.StopTheChase();
+            
+            SetCurrentStageUnlockedLevels(1);
+            SetCurrentStageTaskNumber(0);
             MainScript.instance.AllTasksCompleted();
         }
         else
         {
-            Debug.Log(items[taskNumber].name);
-
             float taskUpdateDelay = 0;
 
-
+            Debug.Log(taskNumber);
             if (taskNumber == 1) //throw toy
             {
                 if (throwTimelineDuration > 0)
@@ -75,14 +70,14 @@ public class Level2Script : LevelScript
                 //{
                 //saltTimeline.SetActive(false);
                 //player.EnablePlayer();
-                grandpa.ChasePlayerForDuration(30);
+                grandpa.ChasePlayerForDuration(2);
 
                 //});
             }
 
             if (taskNumber == 3) //when tablet hide
             {
-                grandpa.ChasePlayerForDuration(30);
+                grandpa.ChasePlayerForDuration(2);
             }
 
             if (taskNumber == 4) // when door shut
@@ -99,7 +94,7 @@ public class Level2Script : LevelScript
                     {
                         shutDoorTimeline.SetActive(false);
                         player.EnablePlayer();
-                        grandpa.ChasePlayerForDuration(30);
+                        grandpa.ChasePlayerForDuration(2);
                         shutDoorTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
                 }
@@ -115,14 +110,94 @@ public class Level2Script : LevelScript
 
             DOVirtual.DelayedCall(taskUpdateDelay, () =>
             {
-                items[taskNumber].EnableForInteraction(true);
-                MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber()+1);
+
+
+                SetCurrentStageTaskNumber(taskNumber);
+                int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
+
+                Debug.Log(GetCurrentStageUnlockedLevels());
+                Debug.Log(currentLevelTasks);
+                Debug.Log(GetCurrentLevelCompletedTaskNumber());
+
+                MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
+
+                if (GetCurrentLevelCompletedTaskNumber() >= currentLevelTasks)
+                {
+                    MainScript.instance.CurrentLevelTasksCompleted();
+                    SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
+                    SetCurrentLevelCompletedTaskNumber(0);
+                }
+                else
+                {
+                    Debug.Log((tasks[taskNumber]));
+                    items[taskNumber].EnableForInteraction(true);
+                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                }
             });
-
-            MainScript.instance.TaskCompleted(taskNumber, tasks.Length);
-
-            MainScript.currentTaskNumber = taskNumber;
         }
+    }
+
+
+    public override void UpdateTask(int taskNumber)
+    {
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
+            return;
+        Debug.Log(taskNumber);
+
+        Debug.Log(items[taskNumber].name);
+
+        float taskUpdateDelay = 0;
+
+
+        if (taskNumber == 1) //throw toy
+        {
+            grandpa.ChasePlayerForDuration(2);
+        }
+
+        if (taskNumber == 2) //when salt pour
+        {
+            grandpa.ChasePlayerForDuration(2);
+        }
+
+        if (taskNumber == 3) //when tablet hide
+        {
+            grandpa.ChasePlayerForDuration(2);
+        }
+
+        if (taskNumber == 4) // when door shut
+        {
+            grandpa.ChasePlayerForDuration(2);
+        }
+
+        if (taskNumber > 4)
+        {
+            laundaryDoor.kidsLocked = true;
+            laundaryDoor.CloseDoor();
+            laundaryDoor.EnableForInteraction(false);
+        }
+
+
+        DOVirtual.DelayedCall(taskUpdateDelay, () =>
+        {
+            items[taskNumber].EnableForInteraction(true);
+            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+        });
+
+
+        SetCurrentStageTaskNumber(taskNumber);
+        int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels()-1];
+
+        Debug.Log(currentLevelTasks);
+        Debug.Log(GetCurrentLevelCompletedTaskNumber());
+        MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
+    }
+
+    public override void StartNextLevel()
+    {
+        SetCurrentLevelCompletedTaskNumber(0);
+
+        OnEnable();
     }
 
     public override void MiniGameEnded()

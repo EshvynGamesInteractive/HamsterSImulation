@@ -46,7 +46,7 @@ public class RewardedCutscene : MonoBehaviour
             MainScript.instance.grandPa.transform.SetPositionAndRotation(grandpaPosTOSet.position, grandpaPosTOSet.rotation);
 
         DOVirtual.DelayedCall(3, () =>
-        { grandpa.ChasePlayerForDuration(30); });
+        { grandpa.ChasePlayerForDuration(2); });
 
 
     }

@@ -15,7 +15,7 @@ public class MainScript : MonoBehaviour
     public InfoPanelScript pnlInfo;
     public TaskPanelScript taskPanel;
 
-    [SerializeField] GameObject btnRetry, btnNext, pnlPause, pnlWin, pnlLose, pnlAd;
+    [SerializeField] GameObject btnRetry, btnNext, pnlPause, pnlStageWin, pnlLevelWin, pnlLose, pnlAd;
 
     //[SerializeField] Text txtScore;
     [SerializeField] LevelScript[] levels;
@@ -27,10 +27,17 @@ public class MainScript : MonoBehaviour
     [HideInInspector]public bool gameover;
     public GameObject indication;
     public NavmeshPathDraw pathDraw;
-    public static int currentTaskNumber;
+    // public static int currentTaskNumber;
     public static int decrementedNumber;
     public bool canShowRewardedPopup = true;
 
+    
+    // public int currentTaskNumber
+    // {
+    //
+    //     get { return activeLevel.GetCurrentStageCompletedTaskNumber(); }
+    //     set { activeLevel.SetCurrentStageTaskNumber(value); }
+    // }
     private void Awake()
     {
         instance = this;
@@ -39,8 +46,7 @@ public class MainScript : MonoBehaviour
     private void Start()
     {
         if (isTesting)
-            GlobalValues.currentLevel = activeLevelIndex + 1; //forTesting
-        txtLevel.text ="Level "+ GlobalValues.currentLevel;
+            GlobalValues.currentStage = activeLevelIndex + 1; //forTesting
         
         if (Nicko_ADSManager._Instance)
         {
@@ -49,16 +55,16 @@ public class MainScript : MonoBehaviour
         }
 
         Time.timeScale = 1;
-        if (GlobalValues.currentLevel > levels.Length)
-            GlobalValues.currentLevel = levels.Length;
-        if (GlobalValues.retryAfterLevelCompleted && GlobalValues.currentLevel > 1)
+        if (GlobalValues.currentStage > levels.Length)
+            GlobalValues.currentStage = levels.Length;
+        if (GlobalValues.retryAfterLevelCompleted && GlobalValues.currentStage > 1)
         {
-            GlobalValues.currentLevel--;
+            GlobalValues.currentStage--;
         }
 
         GlobalValues.retryAfterLevelCompleted = false;
 
-        activeLevelIndex = GlobalValues.currentLevel - 1;
+        activeLevelIndex = GlobalValues.currentStage - 1;
 
         for (int i = 0; i < levels.Length; i++)
         {
@@ -72,8 +78,13 @@ public class MainScript : MonoBehaviour
         levels[activeLevelIndex].gameObject.SetActive(true);
         activeLevel = levels[activeLevelIndex];
         CheckSound();
+        // currentTaskNumber= activeLevel.GetCurrentStageCompletedTaskNumber();
     }
 
+    public void UpdateLevelText(int levelNumber)
+    {
+        txtLevel.text ="Level "+ levelNumber;
+    }
     private void CheckSound()
     {
         if (GlobalValues.Effects == 1)
@@ -156,11 +167,15 @@ public class MainScript : MonoBehaviour
     {
         if (gameover)
             return;
-        if (currentTaskNumber > 0 && !caughtWhileMinigame &&
-            currentTaskNumber != decrementedNumber) // so it does not decrement when caught on same task
+        
+        Debug.Log(activeLevel.GetCurrentLevelCompletedTaskNumber());
+        if (activeLevel.GetCurrentStageCompletedTaskNumber() > 0 && !caughtWhileMinigame &&
+            activeLevel.GetCurrentStageCompletedTaskNumber() != decrementedNumber
+            &&activeLevel.GetCurrentLevelCompletedTaskNumber()!=0) // so it does not decrement when caught on same task
         {
-            currentTaskNumber--;
-            decrementedNumber = currentTaskNumber;
+            activeLevel.SetCurrentLevelCompletedTaskNumber(activeLevel.GetCurrentLevelCompletedTaskNumber()-1);
+            activeLevel.SetCurrentStageTaskNumber(activeLevel.GetCurrentStageCompletedTaskNumber()-1);
+            decrementedNumber = activeLevel.GetCurrentStageCompletedTaskNumber();
         }
 
         MainScript.instance.pnlInfo.ShowInfo("You have been caught");
@@ -177,30 +192,60 @@ public class MainScript : MonoBehaviour
     public void TaskCompleted(int completedTasks, int totalTasks)
     {
         float taskPercentage = (float)completedTasks / totalTasks;
+        Debug.Log(taskPercentage);
         levelFillBar.DOFillAmount(taskPercentage, 0.2f).SetUpdate(true);
     }
-    public void AllTasksCompleted()
+
+    public void CurrentLevelTasksCompleted()
     {
         if (gameover)
             return;
+        
+        Debug.Log("currenttasks");
+        grandPa.StopTheChase();
         levelFillBar.DOFillAmount(1, 0.2f).SetUpdate(true);
         player.DisablePlayer();
         player.gameObject.SetActive(true);
         gameover = true;
         Invoke(nameof(LevelCompleted), 1);
     }
-
-
     private void LevelCompleted()
     {
         canShowRewardedPopup = false;
-        if (GlobalValues.currentLevel == GlobalValues.UnlockedLevels)
-            GlobalValues.UnlockedLevels++;
-        GlobalValues.currentLevel++;
+        if (GlobalValues.currentStage == GlobalValues.UnlockedStages)
+            GlobalValues.UnlockedStages++;
+        
         SoundManager.instance.PlaySound(SoundManager.instance.levelComplete);
-        OpenPopup(pnlWin);
-        currentTaskNumber = 0;
+        OpenPopup(pnlLevelWin);
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
+    }
+    public void AllTasksCompleted()
+    {
+        if (gameover)
+            return;
         decrementedNumber = 0;
+        Debug.Log("ALltasks");
+        grandPa.StopTheChase();
+        levelFillBar.DOFillAmount(1, 0.2f).SetUpdate(true);
+        player.DisablePlayer();
+        player.gameObject.SetActive(true);
+        gameover = true;
+        Invoke(nameof(StageCompleted), 1);
+    }
+
+   
+
+    private void StageCompleted()
+    {
+        canShowRewardedPopup = false;
+        if (GlobalValues.currentStage == GlobalValues.UnlockedStages)
+            GlobalValues.UnlockedStages++;
+        GlobalValues.currentStage++;
+        SoundManager.instance.PlaySound(SoundManager.instance.levelComplete);
+        OpenPopup(pnlStageWin);
+        
+        // decrementedNumber = 0;
         System.GC.Collect();
         System.GC.WaitForPendingFinalizers();
     }
@@ -302,8 +347,7 @@ public class MainScript : MonoBehaviour
             Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
         }
 
-        currentTaskNumber = 0;
-        decrementedNumber = 0;
+        // decrementedNumber = 0;
         Time.timeScale = 1;
         //GlobalValues.sceneTOLoad = "MainMenu";
         CanvasScriptSplash.instance.LoadScene("MainMenu");
@@ -315,7 +359,7 @@ public class MainScript : MonoBehaviour
     {
         if (Nicko_ADSManager._Instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("NextButtonAD");
+            Nicko_ADSManager._Instance.ShowInterstitial("NextStageButtonAD");
             Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
         }
 
@@ -324,5 +368,19 @@ public class MainScript : MonoBehaviour
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");
         //SceneManager.LoadScene("Loading");
+    }
+
+
+    public void OnBtnNextLevel()
+    {
+        if (Nicko_ADSManager._Instance)
+        {
+            Nicko_ADSManager._Instance.ShowInterstitial("NextLevelButtonAD");
+        }
+activeLevel.StartNextLevel();
+        gameover = false;
+        ClosePopup(pnlLevelWin);
+        player.EnablePlayer();
+        levelFillBar.DOFillAmount(0, 0f).SetUpdate(true);
     }
 }

@@ -50,7 +50,7 @@ public class CutsceneTrigger : MonoBehaviour
 
                 if (taskNumber == -1) // means no need to increment task for level. just continue the ongoing task
                 {
-                    MainScript.instance.activeLevel.TaskCompleted(MainScript.currentTaskNumber);
+                    MainScript.instance.activeLevel.UpdateTask(MainScript.instance.activeLevel.GetCurrentStageCompletedTaskNumber());
                     return;
                 }
 

@@ -26,6 +26,7 @@ public class MiniGameManager : MonoBehaviour
     public BubblePopManager bubbleLevel;
     public CushionTrampolineManager cushionTrampoline;
     public BallFetchGameController ballFetchGameController;
+    public MusicGameController pianoGameController;
     private string currentTask;
 
     public MiniGameType ActiveMiniGame { get; private set; } = MiniGameType.None;

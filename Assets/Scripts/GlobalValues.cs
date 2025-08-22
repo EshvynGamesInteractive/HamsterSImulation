@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class GlobalValues
 {
-    public static int currentLevel=1;
+    public static int currentStage=1;
     public static string sceneTOLoad = "MainMenu";
     public static bool retryAfterLevelCompleted;
     public static int Music
@@ -23,6 +23,19 @@ public static class GlobalValues
 
         get { return PlayerPrefs.GetInt("ShowAppOpen", 0); }
         set { PlayerPrefs.SetInt("ShowAppOpen", value); }
+    }
+    public static int UnlockedStages
+    {
+
+        get { return PlayerPrefs.GetInt("UnlockedStages", 1); }
+        set { PlayerPrefs.SetInt("UnlockedStages", value); }
+    }
+    
+    public static int CurrentLevel
+    {
+
+        get { return PlayerPrefs.GetInt("CurrentLevel", 1); }
+        set { PlayerPrefs.SetInt("CurrentLevel", value); }
     }
     public static int UnlockedLevels
     {

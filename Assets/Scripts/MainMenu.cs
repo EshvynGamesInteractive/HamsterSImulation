@@ -14,9 +14,6 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        MainScript.currentTaskNumber = 0;
-        Debug.Log("tasknumber = "  + MainScript.currentTaskNumber);
-        Debug.Log("instance = "  + Nicko_ADSManager._Instance);
         if (Nicko_ADSManager._Instance)
         {
             Debug.Log("aaaaaaa");

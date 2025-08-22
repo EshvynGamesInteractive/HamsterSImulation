@@ -74,7 +74,7 @@ public class PlayerScript : MonoBehaviour
         //Debug.Log("aaa");
         playerCanvas.SetActive(true);
         gameObject.SetActive(true);
-        GetComponent<FP_Controller>().canControl = true;
+        GetComponent<FP_Controller>().OnEnable();
     }
 
     public void AnimatePawToCenter()

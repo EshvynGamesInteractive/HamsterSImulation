@@ -22,10 +22,10 @@ public class Level1Script : LevelScript
     private new void OnEnable()
     {
         base.OnEnable();
-        if (MainScript.currentTaskNumber < 0)
-            MainScript.currentTaskNumber = 0;
-
-        DOVirtual.DelayedCall(1, () => { TaskCompleted(MainScript.currentTaskNumber); });
+        if (GetCurrentStageCompletedTaskNumber() < 0)
+            SetCurrentStageTaskNumber(0);
+        MainScript.instance.UpdateLevelText(GetCurrentStageUnlockedLevels());
+        DOVirtual.DelayedCall(1, () => { UpdateTask(GetCurrentStageCompletedTaskNumber()); });
     }
 
     private void MakeGrandpaWatchTV()
@@ -43,18 +43,22 @@ public class Level1Script : LevelScript
 
     public override void TaskCompleted(int taskNumber)
     {
-        if (taskNumber < MainScript.currentTaskNumber)
+        Debug.Log("TaskCompleted");
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
             return;
         if (taskNumber >= tasks.Length)
         {
             if (levelCompleteCutscene != null)
                 levelCompleteCutscene.SetActive(true);
-            grandpa.StopTheChase();
-           
+
+
+            SetCurrentStageUnlockedLevels(1);
+            SetCurrentStageTaskNumber(0);
             MainScript.instance.AllTasksCompleted();
         }
         else
         {
+            Debug.Log(taskNumber);
             if (taskNumber == 0)
             {
                 bucket.GetComponent<Interactable>().EnableForInteraction(true);
@@ -65,15 +69,12 @@ public class Level1Script : LevelScript
                 spilledWater.SetActive(false);
             }
 
-            float waitDuration = 1;
+            float taskUpdateDelay = 1;
 
-            //Debug.Log(items[taskNumber].name);
-            //items[taskNumber].EnableForInteraction(true);
-            //MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+
             if (taskNumber == 1)
             {
-                // grandpa.isSitting = false;
-                DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(30));
+                DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(2));
             }
 
             if (taskNumber == 2) //when bury book
@@ -92,7 +93,7 @@ public class Level1Script : LevelScript
                     Typewriter.instance.StartTyping(
                         "Hey! Who turned off my TV? I was watching that! Dog? Was that you again? Come back here, you little rascal!",
                         2);
-                    waitDuration = tvTimelineDuration;
+                    taskUpdateDelay = tvTimelineDuration;
                     televisionTimeline.SetActive(true);
                     player.DisablePlayer();
                     DOVirtual.DelayedCall(tvTimelineDuration, () =>
@@ -100,7 +101,7 @@ public class Level1Script : LevelScript
                         tvScreen.SetActive(false);
                         televisionTimeline.SetActive(false);
                         player.EnablePlayer();
-                        DOVirtual.DelayedCall(4, () => { grandpa.ChasePlayerForDuration(30); });
+                        DOVirtual.DelayedCall(4, () => { grandpa.ChasePlayerForDuration(2); });
 
                         tvTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
@@ -122,28 +123,46 @@ public class Level1Script : LevelScript
                 {
                     Typewriter.instance.StartTyping(
                         "Blegh! What in tarnation, this ain't tea! Who put ketchup in my cup?! Dog?!", 3);
-                    waitDuration = ketchupTimelineDuration;
+                    taskUpdateDelay = ketchupTimelineDuration;
                     ketchupTimeline.SetActive(true);
                     player.DisablePlayer();
                     DOVirtual.DelayedCall(ketchupTimelineDuration, () =>
                     {
                         ketchupTimeline.SetActive(false);
                         player.EnablePlayer();
-                        DOVirtual.DelayedCall(3, () => { grandpa.ChasePlayerForDuration(30); });
+                        DOVirtual.DelayedCall(3, () => { grandpa.ChasePlayerForDuration(2); });
                         ketchupTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
                 }
             }
 
 
-            DOVirtual.DelayedCall(waitDuration, () =>
+            DOVirtual.DelayedCall(taskUpdateDelay, () =>
             {
-                //Debug.Log(items[taskNumber].name);
-                items[taskNumber].EnableForInteraction(true);
-                MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber()+1);
+
+
+                SetCurrentStageTaskNumber(taskNumber);
+                int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
+
+                Debug.Log(GetCurrentStageUnlockedLevels());
+                Debug.Log(currentLevelTasks);
+                Debug.Log(GetCurrentLevelCompletedTaskNumber());
+
+                MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
+
+                if (GetCurrentLevelCompletedTaskNumber() >= currentLevelTasks)
+                {
+                    MainScript.instance.CurrentLevelTasksCompleted();
+                    SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
+                    SetCurrentLevelCompletedTaskNumber(0);
+                }
+                else
+                {
+                    items[taskNumber].EnableForInteraction(true);
+                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                }
             });
-                MainScript.currentTaskNumber = taskNumber;
-          MainScript.instance.TaskCompleted(taskNumber, tasks.Length);
         }
     }
 
@@ -155,5 +174,77 @@ public class Level1Script : LevelScript
             MakeGrandpaDrinkTea();
         if (watchingTV)
             MakeGrandpaWatchTV();
+    }
+
+    public override void StartNextLevel()
+    {
+        SetCurrentLevelCompletedTaskNumber(0);
+
+        OnEnable();
+    }
+
+    public override void UpdateTask(int taskNumber)
+    {
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
+            return;
+
+        if (taskNumber == 0)
+        {
+            bucket.GetComponent<Interactable>().EnableForInteraction(true);
+        }
+        else
+        {
+            bucket.SetActive(false);
+            spilledWater.SetActive(false);
+        }
+
+        float waitDuration = 1;
+
+
+        if (taskNumber == 1)
+        {
+            // grandpa.isSitting = false;
+            DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(2));
+        }
+
+        if (taskNumber == 2) //when bury book
+        {
+            MakeGrandpaWatchTV();
+            DOVirtual.DelayedCall(1, () => MakeGrandpaWatchTV());
+        }
+        else
+            watchingTV = false;
+
+        if (taskNumber == 3) // when turn tv off
+        {
+            grandpa.isSitting = false;
+        }
+
+        if (taskNumber == 4) // when toss blanket in tub
+        {
+            MakeGrandpaDrinkTea();
+            DOVirtual.DelayedCall(1, () => MakeGrandpaDrinkTea());
+        }
+        else
+            drinkingTea = false;
+
+        if (taskNumber == 5) // pour ketchup
+        {
+            grandpa.isSitting = false;
+        }
+
+
+        DOVirtual.DelayedCall(waitDuration, () =>
+        {
+            items[taskNumber].EnableForInteraction(true);
+            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+        });
+
+        SetCurrentStageTaskNumber(taskNumber);
+        int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
+
+        Debug.Log(currentLevelTasks);
+        Debug.Log(GetCurrentLevelCompletedTaskNumber());
+        MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
     }
 }

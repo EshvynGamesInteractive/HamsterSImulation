@@ -40,21 +40,23 @@ public class Level4Script : LevelScript
     private new void OnEnable()
     {
         base.OnEnable();
-        if (MainScript.currentTaskNumber < 0)
-            MainScript.currentTaskNumber = 0;
-
-        DOVirtual.DelayedCall(1, () => { TaskCompleted(MainScript.currentTaskNumber); });
+        if (GetCurrentStageCompletedTaskNumber() < 0)
+            SetCurrentStageTaskNumber(0);
+        MainScript.instance.UpdateLevelText(GetCurrentStageUnlockedLevels());
+        DOVirtual.DelayedCall(1, () => { UpdateTask(GetCurrentStageCompletedTaskNumber()); });
     }
 
     public override void TaskCompleted(int taskNumber)
     {
-        if (taskNumber < MainScript.currentTaskNumber)
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
             return;
         if (taskNumber >= tasks.Length)
         {
             if (levelCompleteCutscene != null)
                 levelCompleteCutscene.SetActive(true);
-            grandpa.StopTheChase();
+            SetCurrentLevelCompletedTaskNumber(0);
+            SetCurrentStageUnlockedLevels(1);
+            SetCurrentStageTaskNumber(0);
             MainScript.instance.AllTasksCompleted();
             player.DisablePlayer();
         }
@@ -71,8 +73,9 @@ public class Level4Script : LevelScript
             //    //isSittingForSquirrel = false;
             //    //grandpa.isSitting = false;
             //}
-            items[taskNumber].EnableForInteraction(true);
-            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+
+            float taskUpdateDelay = 0;
+
 
             if (taskNumber > 1)
             {
@@ -104,7 +107,7 @@ public class Level4Script : LevelScript
                     {
                         catTimeline.SetActive(false);
                         player.EnablePlayer();
-                        grandpa.ChasePlayerForDuration(30);
+                        grandpa.ChasePlayerForDuration(2);
                         catTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
                 }
@@ -123,15 +126,107 @@ public class Level4Script : LevelScript
                     {
                         hensTimeline.SetActive(false);
                         player.EnablePlayer();
-                        grandpa.ChasePlayerForDuration(30);
+                        grandpa.ChasePlayerForDuration(2);
                         hensTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
                 }
             }
-            MainScript.instance.TaskCompleted(taskNumber, tasks.Length);
-            MainScript.currentTaskNumber = taskNumber;
+
+
+            DOVirtual.DelayedCall(taskUpdateDelay, () =>
+            {
+                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber()+1);
+
+
+                SetCurrentStageTaskNumber(taskNumber);
+                int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
+
+                Debug.Log(GetCurrentStageUnlockedLevels());
+                Debug.Log(currentLevelTasks);
+                Debug.Log(GetCurrentLevelCompletedTaskNumber());
+
+                MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
+
+                if (GetCurrentLevelCompletedTaskNumber() >= currentLevelTasks)
+                {
+                    MainScript.instance.CurrentLevelTasksCompleted();
+                    SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
+                    SetCurrentLevelCompletedTaskNumber(0);
+                }
+                else
+                {
+                    items[taskNumber].EnableForInteraction(true);
+                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                }
+            });
         }
     }
+
+
+    public override void UpdateTask(int taskNumber)
+    {
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
+            return;
+
+
+        float taskUpdateDelay = 0;
+
+
+        if (taskNumber > 1)
+        {
+            isSittingForSquirrel = false;
+            grandpa.isSitting = false;
+            squirrelCage.SetActive(false);
+        }
+        else
+        {
+            DOVirtual.DelayedCall(1, () => MakeGrandpaSitForSquirrel());
+
+            isSittingForSquirrel = true;
+        }
+
+
+        if (taskNumber == 2) // when release squirrel
+        {
+            grandpa.transform.SetPositionAndRotation(sitPos.position, sitPos.rotation);
+            grandpa.gameObject.SetActive(true);
+            grandpa.isSitting = false;
+            grandpa.ChasePlayerForDuration(2);
+        }
+
+        if (taskNumber == 3) // when throw cat at sock
+        {
+            grandpa.ChasePlayerForDuration(2);
+        }
+
+        if (taskNumber == 4) // when scare hens
+        {
+            grandpa.ChasePlayerForDuration(2);
+        }
+
+
+        DOVirtual.DelayedCall(taskUpdateDelay, () =>
+        {
+           
+            items[taskNumber].EnableForInteraction(true);
+            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+        });
+        SetCurrentStageTaskNumber(taskNumber);
+        int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
+        Debug.Log(currentLevelTasks);
+        Debug.Log(GetCurrentLevelCompletedTaskNumber());
+
+        MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
+    }
+
+
+    public override void StartNextLevel()
+    {
+        SetCurrentLevelCompletedTaskNumber(0);
+
+        OnEnable();
+    }
+
 
     public override void MiniGameEnded()
     {
@@ -154,7 +249,7 @@ public class Level4Script : LevelScript
                 grandpa.transform.SetPositionAndRotation(sitPos.position, sitPos.rotation);
                 grandpa.gameObject.SetActive(true);
                 grandpa.isSitting = false;
-                grandpa.ChasePlayerForDuration(30);
+                grandpa.ChasePlayerForDuration(2);
                 squirrelCutscene.SetActive(false);
                 squirrel.RunTowardsCage();
             });

@@ -22,15 +22,15 @@ public class LevelSelection : MonoBehaviour
 
     private void OnEnable()
     {
-        if (GlobalValues.UnlockedLevels > levels.Length)
-            GlobalValues.UnlockedLevels = levels.Length;
+        if (GlobalValues.UnlockedStages > levels.Length)
+            GlobalValues.UnlockedStages = levels.Length;
 
         if (Nicko_ADSManager._Instance)
             Nicko_ADSManager._Instance.HideBanner();
 
         float moveTO = 300;
         float moveDuration = 0.2f;
-        switch (GlobalValues.UnlockedLevels)
+        switch (GlobalValues.UnlockedStages)
         {
             case 1:
             case 2:
@@ -46,10 +46,10 @@ public class LevelSelection : MonoBehaviour
 
         content.DOAnchorPosY(310, 0);
         content.DOAnchorPosY(moveTO, moveDuration);
-        Debug.Log(GlobalValues.UnlockedLevels);
+        Debug.Log(GlobalValues.UnlockedStages);
 
 
-        levels[GlobalValues.UnlockedLevels - 1].transform.DOPunchScale(new Vector2(0.1f, 0.1f), 0.5f, 1, 1)
+        levels[GlobalValues.UnlockedStages - 1].transform.DOPunchScale(new Vector2(0.1f, 0.1f), 0.5f, 1, 1)
             .SetDelay(moveDuration);
         //StartCoroutine(FocusOnUnlockedLevel());
     }
@@ -89,8 +89,8 @@ public class LevelSelection : MonoBehaviour
 
     public void LockLevels()
     {
-        Debug.Log(GlobalValues.UnlockedLevels);
-        for (int i = GlobalValues.UnlockedLevels; i < levels.Length; i++)
+        Debug.Log(GlobalValues.UnlockedStages);
+        for (int i = GlobalValues.UnlockedStages; i < levels.Length; i++)
         {
             levels[i].LockLevel();
             Instantiate(lockPrefab, levels[i].transform);
@@ -107,7 +107,7 @@ public class LevelSelection : MonoBehaviour
 
     public void OnBtnPlaylevel()
     {
-        GlobalValues.currentLevel = selectedLevel;
+        GlobalValues.currentStage = selectedLevel;
         //GlobalValues.sceneTOLoad = "Gameplay";
         //Debug.Log("gameplay");
         CanvasScriptSplash.instance.LoadScene("Gameplay");

@@ -24,10 +24,10 @@ public class Level3Script : LevelScript
     private new void OnEnable()
     {
         base.OnEnable();
-        if (MainScript.currentTaskNumber < 0)
-            MainScript.currentTaskNumber = 0;
-
-        DOVirtual.DelayedCall(1, () => { TaskCompleted(MainScript.currentTaskNumber); });
+        if (GetCurrentStageCompletedTaskNumber() < 0)
+            SetCurrentStageTaskNumber(0);
+        MainScript.instance.UpdateLevelText(GetCurrentStageUnlockedLevels());
+        DOVirtual.DelayedCall(1, () => { UpdateTask(GetCurrentStageCompletedTaskNumber()); });
     }
 
     private void GrandpaSitForDinner()
@@ -38,7 +38,7 @@ public class Level3Script : LevelScript
     public override void TaskCompleted(int taskNumber)
     {
         Debug.Log(taskNumber);
-        if (taskNumber < MainScript.currentTaskNumber)
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
             return;
 
         if (taskNumber >= tasks.Length)
@@ -54,7 +54,10 @@ public class Level3Script : LevelScript
 
                 if (levelCompleteCutscene != null)
                     levelCompleteCutscene.SetActive(true);
-                grandpa.StopTheChase();
+
+                SetCurrentLevelCompletedTaskNumber(0);
+                SetCurrentStageUnlockedLevels(1);
+                SetCurrentStageTaskNumber(0);
                 MainScript.instance.AllTasksCompleted();
             });
         }
@@ -62,8 +65,8 @@ public class Level3Script : LevelScript
         {
             Debug.Log(items[taskNumber].name);
 
-            items[taskNumber].EnableForInteraction(true);
-            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+
+            float taskUpdateDelay = 0;
 
             if (taskNumber >= 1)
             {
@@ -80,7 +83,7 @@ public class Level3Script : LevelScript
                 grandpa.StopTheChase();
 
             if (taskNumber == 2) // when topple dishes
-                grandpa.ChasePlayerForDuration(30);
+                grandpa.ChasePlayerForDuration(2);
 
             if (taskNumber == 3) // when licking cutlery
             {
@@ -88,11 +91,92 @@ public class Level3Script : LevelScript
                 if (Nicko_ADSManager._Instance)
 
                     Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
-                DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(30); });
+                DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
             }
-            MainScript.instance.TaskCompleted(taskNumber, tasks.Length);
-            MainScript.currentTaskNumber = taskNumber;
+
+            DOVirtual.DelayedCall(taskUpdateDelay, () =>
+            {
+                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber()+1);
+
+
+                SetCurrentStageTaskNumber(taskNumber);
+                int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
+
+                Debug.Log(GetCurrentStageUnlockedLevels());
+                Debug.Log(currentLevelTasks);
+                Debug.Log(GetCurrentLevelCompletedTaskNumber());
+
+                MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
+
+                if (GetCurrentLevelCompletedTaskNumber() >= currentLevelTasks)
+                {
+                    MainScript.instance.CurrentLevelTasksCompleted();
+                    SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
+                    SetCurrentLevelCompletedTaskNumber(0);
+                }
+                else
+                {
+                    items[taskNumber].EnableForInteraction(true);
+                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                }
+            });
+
+
         }
+    }
+
+
+    public override void UpdateTask(int taskNumber)
+    {
+        Debug.Log(taskNumber);
+        if (taskNumber < GetCurrentStageCompletedTaskNumber())
+            return;
+
+
+        float taskUpdateDelay = 0;
+
+        if (taskNumber >= 1)
+        {
+            grandpa.isSitting = false;
+            tableCloth.SetActive(false);
+        }
+
+        if (taskNumber == 1) //when bury cloth
+            grandpa.StopTheChase();
+
+        if (taskNumber == 2) // when topple dishes
+            grandpa.ChasePlayerForDuration(2);
+
+        if (taskNumber == 3) // when licking cutlery
+        {
+            grandpa.StopTheChase();
+            if (Nicko_ADSManager._Instance)
+
+                Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
+            DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
+        }
+
+        DOVirtual.DelayedCall(taskUpdateDelay, () =>
+        {
+            items[taskNumber].EnableForInteraction(true);
+            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+        });
+     
+
+
+        SetCurrentStageTaskNumber(taskNumber);
+        int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels()-1];
+        Debug.Log(currentLevelTasks);
+        Debug.Log(GetCurrentLevelCompletedTaskNumber());
+
+        MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
+    }
+
+    public override void StartNextLevel()
+    {
+        SetCurrentLevelCompletedTaskNumber(0);
+
+        OnEnable();
     }
 
     public override void MiniGameEnded()

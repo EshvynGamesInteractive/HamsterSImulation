@@ -20,6 +20,7 @@ public class GrandpaAI : MonoBehaviour
     [Header("Chase Settings")] [SerializeField]
     private Transform chaseEndPoint;
 
+
     public float chaseEndThreshold = 1f;
     [SerializeField] private bool scoldPlayerWhenSee;
     [SerializeField] private bool shouldCatchPlayer = true;
@@ -155,7 +156,7 @@ public class GrandpaAI : MonoBehaviour
 
     public void StartPatrolOnGroundFloor()
     {
-        if (GlobalValues.currentLevel == 1)
+        if (GlobalValues.currentStage == 1)
             waypoints = waypointsGroundFloor;
         else
             waypoints = waypointsGroundFloor2;
@@ -420,22 +421,38 @@ public class GrandpaAI : MonoBehaviour
         shouldCatchPlayer = false;
         chaseTimer = 0;
         isChasingForDuration = false;
-        if (GlobalValues.currentLevel == 1)
+        if (GlobalValues.currentStage == 1)
             waypoints = waypointsGroundFloor;
         else
             waypoints = waypointsGroundFloor2;
         MoveToCurrentWaypoint();
     }
 
-    public void ChasePlayerForDuration(float duration)
+    public void ChasePlayerForDuration(int index)
     {
-        if (isSitting) return;
+        if (isSitting || isChasing) return;
 
         MainScript.instance.pnlInfo.ShowInfo("Grandpa’s on the move, better stay out of sight!");
-        chaseTimer = duration;
-        StartChase();
 
-        DOVirtual.DelayedCall(2.2f, StartChase);
+
+        if (index == 1)
+            chaseTimer = 10;
+        else if (index == 2)
+            chaseTimer = 15;
+        else
+            chaseTimer = 20;
+
+
+        DOVirtual.DelayedCall(3, () =>
+            {
+                if (!isSitting)
+                    StartChase();
+                else
+                {
+                    StopTheChase();
+                }
+            }
+        );
     }
 
     private void StartChase()
@@ -570,7 +587,7 @@ public class GrandpaAI : MonoBehaviour
 
             GetComponent<Collider>().enabled = true;
 
-            ChasePlayerForDuration(10);
+            ChasePlayerForDuration(1);
         });
     }
 
@@ -606,7 +623,7 @@ public class GrandpaAI : MonoBehaviour
         {
             if (faceMat != null) faceMat.color = Color.white;
             GetComponent<Collider>().enabled = true;
-            ChasePlayerForDuration(10);
+            ChasePlayerForDuration(1);
         });
     }
 
@@ -642,7 +659,7 @@ public class GrandpaAI : MonoBehaviour
         {
             if (faceMat != null) faceMat.color = Color.white;
             GetComponent<Collider>().enabled = true;
-            ChasePlayerForDuration(10);
+            ChasePlayerForDuration(1);
         });
     }
 
@@ -659,15 +676,15 @@ public class GrandpaAI : MonoBehaviour
         agent.speed = 2.5f;
         DOVirtual.DelayedCall(6, () =>
         {
-            if (GlobalValues.currentLevel == 1)
+            if (GlobalValues.currentStage == 1)
                 waypoints = waypointsGroundFloor;
             else
                 waypoints = waypointsGroundFloor2;
             isRunning = false;
             agent.speed = 0.7f;
-            EnableWalking(true);                                                                                                                                                        
+            EnableWalking(true);
             animator.SetBool("isRunning", false);
-            ChasePlayerForDuration(10);
+            ChasePlayerForDuration(1);
         });
     }
 

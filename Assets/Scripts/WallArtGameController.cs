@@ -151,7 +151,7 @@ public class WallArtGameController : MonoBehaviour
                 {
                     DOVirtual.DelayedCall(4, () =>
                 {
-                    grandpaAI.ChasePlayerForDuration(30);
+                    grandpaAI.ChasePlayerForDuration(2);
                 });
                 }
             });

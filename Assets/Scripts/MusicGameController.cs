@@ -9,6 +9,9 @@ public class MusicGameController : MonoBehaviour
     [SerializeField] private float gameDuration = 30f;
     [SerializeField] Transform playerStandPos;
     [SerializeField] Transform pianoCamera;
+    [SerializeField] private ParticleSystem musicParticle;
+
+    [SerializeField] private Collider[] itemsTOEnable;
 
     private Camera playerCamera;
     private PlayerScript player;
@@ -34,6 +37,11 @@ public class MusicGameController : MonoBehaviour
             MiniGameManager.Instance.OnMiniGameStart -= OnMiniGameStarted;
     }
 
+    public void ButtonPressed(Transform button)
+    {
+        musicParticle.transform.position = button.position;
+        musicParticle.Play();
+    }
     private void Update()
     {
         if (!isGameActive) return;
@@ -57,6 +65,11 @@ public class MusicGameController : MonoBehaviour
     {
         if (type != miniGameType) return;
 
+        foreach (Collider btn in itemsTOEnable)
+        {
+            btn.enabled = true;
+        }
+        
         MainScript.instance.grandPa.StopTheChase();
         MainScript.instance.grandPa.StartPatrolOnGroundFloor();
         timerText.transform.parent.gameObject.SetActive(true);
@@ -91,6 +104,11 @@ public class MusicGameController : MonoBehaviour
 
     private void EndMiniGame()
     {
+        
+        foreach (Collider btn in itemsTOEnable)
+        {
+            btn.enabled = false;
+        }
         timerText.transform.parent.gameObject.SetActive(false);
         isGameActive = false;
         if (!MainScript.instance.gameover)

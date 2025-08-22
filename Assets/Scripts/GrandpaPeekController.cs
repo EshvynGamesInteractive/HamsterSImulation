@@ -60,7 +60,7 @@ public class GrandpaPeekController : MonoBehaviour
 
         currentTargetPos = toPoint.position;
 
-        GenerateLookCone();
+        //GenerateLookCone();
 
         StartLooking();
     }
@@ -188,6 +188,7 @@ public class GrandpaPeekController : MonoBehaviour
     }
     private void CatchPlayer()
     {
+        GameEnd();
         playerCaught = true;
         Debug.Log("Level Failed: Grandpa caught you moving!");
         StopLooking();
