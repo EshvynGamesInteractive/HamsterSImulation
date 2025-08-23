@@ -8,7 +8,7 @@ public class LaundaryDoor : DoorScript
         if (!kidsLocked)
         {
             kidsLocked = true;
-            DisableForInteraction(true);
+           // DisableForInteraction(true);
             MainScript.instance.activeLevel.TaskCompleted(4);
         }
 

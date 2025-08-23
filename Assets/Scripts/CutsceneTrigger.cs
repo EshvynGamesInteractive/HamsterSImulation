@@ -18,7 +18,7 @@ public class CutsceneTrigger : MonoBehaviour
                 MainScript.instance.pnlInfo.ShowInfo(txtTOShow);
                 return;
             }
-
+            SoundManager.instance.PlaySound(SoundManager.instance.chime);
             MainScript.instance.grandPa.StopTheChase();
 
             Pickable itemTODrop = player.pickedObject;

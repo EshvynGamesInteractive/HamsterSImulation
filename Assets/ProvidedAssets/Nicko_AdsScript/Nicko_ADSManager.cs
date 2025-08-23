@@ -3,12 +3,14 @@ using System;
 using GoogleMobileAds.Api;
 // using LaundaryMan;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Nicko_ADSManager : MonoBehaviour
 {
     public static Nicko_ADSManager _Instance;
-
+    public GameObject noAdAvailablePanel;
+    public Button btnOkNoAd;
     public enum AdPriority
     {
         Admob,
@@ -46,8 +48,19 @@ public class Nicko_ADSManager : MonoBehaviour
         if (_Instance == null)
             _Instance = this;
         DontDestroyOnLoad(gameObject);
+        btnOkNoAd.onClick.AddListener(HideNoAdPanel);
     }
 
+
+    public void ShowNoAdPanel()
+    {
+        noAdAvailablePanel.SetActive(true);
+    }
+
+    public void HideNoAdPanel()
+    {
+        noAdAvailablePanel.SetActive(false);
+    }
     //  public AdTimer TIMER;
 
     public void Init()
@@ -150,8 +163,8 @@ public class Nicko_ADSManager : MonoBehaviour
         action = ac;
         if (adPriority == AdPriority.Max)
         {
-            // appLovinMax.ShowRewardedAd(ac);  // replaced by Khubaib
-            appLovinMax.ShowRewardedOrInterstitialAd(ac);
+             appLovinMax.ShowRewardedAd(ac); 
+            // appLovinMax.ShowRewardedOrInterstitialAd(ac); //added by Khubaib
         }
         else
             admobInstance.ShowRewardedAdmob(ac);
@@ -178,8 +191,8 @@ public class Nicko_ADSManager : MonoBehaviour
             print("Nicko_Admob.Instance");
         if (adPriority == AdPriority.Max)
         {
-            // appLovinMax.ShowRewardedAd(action);  // replaced by Khubaib
-            appLovinMax.ShowRewardedOrInterstitialAd(action);
+             appLovinMax.ShowRewardedAd(action); 
+            // appLovinMax.ShowRewardedOrInterstitialAd(action);//added by Khubaib
         }
         else
             admobInstance.ShowRewardedAdmob(action);

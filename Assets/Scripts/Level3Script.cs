@@ -55,9 +55,8 @@ public class Level3Script : LevelScript
                 if (levelCompleteCutscene != null)
                     levelCompleteCutscene.SetActive(true);
 
-                SetCurrentLevelCompletedTaskNumber(0);
-                SetCurrentStageUnlockedLevels(1);
-                SetCurrentStageTaskNumber(0);
+              
+               
                 MainScript.instance.AllTasksCompleted();
             });
         }
@@ -112,7 +111,7 @@ public class Level3Script : LevelScript
                 {
                     MainScript.instance.CurrentLevelTasksCompleted();
                     SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
-                    SetCurrentLevelCompletedTaskNumber(0);
+                   
                 }
                 else
                 {
@@ -174,7 +173,7 @@ public class Level3Script : LevelScript
 
     public override void StartNextLevel()
     {
-        SetCurrentLevelCompletedTaskNumber(0);
+        
 
         OnEnable();
     }

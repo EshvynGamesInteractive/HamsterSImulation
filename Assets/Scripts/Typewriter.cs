@@ -13,18 +13,19 @@ public class Typewriter : MonoBehaviour
     [SerializeField] CanvasGroup bg;
 
     private Coroutine typingCoroutine;
-
+    public bool autoHideAfterCompletion = true;
 
     private void Awake()
     {
         instance = this;
     }
+
     public void StartTyping(string message, float delay)
     {
         if (typingCoroutine != null)
-            return;
-            // StopCoroutine(typingCoroutine);
-        
+            // return;
+            StopCoroutine(typingCoroutine);
+
         typingCoroutine = StartCoroutine(TypeText(message, delay));
     }
 
@@ -38,8 +39,16 @@ public class Typewriter : MonoBehaviour
             textBox.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
+
         yield return new WaitForSeconds(3);
-        bg.DOFade(0, 0.1f);
+        if (autoHideAfterCompletion)
+            bg.DOFade(0, 0.1f);
         typingCoroutine = null;
+    }
+
+    public void HideTypeWriter()
+    {
+        autoHideAfterCompletion = true;
+        bg.DOFade(0, 0.1f);
     }
 }

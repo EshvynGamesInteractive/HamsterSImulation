@@ -5,6 +5,14 @@ public static class GlobalValues
     public static int currentStage=1;
     public static string sceneTOLoad = "MainMenu";
     public static bool retryAfterLevelCompleted;
+    
+    public static int TutorialPlayed
+    {
+
+        get { return PlayerPrefs.GetInt("TutorialPlayed", 0); }
+        set { PlayerPrefs.SetInt("TutorialPlayed", value); }
+    }
+    
     public static int Music
     {
 

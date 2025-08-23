@@ -6,12 +6,14 @@ using UnityEngine.UI;
 public class MainScript : MonoBehaviour
 {
     public static MainScript instance;
+    public TutorialScript tutorial;
     [SerializeField] private bool isTesting = false;
     [SerializeField] int activeLevelIndex;
     [SerializeField] Sprite soundOn, soundOff;
     [SerializeField] Image btnSound;
     [SerializeField] private Text txtLevel;
     [SerializeField] private Image levelFillBar;
+    [SerializeField] private GameObject btnNextStage;
     public InfoPanelScript pnlInfo;
     public TaskPanelScript taskPanel;
 
@@ -24,14 +26,16 @@ public class MainScript : MonoBehaviour
     public GrandpaAI grandPa;
     private int scoreCount;
     [HideInInspector] public LevelScript activeLevel;
-    [HideInInspector]public bool gameover;
+    [HideInInspector] public bool gameover;
     public GameObject indication;
+
     public NavmeshPathDraw pathDraw;
+
     // public static int currentTaskNumber;
     public static int decrementedNumber;
     public bool canShowRewardedPopup = true;
 
-    
+
     // public int currentTaskNumber
     // {
     //
@@ -47,44 +51,53 @@ public class MainScript : MonoBehaviour
     {
         if (isTesting)
             GlobalValues.currentStage = activeLevelIndex + 1; //forTesting
-        
+
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.HideRecBanner();
             Nicko_ADSManager._Instance.ShowBanner("GameStart");
         }
 
-        Time.timeScale = 1;
-        if (GlobalValues.currentStage > levels.Length)
-            GlobalValues.currentStage = levels.Length;
-        if (GlobalValues.retryAfterLevelCompleted && GlobalValues.currentStage > 1)
-        {
-            GlobalValues.currentStage--;
-        }
-
-        GlobalValues.retryAfterLevelCompleted = false;
-
-        activeLevelIndex = GlobalValues.currentStage - 1;
-
-        for (int i = 0; i < levels.Length; i++)
-        {
-            levels[i].gameObject.SetActive(false);
-        }
-
-        if (activeLevelIndex >= levels.Length)
-            activeLevelIndex = levels.Length - 1;
-
-
-        levels[activeLevelIndex].gameObject.SetActive(true);
-        activeLevel = levels[activeLevelIndex];
         CheckSound();
-        // currentTaskNumber= activeLevel.GetCurrentStageCompletedTaskNumber();
+        Time.timeScale = 1;
+        if (GlobalValues.TutorialPlayed == 0)
+        {
+           
+            tutorial.gameObject.SetActive(true);
+        }
+        else
+        {
+            
+            if (GlobalValues.currentStage > levels.Length)
+                GlobalValues.currentStage = levels.Length;
+            if (GlobalValues.retryAfterLevelCompleted && GlobalValues.currentStage > 1)
+            {
+                GlobalValues.currentStage--;
+            }
+
+            GlobalValues.retryAfterLevelCompleted = false;
+
+            activeLevelIndex = GlobalValues.currentStage - 1;
+
+            for (int i = 0; i < levels.Length; i++)
+            {
+                levels[i].gameObject.SetActive(false);
+            }
+
+            if (activeLevelIndex >= levels.Length)
+                activeLevelIndex = levels.Length - 1;
+
+
+            levels[activeLevelIndex].gameObject.SetActive(true);
+            activeLevel = levels[activeLevelIndex];
+        }
     }
 
     public void UpdateLevelText(int levelNumber)
     {
-        txtLevel.text ="Level "+ levelNumber;
+        txtLevel.text = "Level " + levelNumber;
     }
+
     private void CheckSound()
     {
         if (GlobalValues.Effects == 1)
@@ -167,14 +180,15 @@ public class MainScript : MonoBehaviour
     {
         if (gameover)
             return;
-        
+
         Debug.Log(activeLevel.GetCurrentLevelCompletedTaskNumber());
         if (activeLevel.GetCurrentStageCompletedTaskNumber() > 0 && !caughtWhileMinigame &&
             activeLevel.GetCurrentStageCompletedTaskNumber() != decrementedNumber
-            &&activeLevel.GetCurrentLevelCompletedTaskNumber()!=0) // so it does not decrement when caught on same task
+            && activeLevel.GetCurrentLevelCompletedTaskNumber() !=
+            0) // so it does not decrement when caught on same task
         {
-            activeLevel.SetCurrentLevelCompletedTaskNumber(activeLevel.GetCurrentLevelCompletedTaskNumber()-1);
-            activeLevel.SetCurrentStageTaskNumber(activeLevel.GetCurrentStageCompletedTaskNumber()-1);
+            activeLevel.SetCurrentLevelCompletedTaskNumber(activeLevel.GetCurrentLevelCompletedTaskNumber() - 1);
+            activeLevel.SetCurrentStageTaskNumber(activeLevel.GetCurrentStageCompletedTaskNumber() - 1);
             decrementedNumber = activeLevel.GetCurrentStageCompletedTaskNumber();
         }
 
@@ -200,7 +214,7 @@ public class MainScript : MonoBehaviour
     {
         if (gameover)
             return;
-        
+        activeLevel.SetCurrentLevelCompletedTaskNumber(0);
         Debug.Log("currenttasks");
         grandPa.StopTheChase();
         levelFillBar.DOFillAmount(1, 0.2f).SetUpdate(true);
@@ -209,21 +223,26 @@ public class MainScript : MonoBehaviour
         gameover = true;
         Invoke(nameof(LevelCompleted), 1);
     }
+
     private void LevelCompleted()
     {
         canShowRewardedPopup = false;
-        if (GlobalValues.currentStage == GlobalValues.UnlockedStages)
-            GlobalValues.UnlockedStages++;
-        
+
+
         SoundManager.instance.PlaySound(SoundManager.instance.levelComplete);
         OpenPopup(pnlLevelWin);
         System.GC.Collect();
         System.GC.WaitForPendingFinalizers();
     }
+
     public void AllTasksCompleted()
     {
+        Debug.Log("allTasksCompleted " + gameover);
         if (gameover)
             return;
+        activeLevel.SetCurrentLevelCompletedTaskNumber(0);
+        activeLevel.SetCurrentStageUnlockedLevels(1);
+        activeLevel.SetCurrentStageTaskNumber(0);
         decrementedNumber = 0;
         Debug.Log("ALltasks");
         grandPa.StopTheChase();
@@ -234,17 +253,27 @@ public class MainScript : MonoBehaviour
         Invoke(nameof(StageCompleted), 1);
     }
 
-   
 
     private void StageCompleted()
     {
         canShowRewardedPopup = false;
+        Debug.Log(GlobalValues.currentStage);
+        Debug.Log(GlobalValues.UnlockedStages);
+        if (GlobalValues.currentStage >= levels.Length)
+            btnNextStage.SetActive(false);
+        else
+        {
+            btnNextStage.SetActive(true);
+        }
+
         if (GlobalValues.currentStage == GlobalValues.UnlockedStages)
             GlobalValues.UnlockedStages++;
         GlobalValues.currentStage++;
         SoundManager.instance.PlaySound(SoundManager.instance.levelComplete);
+
+
         OpenPopup(pnlStageWin);
-        
+
         // decrementedNumber = 0;
         System.GC.Collect();
         System.GC.WaitForPendingFinalizers();
@@ -274,6 +303,8 @@ public class MainScript : MonoBehaviour
             Nicko_ADSManager._Instance.HideBanner();
         canShowRewardedPopup = false;
 
+        
+        Debug.Log("WHereeeee");
         Time.timeScale = 0.001f;
         pnl.SetActive(true);
         float animTime = 1;
@@ -312,6 +343,7 @@ public class MainScript : MonoBehaviour
 
     public void OnBtnRetry()
     {
+        timerAd.StartPanelTimer();
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryONPauseAD");
@@ -326,6 +358,7 @@ public class MainScript : MonoBehaviour
 
     public void OnBtnRetryAfterLevelCompleted()
     {
+        timerAd.StartPanelTimer();
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryAfterWinAD");
@@ -341,6 +374,7 @@ public class MainScript : MonoBehaviour
 
     public void OnBtnHome()
     {
+        timerAd.StartPanelTimer();
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("HomeButtonAD");
@@ -357,6 +391,7 @@ public class MainScript : MonoBehaviour
 
     public void OnBtnNext()
     {
+        timerAd.StartPanelTimer();
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("NextStageButtonAD");
@@ -373,11 +408,13 @@ public class MainScript : MonoBehaviour
 
     public void OnBtnNextLevel()
     {
+        timerAd.StartPanelTimer();
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("NextLevelButtonAD");
         }
-activeLevel.StartNextLevel();
+
+        activeLevel.StartNextLevel();
         gameover = false;
         ClosePopup(pnlLevelWin);
         player.EnablePlayer();

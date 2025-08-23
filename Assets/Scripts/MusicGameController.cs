@@ -39,8 +39,10 @@ public class MusicGameController : MonoBehaviour
 
     public void ButtonPressed(Transform button)
     {
-        musicParticle.transform.position = button.position;
-        musicParticle.Play();
+        GameObject particle = Instantiate(musicParticle.gameObject, musicParticle.transform.parent);
+        particle.transform.position = button.position;
+        particle.GetComponent<ParticleSystem>().Play();
+        Destroy(particle.gameObject, 2);
     }
     private void Update()
     {

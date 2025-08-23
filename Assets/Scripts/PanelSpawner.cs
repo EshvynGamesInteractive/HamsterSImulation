@@ -53,6 +53,8 @@ public class PanelSpawner : MonoBehaviour
 
     private IEnumerator OpenPanelAfterDelay()
     {
+        if(GlobalValues.TutorialPlayed==0)
+            yield break;
         isWaiting = true;
         float elapsed = 0f;
 

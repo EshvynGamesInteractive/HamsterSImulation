@@ -54,9 +54,7 @@ public class Level4Script : LevelScript
         {
             if (levelCompleteCutscene != null)
                 levelCompleteCutscene.SetActive(true);
-            SetCurrentLevelCompletedTaskNumber(0);
-            SetCurrentStageUnlockedLevels(1);
-            SetCurrentStageTaskNumber(0);
+          
             MainScript.instance.AllTasksCompleted();
             player.DisablePlayer();
         }
@@ -94,7 +92,10 @@ public class Level4Script : LevelScript
             //    grandpa.StopTheChase();
 
             if (taskNumber == 2) // when release squirrel
+            {
                 PlaySquirrelCutscene();
+                taskUpdateDelay = cutsceneDuration;
+            }
 
             if (taskNumber == 3) // when throw cat at sock
             {
@@ -151,7 +152,7 @@ public class Level4Script : LevelScript
                 {
                     MainScript.instance.CurrentLevelTasksCompleted();
                     SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
-                    SetCurrentLevelCompletedTaskNumber(0);
+                    
                 }
                 else
                 {

@@ -16,6 +16,7 @@ public class GrandpaAI : MonoBehaviour
     [SerializeField] private Material faceMat;
     [SerializeField] private ParticleSystem angryEmote;
     [SerializeField] private ParticleSystem hitParticle;
+    [SerializeField] private GameObject electrocutedParticle, beesParticle;
 
     [Header("Chase Settings")] [SerializeField]
     private Transform chaseEndPoint;
@@ -539,7 +540,7 @@ public class GrandpaAI : MonoBehaviour
         stopWalking = true;
         agent.enabled = false;
         GetComponent<Collider>().enabled = false;
-
+        isChasing = false;
         if (faceMat != null) faceMat.color = Color.red;
 
         Typewriter.instance.StartTyping("Dang it! Slipped again?! This dog's gonna be the end of me!", 3);
@@ -572,7 +573,7 @@ public class GrandpaAI : MonoBehaviour
         stopWalking = true;
         agent.enabled = false;
         GetComponent<Collider>().enabled = false;
-
+        isChasing = false;
         if (faceMat != null) faceMat.color = Color.red;
 
         Typewriter.instance.StartTyping("Dang it! Slipped again?! This dog's gonna be the end of me!", 3);
@@ -581,7 +582,7 @@ public class GrandpaAI : MonoBehaviour
 
         MainScript.instance.pnlInfo.ShowInfo("Grandpa's down. Run while you can");
 
-        DOVirtual.DelayedCall(6, () =>
+        DOVirtual.DelayedCall(4, () =>
         {
             if (faceMat != null) faceMat.color = Color.white;
 
@@ -640,7 +641,7 @@ public class GrandpaAI : MonoBehaviour
         transform.LookAt(player.transform);
         MainScript.instance.RestartRewardedTimer();
         Debug.Log("electrocuted");
-
+        electrocutedParticle.SetActive(true);
         animator.SetTrigger("Electrocuted");
         EnableWalking(false);
         stopWalking = true;
@@ -651,12 +652,13 @@ public class GrandpaAI : MonoBehaviour
 
         Typewriter.instance.StartTyping("Ouch! You naughty dog, I’ll catch you!", 1);
 
-        DOVirtual.DelayedCall(8, angryEmote.Play);
+        // DOVirtual.DelayedCall(8, angryEmote.Play);
 
         MainScript.instance.pnlInfo.ShowInfo("You made Grandpa angry, he’s coming after you!");
 
         DOVirtual.DelayedCall(3, () =>
         {
+            electrocutedParticle.SetActive(false);
             if (faceMat != null) faceMat.color = Color.white;
             GetComponent<Collider>().enabled = true;
             ChasePlayerForDuration(1);
@@ -685,6 +687,7 @@ public class GrandpaAI : MonoBehaviour
             EnableWalking(true);
             animator.SetBool("isRunning", false);
             ChasePlayerForDuration(1);
+            beesParticle.SetActive(false);
         });
     }
 
@@ -718,8 +721,18 @@ public class GrandpaAI : MonoBehaviour
 
             hitParticle.Play();
             MainScript.instance.RestartRewardedTimer();
-            if (other.gameObject.CompareTag("Lizard") || other.gameObject.CompareTag("Beehive"))
+            if (isSitting)
+            {
+                MainScript.instance.pnlInfo.ShowInfo("Don't disturb grandpa when he is resting");
+                return;
+            }
+            else if (other.gameObject.CompareTag("Lizard"))
                 MakeGrandpaRun();
+            else if (other.gameObject.CompareTag("Beehive"))
+            {
+                beesParticle.SetActive(true);
+                MakeGrandpaRun();
+            }
             else if (other.gameObject.CompareTag("ShockGun"))
                 ElectrocuteGrandpa();
             else if (other.gameObject.CompareTag("BananaPeel"))

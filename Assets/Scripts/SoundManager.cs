@@ -9,7 +9,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip buttonClick, levelFail, levelComplete, taskComplete, ballLaunch, timeOut, dogBark, eat, interact, bubblePop, dogPawPrint, 
         dropBucket, spillWater, lightSwitch, throwBlanket, pour, fireAlarm, spillTrash, 
         throwItem, toppleDishes, lick, hens, goat, cageOpen, catMeow, balloonPop, doorOpen, doorClose,
-        drawerOpen, drawerClose;
+        drawerOpen, drawerClose, chime;
 
     private void Awake()
     {

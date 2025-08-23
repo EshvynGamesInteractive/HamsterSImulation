@@ -43,6 +43,7 @@ public class GoatScript : Interactable
         StartCoroutine(PlayCutscene());
         SoundManager.instance.PlaySound(SoundManager.instance.goat);
         SoundManager.instance.PlaySoundDelayed(SoundManager.instance.goat, 2);
+       
     }
 
     public void StartSequence()
@@ -75,6 +76,7 @@ public class GoatScript : Interactable
 
     private IEnumerator PlayCutscene()
     {
+        MainScript.instance.gameover = true;
         yield return new WaitForSeconds(1);
         grandpaAI.gameObject.SetActive(false);
         goatGrandpa.SetActive(true);
@@ -82,9 +84,11 @@ public class GoatScript : Interactable
         //mainCamera.enabled = false;
         cinematicCamera.SetActive(true);
         yield return new WaitForSeconds(cutsceneDuration);
+        MainScript.instance.gameover = false;
         //cinematicCamera.SetActive(false);
         //mainCamera.enabled = true;
         MainScript.instance.activeLevel.TaskCompleted(5);
+        
         MoveToNextWaypoint();
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class InternetCheck : MonoBehaviour
 {
     public Button tryAgain;
+    
 
     public int PrivacyPolicy
     {

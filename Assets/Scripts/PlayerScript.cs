@@ -243,6 +243,10 @@ public class PlayerScript : MonoBehaviour
     {
         if (!IsObjectPicked || pickedObject == null) return;
         SoundManager.instance.PlaySound(SoundManager.instance.throwItem);
+        if(pickedObject.gameObject.CompareTag("ShockGun"))
+            pickedObject.GetComponent<MeshRenderer>().enabled = false;
+        if(pickedObject.gameObject.CompareTag("Vase"))
+            MainScript.instance.tutorial.EndTutorial();
         btnThrow.SetActive(false);
         pickedObject.EnableForInteraction(false);
         pickedObject.transform.SetParent(null);

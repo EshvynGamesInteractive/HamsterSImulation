@@ -34,9 +34,7 @@ public class Level2Script : LevelScript
         {
             if (levelCompleteCutscene != null)
                 levelCompleteCutscene.SetActive(true);
-            
-            SetCurrentStageUnlockedLevels(1);
-            SetCurrentStageTaskNumber(0);
+           
             MainScript.instance.AllTasksCompleted();
         }
         else
@@ -126,7 +124,7 @@ public class Level2Script : LevelScript
                 {
                     MainScript.instance.CurrentLevelTasksCompleted();
                     SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
-                    SetCurrentLevelCompletedTaskNumber(0);
+                    
                 }
                 else
                 {
@@ -195,7 +193,7 @@ public class Level2Script : LevelScript
 
     public override void StartNextLevel()
     {
-        SetCurrentLevelCompletedTaskNumber(0);
+       
 
         OnEnable();
     }

@@ -99,8 +99,8 @@ public class FridgeHeistController : MonoBehaviour
         SlowDownPlayer(true);
 
         Debug.Log("Fridge Heist started!");
-        MainScript.instance.taskPanel.UpdateTask("Sneak some fruit from the fridge. Careful not to alert Grandpa!");
-        MainScript.instance.pnlInfo.ShowInfo("Steal items from the fridge without being caught by Grandpa");
+        MainScript.instance.taskPanel.UpdateTask("Sneak fruit from the fridge, but stay out of Grandpa's sight or he'll catch you!");
+        MainScript.instance.pnlInfo.ShowInfo("Freeze to trick Grandpa! If you stay still, he won't catch you");
         yield return null;
     }
 

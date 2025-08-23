@@ -464,6 +464,11 @@ public class AppLovinMax : MonoBehaviour
             Nicko_Admob.isInterstialAdPresent = true;
             MaxSdk.ShowRewardedAd(RewardedAdUnitId);
         }
+        else
+        {
+            Debug.LogWarning("No rewarded ad available at the moment.");
+            Nicko_ADSManager._Instance.ShowNoAdPanel();
+        }
     }
     
     

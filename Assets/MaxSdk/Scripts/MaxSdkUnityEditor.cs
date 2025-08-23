@@ -387,9 +387,10 @@ public class MaxSdkUnityEditor : MaxSdkBase
     public static void ShowBanner(string adUnitIdentifier)
     {
         ValidateAdUnitIdentifier(adUnitIdentifier, "show banner");
-
+        Debug.Log("1banner");
         if (!IsAdUnitRequested(adUnitIdentifier))
         {
+        Debug.Log("2banner");
             MaxSdkLogger.UserWarning("Banner '" + adUnitIdentifier + "' was not created, can not show it");
         }
         else
@@ -398,6 +399,11 @@ public class MaxSdkUnityEditor : MaxSdkBase
             if (StubBanners.TryGetValue(adUnitIdentifier, out stubBanner))
             {
                 stubBanner.SetActive(true);
+                Debug.Log("ShowingStubbanner");
+            }
+            else
+            {
+                Debug.Log("NoStubBanner");
             }
         }
     }

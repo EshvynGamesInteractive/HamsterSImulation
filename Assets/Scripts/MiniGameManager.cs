@@ -63,6 +63,11 @@ public class MiniGameManager : MonoBehaviour
             return;
         }
 
+        if (MainScript.instance.gameover)
+        {
+            EndMiniGame();
+            return;
+        }
         if (Nicko_ADSManager._Instance)
             Nicko_ADSManager._Instance.ShowInterstitial("MiniGameStart");
         MainScript.instance.grandPa.StopTheChase();
