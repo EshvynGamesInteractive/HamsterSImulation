@@ -563,6 +563,10 @@ public class GrandpaAI : MonoBehaviour
         });
     }
 
+    public void StandInjured()
+    {
+        animator.SetTrigger("InjuredStand");
+    }
     private void GrandpaSlip()
     {
         MainScript.instance.RestartRewardedTimer();

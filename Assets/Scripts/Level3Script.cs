@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Level3Script : LevelScript
 {
-    [SerializeField] GameObject levelCompleteCutscene;
     [SerializeField] Transform dinnerPos;
     [SerializeField] GameObject balloonTimeline;
     [SerializeField] float balloonTimelineDuration;

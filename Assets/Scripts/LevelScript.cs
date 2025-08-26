@@ -7,6 +7,7 @@ public abstract class LevelScript : MonoBehaviour
     [SerializeField] protected Interactable[] items;
     [SerializeField] protected string[] tasks;
     [SerializeField] protected int[] eachLevelTasksCount;
+    [SerializeField]protected GameObject levelCompleteCutscene;
     // [SerializeField] protected int currentLevelCompletedTasks;
     protected bool miniGameisActive;
     protected GrandpaAI grandpa;

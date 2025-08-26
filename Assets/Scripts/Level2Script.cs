@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Level2Script : LevelScript
 {
-    [SerializeField] GameObject levelCompleteCutscene;
     [SerializeField] GameObject shutDoorTimeline, toyThrowTimeline;
     [SerializeField] float shutDoorTimelineDuration, throwTimelineDuration;
     [SerializeField] LaundaryDoor laundaryDoor;

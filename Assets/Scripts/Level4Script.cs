@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Level4Script : LevelScript
 {
-    [SerializeField] GameObject levelCompleteCutscene, squirrelCutscene;
+    [SerializeField] GameObject  squirrelCutscene;
     [SerializeField] Transform sitPos;
     [SerializeField] float cutsceneDuration = 4;
     [SerializeField] Transform cutsceneCamera;

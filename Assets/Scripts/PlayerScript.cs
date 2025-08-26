@@ -76,6 +76,14 @@ public class PlayerScript : MonoBehaviour
         gameObject.SetActive(true);
         GetComponent<FP_Controller>().OnEnable();
     }
+    public void EnablePlayer(Transform enablePos)
+    {
+        transform.SetPositionAndRotation(enablePos.position, enablePos.rotation);
+        
+        playerCanvas.SetActive(true);
+        gameObject.SetActive(true);
+        GetComponent<FP_Controller>().OnEnable();
+    }
 
     public void AnimatePawToCenter()
     {

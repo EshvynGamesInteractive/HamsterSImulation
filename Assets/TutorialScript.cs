@@ -13,6 +13,8 @@ public class TutorialScript : MonoBehaviour
     [SerializeField] private GameObject tutorialLevel;
     [SerializeField] private FP_Controller player;
     [SerializeField] private Pickable vase;
+    [SerializeField] private GameObject[] itemsToDisable;
+    [SerializeField] private RectTransform highlightedCircle;
 
     private void Start()
     {
@@ -21,16 +23,37 @@ public class TutorialScript : MonoBehaviour
 
     private void StartTutorial()
     {
+        foreach (var t in itemsToDisable)
+        {
+            t.SetActive(false);
+        }
+
+        MainScript.instance.taskPanel.gameObject.SetActive(false);
         player.StopPlayerMovement();
         player.GetComponent<PlayerScript>().playerCanvas.SetActive(false);
         Typewriter.instance.autoHideAfterCompletion = false;
-         tutorialLevel.SetActive(true);
+        tutorialLevel.SetActive(true);
         gameObject.SetActive(true);
         ShowTutorial();
     }
 
     public void ShowTutorial()
     {
+        if (tutorialCount != 1)
+        {
+            highlightedCircle.gameObject.SetActive(true);
+            RectTransform target = tutorialUI[tutorialCount].GetComponent<RectTransform>();
+
+            highlightedCircle.pivot = target.pivot;
+            highlightedCircle.anchorMax = target.anchorMax;
+            highlightedCircle.anchorMin = target.anchorMin;
+            highlightedCircle.sizeDelta = target.sizeDelta * 1.5f;
+            highlightedCircle.anchoredPosition = target.anchoredPosition;
+        }
+        else
+        {
+            highlightedCircle.gameObject.SetActive(false);
+        }
         btnGotIt.SetActive(false);
         dullScreen.SetActive(true);
         tutorialUI[tutorialCount].SetActive(true);
@@ -55,14 +78,13 @@ public class TutorialScript : MonoBehaviour
             btnGotIt.SetActive(false);
             UITutorialEnded();
         }
-
     }
 
     public void UITutorialEnded()
     {
         Typewriter.instance.HideTypeWriter();
-      
-      vase.EnableForInteraction(true);
+        MainScript.instance.taskPanel.gameObject.SetActive(true);
+        vase.EnableForInteraction(true);
         gameObject.SetActive(false);
         Debug.Log("TutorialEnded");
         player.OnEnable();
@@ -77,6 +99,5 @@ public class TutorialScript : MonoBehaviour
             GlobalValues.TutorialPlayed = 1;
             MainScript.instance.OnBtnRetry();
         });
-       
     }
 }

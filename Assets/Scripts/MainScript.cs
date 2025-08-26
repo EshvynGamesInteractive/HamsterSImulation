@@ -60,7 +60,7 @@ public class MainScript : MonoBehaviour
 
         CheckSound();
         Time.timeScale = 1;
-        if (GlobalValues.TutorialPlayed == 0)
+        if (GlobalValues.TutorialPlayed == 0 && !isTesting)
         {
            
             tutorial.gameObject.SetActive(true);
@@ -87,7 +87,8 @@ public class MainScript : MonoBehaviour
             if (activeLevelIndex >= levels.Length)
                 activeLevelIndex = levels.Length - 1;
 
-
+Debug.Log(activeLevelIndex);
+Debug.Log(levels.Length);
             levels[activeLevelIndex].gameObject.SetActive(true);
             activeLevel = levels[activeLevelIndex];
         }

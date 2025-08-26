@@ -4,7 +4,6 @@ using UnityEngine;
 public class Level1Script : LevelScript
 {
     [SerializeField] Transform grandpaTvPos, drinkTeaPos;
-    [SerializeField] GameObject levelCompleteCutscene;
     [SerializeField] GameObject televisionTimeline, ketchupTimeline;
     [SerializeField] float tvTimelineDuration, ketchupTimelineDuration;
     [SerializeField] GameObject tvScreen;
