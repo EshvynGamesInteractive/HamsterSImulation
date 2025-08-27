@@ -13,7 +13,8 @@ public enum MiniGameType
     WallArtWhirl,
     BubblePopBlitzGround,
     Piano,
-    Drum
+    Drum,
+    RatCatching
 }
 
 public class MiniGameManager : MonoBehaviour
@@ -27,7 +28,9 @@ public class MiniGameManager : MonoBehaviour
     public CushionTrampolineManager cushionTrampoline;
     public BallFetchGameController ballFetchGameController;
     public MusicGameController pianoGameController;
+    public RatCatchingGameController ratGameController;
     private string currentTask;
+    private Sprite currentTaskSprite;
 
     public MiniGameType ActiveMiniGame { get; private set; } = MiniGameType.None;
 
@@ -76,6 +79,7 @@ public class MiniGameManager : MonoBehaviour
         MainScript.instance.RestartRewardedTimer();
         MainScript.instance.activeLevel.MiniGameEnded();
         currentTask = MainScript.instance.taskPanel.GetCurrentTask();
+        currentTaskSprite = MainScript.instance.taskPanel.GetCurrentTaskSprite();
 
         ActiveMiniGame = type;
         //Debug.Log($"Starting mini-game: {type}");
@@ -101,7 +105,7 @@ public class MiniGameManager : MonoBehaviour
         MainScript.instance.canShowRewardedPopup = true;
         SoundManager.instance.PlaySound(SoundManager.instance.timeOut);
         MainScript.instance.ShowIndication();
-        MainScript.instance.taskPanel.UpdateTask(currentTask);
+        MainScript.instance.taskPanel.UpdateTask(currentTask, currentTaskSprite);
         Debug.Log($"Ending mini-game: {ActiveMiniGame}");
         OnMiniGameEnd?.Invoke(ActiveMiniGame);
         ActiveMiniGame = MiniGameType.None;

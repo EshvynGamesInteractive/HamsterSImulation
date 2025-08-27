@@ -32,7 +32,7 @@ public class MainScript : MonoBehaviour
     public NavmeshPathDraw pathDraw;
 
     // public static int currentTaskNumber;
-    public static int decrementedNumber;
+    private static int decrementedNumber;
     public bool canShowRewardedPopup = true;
 
 
@@ -62,12 +62,12 @@ public class MainScript : MonoBehaviour
         Time.timeScale = 1;
         if (GlobalValues.TutorialPlayed == 0 && !isTesting)
         {
-           
+            canShowRewardedPopup = false;
             tutorial.gameObject.SetActive(true);
         }
         else
         {
-            
+            canShowRewardedPopup = true;
             if (GlobalValues.currentStage > levels.Length)
                 GlobalValues.currentStage = levels.Length;
             if (GlobalValues.retryAfterLevelCompleted && GlobalValues.currentStage > 1)
@@ -87,8 +87,8 @@ public class MainScript : MonoBehaviour
             if (activeLevelIndex >= levels.Length)
                 activeLevelIndex = levels.Length - 1;
 
-Debug.Log(activeLevelIndex);
-Debug.Log(levels.Length);
+// Debug.Log(activeLevelIndex);
+// Debug.Log(levels.Length);
             levels[activeLevelIndex].gameObject.SetActive(true);
             activeLevel = levels[activeLevelIndex];
         }
@@ -150,6 +150,7 @@ Debug.Log(levels.Length);
 
     public void SetIndicationPosition(Transform pos)
     {
+        Debug.Log(pos.name);
         ShowIndication();
         indication.transform.position = pos.position;
         if (pos.TryGetComponent<Interactable>(out Interactable interactable))
@@ -207,7 +208,7 @@ Debug.Log(levels.Length);
     public void TaskCompleted(int completedTasks, int totalTasks)
     {
         float taskPercentage = (float)completedTasks / totalTasks;
-        Debug.Log(taskPercentage);
+        // Debug.Log(taskPercentage);
         levelFillBar.DOFillAmount(taskPercentage, 0.2f).SetUpdate(true);
     }
 
@@ -258,8 +259,7 @@ Debug.Log(levels.Length);
     private void StageCompleted()
     {
         canShowRewardedPopup = false;
-        Debug.Log(GlobalValues.currentStage);
-        Debug.Log(GlobalValues.UnlockedStages);
+     
         if (GlobalValues.currentStage >= levels.Length)
             btnNextStage.SetActive(false);
         else
@@ -305,7 +305,6 @@ Debug.Log(levels.Length);
         canShowRewardedPopup = false;
 
         
-        Debug.Log("WHereeeee");
         Time.timeScale = 0.001f;
         pnl.SetActive(true);
         float animTime = 1;

@@ -157,7 +157,7 @@ public class Level4Script : LevelScript
                 else
                 {
                     items[taskNumber].EnableForInteraction(true);
-                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
                 }
             });
         }
@@ -210,7 +210,7 @@ public class Level4Script : LevelScript
         {
            
             items[taskNumber].EnableForInteraction(true);
-            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
         });
         SetCurrentStageTaskNumber(taskNumber);
         int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];

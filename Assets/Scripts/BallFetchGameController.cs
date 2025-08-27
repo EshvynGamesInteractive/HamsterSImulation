@@ -10,6 +10,7 @@ public class BallFetchGameController : MonoBehaviour
     [SerializeField] private float gameduration = 60f;
     [SerializeField] Text txtTimer, scoreText;
     [SerializeField] GameObject gameStartTrigger;
+    [SerializeField] private Sprite ballGameIcon;
     private int score;
     private float timer;
     private bool gameActive;
@@ -58,7 +59,7 @@ public class BallFetchGameController : MonoBehaviour
         scoreText.transform.parent.gameObject.SetActive(true);
         score = 0;
         UpdateScoreUI();
-        MainScript.instance.taskPanel.UpdateTask("Fetch the balls launched and bring them back before time runs out");
+        MainScript.instance.taskPanel.UpdateTask("Fetch the balls launched and bring them back before time runs out", ballGameIcon);
         gameActive = true;
         txtTimer.transform.parent.gameObject.SetActive(true);
         timer = gameduration;

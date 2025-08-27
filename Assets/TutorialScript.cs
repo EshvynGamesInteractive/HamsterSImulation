@@ -15,7 +15,7 @@ public class TutorialScript : MonoBehaviour
     [SerializeField] private Pickable vase;
     [SerializeField] private GameObject[] itemsToDisable;
     [SerializeField] private RectTransform highlightedCircle;
-
+    [SerializeField] private Sprite vaseIcon;
     private void Start()
     {
         StartTutorial();
@@ -61,7 +61,6 @@ public class TutorialScript : MonoBehaviour
 
         DOVirtual.DelayedCall(instructionDelays[tutorialCount], () =>
         {
-            Debug.Log("sdwedknakjn");
             btnGotIt.SetActive(true);
             btnGotIt.transform.DOScale(new Vector2(1.2f, 1.2f), 0.1f);
             btnGotIt.transform.DOScale(new Vector2(1, 1), 0.1f).SetDelay(0.1f);
@@ -89,7 +88,7 @@ public class TutorialScript : MonoBehaviour
         Debug.Log("TutorialEnded");
         player.OnEnable();
         player.GetComponent<PlayerScript>().playerCanvas.SetActive(true);
-        MainScript.instance.taskPanel.UpdateTask("Pick up the vase and give it a big toss!");
+        MainScript.instance.taskPanel.UpdateTask("Pick up the vase and give it a big toss!", vaseIcon);
     }
 
     public void EndTutorial()

@@ -6,6 +6,7 @@ public abstract class LevelScript : MonoBehaviour
 {
     [SerializeField] protected Interactable[] items;
     [SerializeField] protected string[] tasks;
+    [SerializeField] protected Sprite[] taskIcons;
     [SerializeField] protected int[] eachLevelTasksCount;
     [SerializeField]protected GameObject levelCompleteCutscene;
     // [SerializeField] protected int currentLevelCompletedTasks;
@@ -65,7 +66,7 @@ public abstract class LevelScript : MonoBehaviour
     
     public int GetCurrentLevelCompletedTaskNumber() //for storing unlocked tasks of each level for each stage
     {
-        Debug.Log("LevelCompletedTasks"+gameObject.name + GetCurrentStageUnlockedLevels());
+        //Debug.Log("LevelCompletedTasks"+gameObject.name + GetCurrentStageUnlockedLevels());
         return PlayerPrefs.GetInt("LevelCompletedTasks"+gameObject.name + GetCurrentStageUnlockedLevels(), 0);
     }
 

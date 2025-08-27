@@ -17,6 +17,7 @@ public class CushionTrampolineManager : MonoBehaviour
     [SerializeField] private GameObject jumpPowerUI;
     [SerializeField] private Text txtTimer;
     [SerializeField] float cushionHeight;
+    [SerializeField] private Sprite cookieJarIcon;
     public bool jarPicked = false;
 
     private PlayerScript playerScript;
@@ -102,7 +103,7 @@ public class CushionTrampolineManager : MonoBehaviour
     {
         if (type != MiniGameType.CushionTrampoline) return;
         jarPicked = false;
-        MainScript.instance.taskPanel.UpdateTask("Stack cushions on the marked spot and jump to reach the cookie jar!");
+        MainScript.instance.taskPanel.UpdateTask("Stack cushions on the marked spot and jump to reach the cookie jar!", cookieJarIcon);
 
 
         stackPoint.gameObject.SetActive(true);

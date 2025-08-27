@@ -17,7 +17,7 @@ public class WallArtGameController : MonoBehaviour
     [SerializeField] Collider wallToColorCollider;
     [SerializeField] float cutsceneDuration;
     [SerializeField] Transform wallCamera;
-
+    [SerializeField] private Sprite wallArtIcon;
     public float drawDistance = 3f;
     private Camera playerCamera;
     private PlayerScript player;
@@ -101,7 +101,7 @@ public class WallArtGameController : MonoBehaviour
             wallToColorCollider.gameObject.SetActive(true);
         wallToColorCollider.enabled = true;
         timerText.transform.parent.gameObject.SetActive(true);
-        MainScript.instance.taskPanel.UpdateTask("Smudge the clean wall with your muddy paws. But beware, Grandpa checks in often");
+        MainScript.instance.taskPanel.UpdateTask("Smudge the clean wall with your muddy paws. But beware, Grandpa checks in often", wallArtIcon);
 
         MainScript.instance.pnlInfo.ShowInfo("Make this wall your canvas");
         //wallCanvas.enabled = true;

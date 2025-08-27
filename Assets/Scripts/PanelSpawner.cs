@@ -21,10 +21,11 @@ public class PanelSpawner : MonoBehaviour
     private bool isWaiting = false;
     private int selectedCutscene;
     public static int previousOpenedPanel = 0;
-
+    private MainScript mainScript;
     private void Start()
     {
-        grandpa = MainScript.instance.grandPa;
+        mainScript = MainScript.instance;
+        grandpa = mainScript.grandPa;
         StartCoroutine(PanelLoop());
     }
 
@@ -32,7 +33,8 @@ public class PanelSpawner : MonoBehaviour
     {
         while (true)
         {
-            if (!isWaiting && MainScript.instance.canShowRewardedPopup)
+            Debug.LogWarning(mainScript.canShowRewardedPopup);
+            if (!isWaiting && mainScript.canShowRewardedPopup)
             {
                 StartPanelTimer();
             }
@@ -53,7 +55,7 @@ public class PanelSpawner : MonoBehaviour
 
     private IEnumerator OpenPanelAfterDelay()
     {
-        Debug.Log(GlobalValues.TutorialPlayed);
+        Debug.LogWarning(GlobalValues.TutorialPlayed);
         if(GlobalValues.TutorialPlayed==0)
             yield break;
         isWaiting = true;

@@ -18,6 +18,7 @@ public abstract class Interactable : MonoBehaviour
         {
             outl.enabled = false;
             outline = outl;
+            
         }
 
         
@@ -30,7 +31,7 @@ public abstract class Interactable : MonoBehaviour
         //    DisableForInteraction(true);
         //}
     }
-    public void EnableForInteraction(bool showIndication)
+    public virtual void EnableForInteraction(bool showIndication)
     {
         GetComponent<Collider>().enabled = true;
         //if (glowingParticle != null)
@@ -45,6 +46,10 @@ public abstract class Interactable : MonoBehaviour
         {
             ShowOutline();
             MainScript.instance.SetIndicationPosition(transform);
+        }
+        else
+        {
+            MainScript.instance.HideIndication();
         }
 
         isInteractable = true;

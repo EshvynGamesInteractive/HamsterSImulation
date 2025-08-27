@@ -11,7 +11,7 @@ public class DogBedScript : Interactable
     {
         player.DisablePlayer();
         sleepingCutscene.SetActive(true);
-
+        MainScript.instance.HideIndication();
         DOVirtual.DelayedCall(cutsceneDuration, () =>
         {
             sleepingCutscene.SetActive(false);

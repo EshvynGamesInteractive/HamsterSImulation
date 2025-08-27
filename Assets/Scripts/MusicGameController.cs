@@ -10,6 +10,7 @@ public class MusicGameController : MonoBehaviour
     [SerializeField] Transform playerStandPos;
     [SerializeField] Transform pianoCamera;
     [SerializeField] private ParticleSystem musicParticle;
+    [SerializeField] private Sprite pianoIcon, drumsIcon;
 
     [SerializeField] private Collider[] itemsTOEnable;
 
@@ -77,13 +78,13 @@ public class MusicGameController : MonoBehaviour
         timerText.transform.parent.gameObject.SetActive(true);
         if (miniGameType == MiniGameType.Piano)
         {
-            MainScript.instance.taskPanel.UpdateTask("Play the piano and create your tune!");
+            MainScript.instance.taskPanel.UpdateTask("Play the piano and create your tune!", pianoIcon);
 
             MainScript.instance.pnlInfo.ShowInfo("Tap the piano keys to make sounds.");
         }
         else
         {
-            MainScript.instance.taskPanel.UpdateTask("Play with the drums and create your own beat");
+            MainScript.instance.taskPanel.UpdateTask("Play with the drums and create your own beat", drumsIcon);
 
             MainScript.instance.pnlInfo.ShowInfo("Tap on the drums to play sounds");
             

@@ -129,7 +129,7 @@ public class Level2Script : LevelScript
                 {
                     Debug.Log((tasks[taskNumber]));
                     items[taskNumber].EnableForInteraction(true);
-                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
                 }
             });
         }
@@ -178,7 +178,7 @@ public class Level2Script : LevelScript
         DOVirtual.DelayedCall(taskUpdateDelay, () =>
         {
             items[taskNumber].EnableForInteraction(true);
-            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
         });
 
 

@@ -9,8 +9,10 @@ public class PlayerScript : MonoBehaviour
 {
     public Transform playerCamera;
     public GameObject playerCanvas;
-    [Header("Pickup Settings")]
-    [SerializeField] private Transform pickedItemHolder, pickedCushionHolder;
+
+    [Header("Pickup Settings")] [SerializeField]
+    private Transform pickedItemHolder, pickedCushionHolder;
+
     [SerializeField] private float moveDuration = 0.3f;
     [SerializeField] private float throwForce = 5f;
     [SerializeField] GameObject btnThrow;
@@ -22,12 +24,13 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private Transform animLeftPaw; // Animation left paw, parented to camera
     [SerializeField] private float pawCenterDistance = 0.5f;
     [SerializeField] private Image pawAttackImg;
-        
+
     public bool IsObjectPicked { get; private set; }
     public Pickable pickedObject;
 
-    [Header("Death Effect")]
-    [SerializeField] private Transform cameraTransform;
+    [Header("Death Effect")] [SerializeField]
+    private Transform cameraTransform;
+
     [SerializeField] private float deathTiltAngle = 75f;
     [SerializeField] private float deathDuration = 1f;
 
@@ -76,10 +79,11 @@ public class PlayerScript : MonoBehaviour
         gameObject.SetActive(true);
         GetComponent<FP_Controller>().OnEnable();
     }
+
     public void EnablePlayer(Transform enablePos)
     {
         transform.SetPositionAndRotation(enablePos.position, enablePos.rotation);
-        
+
         playerCanvas.SetActive(true);
         gameObject.SetActive(true);
         GetComponent<FP_Controller>().OnEnable();
@@ -96,7 +100,8 @@ public class PlayerScript : MonoBehaviour
 
         float xRot = -120;
         Sequence pawRotateSequence = DOTween.Sequence();
-        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRot, 0, 0), moveDuration).SetEase(Ease.InOutQuad));
+        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRot, 0, 0), moveDuration)
+            .SetEase(Ease.InOutQuad));
         pawRotateSequence.Append(animRightPaw.DOLocalRotate(Vector3.zero, moveDuration).SetEase(Ease.InOutQuad));
 
         pawRotateSequence.OnComplete(() =>
@@ -106,7 +111,6 @@ public class PlayerScript : MonoBehaviour
             isPicking = false;
         });
     }
-
 
 
     public void AnimatePawAttack()
@@ -125,7 +129,7 @@ public class PlayerScript : MonoBehaviour
             pawAttackImg.fillOrigin = (int)Image.OriginHorizontal.Left;
             pawAttackImg.DOFillAmount(0, 0.2f);
         });
-        
+
         bool useRight = Random.value > 0.5f; // 50% chance
         Transform walkPaw = useRight ? rightPaw : leftPaw;
         Transform animPaw = useRight ? animRightPaw : animLeftPaw;
@@ -134,15 +138,15 @@ public class PlayerScript : MonoBehaviour
         walkPaw.gameObject.SetActive(false);
         animPaw.gameObject.SetActive(true);
 
-        float attackDown = -150f;  // swing down
+        float attackDown = -150f; // swing down
         float attackReturn = -20f; // reset
         float rotTowardMid = 20f; // paw rotation towards mid screen
 
 
         if (useRight)
             rotTowardMid = -20;
-       
-        
+
+
         Sequence attackSeq = DOTween.Sequence();
 
         // Quick strike down
@@ -178,6 +182,7 @@ public class PlayerScript : MonoBehaviour
                 {
                     grandpa.MakeGrandpaAngry();
                 }
+
                 if (hit.collider.TryGetComponent<BalloonScript>(out BalloonScript balloon))
                 {
                     balloon.PopBalloon();
@@ -229,7 +234,12 @@ public class PlayerScript : MonoBehaviour
             btnThrow.SetActive(true);
 
         if (itemToPick.TryGetComponent<Rigidbody>(out Rigidbody existingRb))
-            Destroy(existingRb);
+        {
+            // Destroy(existingRb);
+            existingRb.isKinematic = true;
+            existingRb.useGravity = false;
+        }
+
         itemToPick.DisableForInteraction(false);
         pickedObject = itemToPick;
         IsObjectPicked = true;
@@ -251,16 +261,23 @@ public class PlayerScript : MonoBehaviour
     {
         if (!IsObjectPicked || pickedObject == null) return;
         SoundManager.instance.PlaySound(SoundManager.instance.throwItem);
-        if(pickedObject.gameObject.CompareTag("ShockGun"))
+        if (pickedObject.gameObject.CompareTag("ShockGun"))
             pickedObject.GetComponent<MeshRenderer>().enabled = false;
-        if(pickedObject.gameObject.CompareTag("Vase"))
+
+        if (pickedObject.gameObject.CompareTag("Vase"))
             MainScript.instance.tutorial.EndTutorial();
         btnThrow.SetActive(false);
-        pickedObject.EnableForInteraction(false);
-        pickedObject.transform.SetParent(null);
-        Rigidbody rb = pickedObject.gameObject.AddComponent<Rigidbody>();
-        rb.AddForce(playerHead.forward * throwForce, ForceMode.Impulse);
 
+        pickedObject.transform.SetParent(null);
+        Rigidbody rb = pickedObject.GetComponent<Rigidbody>();
+        if (rb == null)
+            rb = pickedObject.gameObject.AddComponent<Rigidbody>();
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        rb.AddForce(playerHead.forward * throwForce, ForceMode.Impulse);
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         float angularVel = Random.Range(30f, 50f);
         Vector3 randomDir = Random.onUnitSphere;
         rb.angularVelocity = randomDir * angularVel;
@@ -268,25 +285,42 @@ public class PlayerScript : MonoBehaviour
         Transform objectThrown = pickedObject.transform;
         // DOVirtual.DelayedCall(moveDuration + 0.2f, () =>
         // {
-            ChangeObjectLayer(objectThrown, "Default");  //added delay so object doesnt collide with player
+        ChangeObjectLayer(objectThrown, "Default"); //added delay so object doesnt collide with player
 
         // });
+
+
+        CharacterController playerCC = GetComponent<CharacterController>();
+        Collider cupCol = objectThrown.GetComponent<Collider>();
+
+        Physics.IgnoreCollision(cupCol, playerCC, true); // ignore for now
+
+        DOVirtual.DelayedCall(moveDuration, () => { Physics.IgnoreCollision(cupCol, playerCC, false); });
 
         if (pickedObject.TryGetComponent<WaterBalloon>(out WaterBalloon balloon))
             MainScript.instance.activeLevel.TaskCompleted(5);
 
 
+        if (pickedObject.gameObject.CompareTag("Pillow"))
+        {
+            Level5Script level5 = MainScript.instance.activeLevel.GetComponent<Level5Script>();
+
+            if (level5 != null) //means level5 is active
+            {
+                level5.PillowThrown();
+            }
+        }
+        else
+            pickedObject.EnableForInteraction(false);
+
         pickedObject = null;
         IsObjectPicked = false;
         if (grandpa != null)
             grandpa.NotifyPlayerHasThrown();
-
-
     }
 
     public void ShowDogCamera(Vector3 pos)
     {
-
     }
 
     public void PlaceObject(Vector3 placementPos)
@@ -342,11 +376,13 @@ public class PlayerScript : MonoBehaviour
         playerModel.gameObject.SetActive(false);
         playerCanvas.SetActive(true);
     }
+
     public void PlayDogEatingAnim()
     {
         SoundManager.instance.PlaySound(SoundManager.instance.eat);
         playerModel.GetComponent<Animator>().SetTrigger("Eating");
     }
+
     public void ShowAndHideDog(float delay)
     {
         ShowDogModel();
@@ -368,10 +404,6 @@ public class PlayerScript : MonoBehaviour
                 playerCanvas.SetActive(true);
             });
         });
-
-
-
-
     }
 
     private void DeathFallEffect()
@@ -392,6 +424,7 @@ public class PlayerScript : MonoBehaviour
             Debug.LogWarning("Invalid layer name: " + newLayerName);
             return;
         }
+
         item.gameObject.layer = newLayer;
         foreach (Transform child in item.GetComponentsInChildren<Transform>())
         {
@@ -399,41 +432,6 @@ public class PlayerScript : MonoBehaviour
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //using System.Collections;
@@ -550,7 +548,6 @@ public class PlayerScript : MonoBehaviour
 //        // DOVirtual.DelayedCall(0.5f, DeathFallEffect)
 
 //        //DeathFallEffect();  
-
 
 
 //        // Optional: Disable player components, show game over, etc.

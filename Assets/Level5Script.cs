@@ -4,6 +4,8 @@ using DG.Tweening;
 public class Level5Script : LevelScript
 {
     [SerializeField] Transform sittingPos, trapPos;
+
+    [SerializeField] private int itemsToBreak, paintingsToTilt, balloonsToBurst, cushionsToThrow;
     // [SerializeField] GameObject trapTimeline;
     // [SerializeField] float trapTimelineDuration;
 
@@ -102,7 +104,7 @@ public class Level5Script : LevelScript
                 else
                 {
                     items[taskNumber].EnableForInteraction(true);
-                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+                    MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
                 }
             });
         }
@@ -140,14 +142,14 @@ public class Level5Script : LevelScript
         DOVirtual.DelayedCall(taskUpdateDelay, () =>
         {
             items[taskNumber].EnableForInteraction(true);
-            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber]);
+            MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
         });
 
 
         SetCurrentStageTaskNumber(taskNumber);
         int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
-        Debug.Log(currentLevelTasks);
-        Debug.Log(GetCurrentLevelCompletedTaskNumber());
+        // Debug.Log(currentLevelTasks);
+        // Debug.Log(GetCurrentLevelCompletedTaskNumber());
 
         MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
     }
@@ -159,5 +161,61 @@ public class Level5Script : LevelScript
 
     public override void MiniGameEnded()
     {
+    }
+
+    private int brokenCounter = 0;
+    private int paintingsCounter = 0;
+    private int balloonCounter = 0;
+    private int cushionCounter = 0;
+    public void ItemBroken()
+    {
+        if(GetCurrentStageCompletedTaskNumber() !=2)
+            return;
+        brokenCounter++;
+        if (brokenCounter >= itemsToBreak)
+        {
+            TaskCompleted(3);
+        }
+    }
+
+    
+    public void PaintingTilted()
+    {
+        if(GetCurrentStageCompletedTaskNumber() !=4)
+            return;
+        paintingsCounter++;
+        if (paintingsCounter >= paintingsToTilt)
+        {
+            TaskCompleted(5);
+        }
+    }
+    public void BalloonBurst()
+    {
+        if(GetCurrentStageCompletedTaskNumber() !=5)
+            return;
+        balloonCounter++;
+        if (balloonCounter >= balloonsToBurst)
+        {
+            TaskCompleted(6);
+        }
+    }
+
+    public void PillowThrown()
+    {
+        if(GetCurrentStageCompletedTaskNumber() !=6)
+            return;
+        cushionCounter++;
+        if (cushionCounter >= cushionsToThrow)
+        {
+            TaskCompleted(7);
+        }
+    }
+
+    public void BasketScored()
+    {
+        if(GetCurrentStageCompletedTaskNumber() !=3)
+            return;
+        
+        TaskCompleted(4);
     }
 }

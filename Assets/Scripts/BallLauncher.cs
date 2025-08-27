@@ -126,17 +126,7 @@ public class BallLauncher : Interactable
         Invoke(nameof(LaunchNewBall), 1);
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(areaCenter, areaSize);
-
-        if (returnZone != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(returnZone.position, 0.5f);
-        }
-    }
+ 
 
     public override void Interact(PlayerScript player)
     {

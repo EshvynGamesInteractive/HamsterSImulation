@@ -13,6 +13,7 @@ public class FridgeHeistController : MonoBehaviour
     [SerializeField] Transform foorCamera;
     [SerializeField] GameObject foodTOPick;
     [SerializeField] private Image stealthMeterImage;
+    [SerializeField] private Sprite pineappleIcon;
     public GameObject btnRevive;
 
     private Vector3 foodCamPos;
@@ -99,7 +100,7 @@ public class FridgeHeistController : MonoBehaviour
         SlowDownPlayer(true);
 
         Debug.Log("Fridge Heist started!");
-        MainScript.instance.taskPanel.UpdateTask("Sneak fruit from the fridge, but stay out of Grandpa's sight or he'll catch you!");
+        MainScript.instance.taskPanel.UpdateTask("Sneak fruit from the fridge, but stay out of Grandpa's sight or he'll catch you!", pineappleIcon);
         MainScript.instance.pnlInfo.ShowInfo("Freeze to trick Grandpa! If you stay still, he won't catch you");
         yield return null;
     }
