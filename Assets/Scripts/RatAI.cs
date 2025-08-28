@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
-public class RatAI : MonoBehaviour
+public class RatAI : Pickable
 {
     [SerializeField] private Transform[] waypoints;
     [SerializeField] private float waitTime = 2f;
-    [SerializeField]private Animator animator;
+    [SerializeField] private Animator animator;
 
     private NavMeshAgent agent;
 
@@ -15,18 +15,37 @@ public class RatAI : MonoBehaviour
     private bool isWaiting = false;
     private bool isCaught = false;
 
+
+    public override void Interact(PlayerScript player)
+    {
+        MainScript.instance.HideIndication();
+        base.PickItem(player);
+
+        StopMovement();
+    }
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.enabled = false;
     }
 
     public void StartMovement()
     {
         if (waypoints.Length == 0 || isCaught) return;
-
+        agent.enabled = true;
         isMoving = true;
         currentWaypointIndex = 0;
         MoveToWaypoint();
+    }
+
+    public void StopMovement()
+    {
+        agent.enabled = false;
+        isMoving = false;
+        currentWaypointIndex = 0;
+
+        UpdateAnimation();
     }
 
     private void Update()
@@ -56,7 +75,8 @@ public class RatAI : MonoBehaviour
 
     private void MoveToWaypoint()
     {
-        agent.SetDestination(waypoints[currentWaypointIndex].position);
+        if (agent.enabled)
+            agent.SetDestination(waypoints[currentWaypointIndex].position);
         UpdateAnimation();
     }
 
@@ -72,7 +92,7 @@ public class RatAI : MonoBehaviour
         isCaught = true;
         isMoving = false;
         agent.isStopped = true;
-
+        agent.enabled = false;
         animator.SetBool("Walk", false);
         animator.SetBool("Idle", true);
     }

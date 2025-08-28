@@ -104,7 +104,7 @@ public class AppLovinMax : MonoBehaviour
         MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerClickedEvent;
         MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += Nicko_AnalyticalManager.instance.Revenue_ReportMax;
 
-        LoadBanner();
+        // LoadBanner();
     }
 
 
@@ -172,12 +172,12 @@ public class AppLovinMax : MonoBehaviour
         isbannerReady = false;
         Debug.LogWarning($"  banner failed to load: {errorInfo.Message}");
         // Retry loading after a delay
-        Invoke(nameof(LoadBanner), 5f);
+       // Invoke(nameof(LoadBanner), 5f);
     }
 
     private void OnBannerClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        LoadBanner();
+       // LoadBanner();
         Debug.Log("[Max]   banner clicked");
     }
 

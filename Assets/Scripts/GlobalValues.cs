@@ -51,5 +51,17 @@ public static class GlobalValues
         get { return PlayerPrefs.GetInt("UnlockedLevels", 1); }
         set { PlayerPrefs.SetInt("UnlockedLevels", value); }
     }
+    
+    public static int TotalBones
+    {
 
+        get { return PlayerPrefs.GetInt("TotalBones", 0); }
+        set { PlayerPrefs.SetInt("TotalBones", value); }
+    }
+    public static int SelectedDogIndex
+    {
+
+        get { return PlayerPrefs.GetInt("SelectedDogIndex", 0); }
+        set { PlayerPrefs.SetInt("SelectedDogIndex", value); }
+    }
 }

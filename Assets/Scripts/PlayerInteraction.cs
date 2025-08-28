@@ -118,6 +118,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public void TryInteract()
     {
+        Debug.Log(currentInteractable);
         if (currentInteractable != null)
         {
             SoundManager.instance.PlaySound(SoundManager.instance.interact);

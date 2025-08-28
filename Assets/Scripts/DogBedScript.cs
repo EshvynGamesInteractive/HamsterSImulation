@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class DogBedScript : Interactable
 {
-    [SerializeField] private GameObject sleepingCutscene;
+    [SerializeField] private GameObject[] sleepingCutscenes;
     [SerializeField] float cutsceneDuration = 5;
     [SerializeField] private Transform playerAwakePos;
 
     public override void Interact(PlayerScript player)
     {
+        GameObject sleepingCutscene = sleepingCutscenes[GlobalValues.SelectedDogIndex];
         player.DisablePlayer();
         sleepingCutscene.SetActive(true);
         MainScript.instance.HideIndication();

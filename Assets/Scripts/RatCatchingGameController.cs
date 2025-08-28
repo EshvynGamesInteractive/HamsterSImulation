@@ -58,7 +58,6 @@ public class RatCatchingGameController : MonoBehaviour
 
     public void PlaceRatInCage(int ratsBroughtBack)
     {
-
         if (ratsBroughtBack >= ratsToBring)
         {
             EndMiniGame();
@@ -73,7 +72,9 @@ public class RatCatchingGameController : MonoBehaviour
         foreach (RatAI rat in rats)
         {
             rat.StartMovement();
+            rat.EnableForInteraction(false);
         }
+
         MainScript.instance.grandPa.StopTheChase();
         MainScript.instance.grandPa.StartPatrolOnGroundFloor();
         timerText.transform.parent.gameObject.SetActive(true);
@@ -85,13 +86,11 @@ public class RatCatchingGameController : MonoBehaviour
 
         isGameActive = true;
         timer = gameDuration;
-
-
     }
 
     private void EndMiniGame()
     {
-ratCage.DisableForInteraction(true);
+        ratCage.DisableForInteraction(true);
         timerText.transform.parent.gameObject.SetActive(false);
         isGameActive = false;
         if (!MainScript.instance.gameover)
@@ -102,5 +101,7 @@ ratCage.DisableForInteraction(true);
             MiniGameManager.Instance.EndMiniGame();
         }
 
+        
+        ratCage.ReturnAllRats(rats);
     }
 }

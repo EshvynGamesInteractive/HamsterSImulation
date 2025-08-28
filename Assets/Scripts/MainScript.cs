@@ -11,7 +11,7 @@ public class MainScript : MonoBehaviour
     [SerializeField] int activeLevelIndex;
     [SerializeField] Sprite soundOn, soundOff;
     [SerializeField] Image btnSound;
-    [SerializeField] private Text txtLevel;
+    [SerializeField] private Text txtLevel, txtBones;
     [SerializeField] private Image levelFillBar;
     [SerializeField] private GameObject btnNextStage;
     public InfoPanelScript pnlInfo;
@@ -92,11 +92,17 @@ public class MainScript : MonoBehaviour
             levels[activeLevelIndex].gameObject.SetActive(true);
             activeLevel = levels[activeLevelIndex];
         }
+        
+        UpdateBonesText();
     }
 
     public void UpdateLevelText(int levelNumber)
     {
-        txtLevel.text = "Level " + levelNumber;
+        txtLevel.text = "Chapter " + levelNumber;
+    }
+    public void UpdateBonesText()
+    {
+        txtBones.text = "" + GlobalValues.TotalBones;
     }
 
     private void CheckSound()
@@ -212,10 +218,31 @@ public class MainScript : MonoBehaviour
         levelFillBar.DOFillAmount(taskPercentage, 0.2f).SetUpdate(true);
     }
 
+    public void OnBtn2xWatchAd()
+    {
+        if (Nicko_ADSManager._Instance)
+            Nicko_ADSManager._Instance.ShowRewardedAd(() => Add2xCoins(), "RewardedReviveAd");
+        else
+            Add2xCoins();
+    }
+
+    private void Add2xCoins()
+    {
+        OnBtnNextLevel();
+        GlobalValues.TotalBones += activeLevel.levelCompleteReward;
+        
+        UpdateBonesText();
+    }
     public void CurrentLevelTasksCompleted()
     {
         if (gameover)
             return;
+        
+        GlobalValues.TotalBones += activeLevel.levelCompleteReward;
+        
+        UpdateBonesText();
+        
+        
         activeLevel.SetCurrentLevelCompletedTaskNumber(0);
         Debug.Log("currenttasks");
         grandPa.StopTheChase();
@@ -242,6 +269,8 @@ public class MainScript : MonoBehaviour
         Debug.Log("allTasksCompleted " + gameover);
         if (gameover)
             return;
+        
+        
         activeLevel.SetCurrentLevelCompletedTaskNumber(0);
         activeLevel.SetCurrentStageUnlockedLevels(1);
         activeLevel.SetCurrentStageTaskNumber(0);
@@ -324,6 +353,8 @@ public class MainScript : MonoBehaviour
 
     public void ClosePopup(GameObject pnl)
     {
+        player.GetComponent<FP_Controller>().OnEnable();
+        
         if (Nicko_ADSManager._Instance)
             Nicko_ADSManager._Instance.ShowBanner("Popup close");
         canShowRewardedPopup = true;

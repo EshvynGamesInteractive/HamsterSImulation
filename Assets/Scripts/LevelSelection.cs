@@ -17,7 +17,7 @@ public class LevelSelection : MonoBehaviour
 
     private void Start()
     {
-        LockLevels();
+        //LockLevels();
     }
 
     private void OnEnable()
@@ -30,6 +30,8 @@ public class LevelSelection : MonoBehaviour
 
         float moveTO = 300;
         float moveDuration = 0.2f;
+        
+        Debug.Log(GlobalValues.UnlockedStages);
         switch (GlobalValues.UnlockedStages)
         {
             case 1:
@@ -40,6 +42,10 @@ public class LevelSelection : MonoBehaviour
             case 3:
                 moveDuration = 0.5f;
                 moveTO = 200;
+                break;
+            case 5:
+                moveDuration = 0.2f;
+                moveTO = 550;
                 break;
         }
 

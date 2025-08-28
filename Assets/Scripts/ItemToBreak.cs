@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class ItemToBreak : Pickable
@@ -38,7 +39,10 @@ public class ItemToBreak : Pickable
             // rb.AddExplosionForce(3f, transform.position, 1f, 0.2f, ForceMode.Impulse);
         }
 
-
+        DOVirtual.DelayedCall(5, () =>
+        {
+gameObject.SetActive(false);
+        });
         level5.ItemBroken();
     }
 }

@@ -52,8 +52,7 @@ public class Level4Script : LevelScript
             return;
         if (taskNumber >= tasks.Length)
         {
-            if (levelCompleteCutscene != null)
-                levelCompleteCutscene.SetActive(true);
+          
           
             MainScript.instance.AllTasksCompleted();
             player.DisablePlayer();

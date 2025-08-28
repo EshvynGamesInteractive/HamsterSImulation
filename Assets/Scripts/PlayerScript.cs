@@ -9,7 +9,7 @@ public class PlayerScript : MonoBehaviour
 {
     public Transform playerCamera;
     public GameObject playerCanvas;
-
+    [SerializeField] private GameObject btnShop;
     [Header("Pickup Settings")] [SerializeField]
     private Transform pickedItemHolder, pickedCushionHolder;
 
@@ -17,7 +17,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float throwForce = 5f;
     [SerializeField] GameObject btnThrow;
     [SerializeField] private Transform playerHead, playerModel, cinematicCamera;
-    [SerializeField] private GrandpaAI grandpa;
+   
     [SerializeField] private Transform rightPaw; // Walking right paw, parented to player
     [SerializeField] private Transform leftPaw; // Walking left paw, parented to player
     [SerializeField] private Transform animRightPaw; // Animation right paw, parented to camera
@@ -25,7 +25,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float pawCenterDistance = 0.5f;
     [SerializeField] private Image pawAttackImg;
 
-    public bool IsObjectPicked { get; private set; }
+    public bool IsObjectPicked { get; set; }
     public Pickable pickedObject;
 
     [Header("Death Effect")] [SerializeField]
@@ -66,6 +66,7 @@ public class PlayerScript : MonoBehaviour
 
     public void DisablePlayer()
     {
+        btnShop.SetActive(false);
         //Debug.Log("disableeeeeeee");
         playerCanvas.SetActive(false);
         gameObject.SetActive(false);
@@ -74,6 +75,7 @@ public class PlayerScript : MonoBehaviour
 
     public void EnablePlayer()
     {
+        btnShop.SetActive(true);
         //Debug.Log("aaa");
         playerCanvas.SetActive(true);
         gameObject.SetActive(true);
@@ -228,7 +230,8 @@ public class PlayerScript : MonoBehaviour
         if (IsObjectPicked || itemToPick == null || isPicking) return;
         isPicking = true;
         if (itemToPick.TryGetComponent<BlanketScript>(out BlanketScript blanket) ||
-            itemToPick.TryGetComponent<NewspaperScript>(out NewspaperScript news))
+            itemToPick.TryGetComponent<NewspaperScript>(out NewspaperScript news)
+            || itemToPick.TryGetComponent<RatAI>(out RatAI rat))
             btnThrow.SetActive(false);
         else
             btnThrow.SetActive(true);
@@ -315,8 +318,8 @@ public class PlayerScript : MonoBehaviour
 
         pickedObject = null;
         IsObjectPicked = false;
-        if (grandpa != null)
-            grandpa.NotifyPlayerHasThrown();
+       
+            MainScript.instance.grandPa.NotifyPlayerHasThrown();
     }
 
     public void ShowDogCamera(Vector3 pos)
@@ -334,6 +337,8 @@ public class PlayerScript : MonoBehaviour
         pickedObject = null;
         IsObjectPicked = false;
     }
+    
+   
 
     public bool HasPickedObject()
     {
@@ -379,8 +384,8 @@ public class PlayerScript : MonoBehaviour
 
     public void PlayDogEatingAnim()
     {
-        SoundManager.instance.PlaySound(SoundManager.instance.eat);
-        playerModel.GetComponent<Animator>().SetTrigger("Eating");
+        
+        playerModel.GetComponent<Dogs>().PlayDogEatingAnim();
     }
 
     public void ShowAndHideDog(float delay)

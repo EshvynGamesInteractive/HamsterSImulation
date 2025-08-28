@@ -51,8 +51,7 @@ public class Level3Script : LevelScript
                 balloonTimeline.SetActive(false);
                 player.EnablePlayer();
 
-                if (levelCompleteCutscene != null)
-                    levelCompleteCutscene.SetActive(true);
+              
 
               
                

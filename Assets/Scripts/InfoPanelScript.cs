@@ -14,8 +14,8 @@ public class InfoPanelScript : MonoBehaviour
             return;
         if (txtInfo != null)
             txtInfo.text = info;
-        infoPanel.DOAnchorPosY(250, 0.5f);
-        infoPanel.DOAnchorPosY(220, 0.3f).SetDelay(0.6f);
-        infoPanel.DOAnchorPosY(-2000, 0.3f).SetDelay(3);
+        infoPanel.DOAnchorPosY(250, 0.5f).SetUpdate(true);
+        infoPanel.DOAnchorPosY(220, 0.3f).SetDelay(0.6f).SetUpdate(true);
+        infoPanel.DOAnchorPosY(-2000, 0.3f).SetDelay(3).SetUpdate(true);
     }
 }

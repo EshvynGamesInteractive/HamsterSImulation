@@ -9,6 +9,7 @@ public class Level1Script : LevelScript
     [SerializeField] GameObject tvScreen;
     private bool watchingTV, drinkingTea;
     [SerializeField] GameObject bucket, spilledWater;
+    [SerializeField]private GameObject levelCompleteCutscene;
 
     private void Start()
     {

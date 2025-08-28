@@ -31,8 +31,7 @@ public class Level2Script : LevelScript
         Debug.Log(taskNumber);
         if (taskNumber >= tasks.Length)
         {
-            if (levelCompleteCutscene != null)
-                levelCompleteCutscene.SetActive(true);
+           
            
             MainScript.instance.AllTasksCompleted();
         }

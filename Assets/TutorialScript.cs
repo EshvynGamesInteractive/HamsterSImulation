@@ -23,6 +23,7 @@ public class TutorialScript : MonoBehaviour
 
     private void StartTutorial()
     {
+        Typewriter.instance.GetComponent<RectTransform>().DOAnchorPosY(250, 0);
         foreach (var t in itemsToDisable)
         {
             t.SetActive(false);
