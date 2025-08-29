@@ -433,7 +433,7 @@ public class GrandpaAI : MonoBehaviour
     {
         if (isSitting || isChasing) return;
 
-        MainScript.instance.pnlInfo.ShowInfo("Grandpa’s on the move, better stay out of sight!");
+        MainScript.instance.pnlInfo.ShowInfo("Grandpa’s coming for you, better stay out of sight!");
 
 
         if (index == 1)
@@ -443,8 +443,9 @@ public class GrandpaAI : MonoBehaviour
         else
             chaseTimer = 20;
 
-
-        DOVirtual.DelayedCall(3, () =>
+        float startChaseDelay = 3;
+         
+        DOVirtual.DelayedCall(startChaseDelay, () =>
             {
                 if (!isSitting)
                     StartChase();

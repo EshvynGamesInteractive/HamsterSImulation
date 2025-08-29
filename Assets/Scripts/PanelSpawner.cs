@@ -33,7 +33,7 @@ public class PanelSpawner : MonoBehaviour
     {
         while (true)
         {
-            Debug.LogWarning(mainScript.canShowRewardedPopup);
+           
             if (!isWaiting && mainScript.canShowRewardedPopup)
             {
                 StartPanelTimer();
@@ -55,7 +55,7 @@ public class PanelSpawner : MonoBehaviour
 
     private IEnumerator OpenPanelAfterDelay()
     {
-        Debug.LogWarning(GlobalValues.TutorialPlayed);
+       
         if(GlobalValues.TutorialPlayed==0)
             yield break;
         isWaiting = true;

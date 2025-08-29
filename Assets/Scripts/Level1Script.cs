@@ -9,7 +9,7 @@ public class Level1Script : LevelScript
     [SerializeField] GameObject tvScreen;
     private bool watchingTV, drinkingTea;
     [SerializeField] GameObject bucket, spilledWater;
-    [SerializeField]private GameObject levelCompleteCutscene;
+    [SerializeField] private GameObject levelCompleteCutscene;
 
     private void Start()
     {
@@ -57,11 +57,12 @@ public class Level1Script : LevelScript
         else
         {
             Debug.Log(taskNumber);
-            if (taskNumber == 0)
-            {
-                bucket.GetComponent<Interactable>().EnableForInteraction(true);
-            }
-            else
+            // if (taskNumber == 0)
+            // {
+            //     bucket.GetComponent<Interactable>().EnableForInteraction(true);
+            // }
+            // else
+            if (taskNumber >= 1)
             {
                 bucket.SetActive(false);
                 spilledWater.SetActive(false);
@@ -72,7 +73,7 @@ public class Level1Script : LevelScript
 
             if (taskNumber == 1)
             {
-                DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(2));
+                grandpa.ChasePlayerForDuration(2);
             }
 
             if (taskNumber == 2) //when bury book
@@ -99,7 +100,7 @@ public class Level1Script : LevelScript
                         tvScreen.SetActive(false);
                         televisionTimeline.SetActive(false);
                         player.EnablePlayer();
-                        DOVirtual.DelayedCall(4, () => { grandpa.ChasePlayerForDuration(2); });
+                        grandpa.ChasePlayerForDuration(2);
 
                         tvTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
@@ -128,7 +129,7 @@ public class Level1Script : LevelScript
                     {
                         ketchupTimeline.SetActive(false);
                         player.EnablePlayer();
-                        DOVirtual.DelayedCall(3, () => { grandpa.ChasePlayerForDuration(2); });
+                        grandpa.ChasePlayerForDuration(2);
                         ketchupTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
                 }
@@ -137,7 +138,7 @@ public class Level1Script : LevelScript
 
             DOVirtual.DelayedCall(taskUpdateDelay, () =>
             {
-                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber()+1);
+                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber() + 1);
 
 
                 SetCurrentStageTaskNumber(taskNumber);
@@ -153,7 +154,6 @@ public class Level1Script : LevelScript
                 {
                     MainScript.instance.CurrentLevelTasksCompleted();
                     SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
-                   
                 }
                 else
                 {
@@ -176,8 +176,6 @@ public class Level1Script : LevelScript
 
     public override void StartNextLevel()
     {
-       
-
         OnEnable();
     }
 
@@ -186,24 +184,26 @@ public class Level1Script : LevelScript
         if (taskNumber < GetCurrentStageCompletedTaskNumber())
             return;
 
-        if (taskNumber == 0)
-        {
-            bucket.GetComponent<Interactable>().EnableForInteraction(true);
-        }
-        else
+        // if (taskNumber == 0)
+        // {
+        //     bucket.GetComponent<Interactable>().EnableForInteraction(true);
+        // }
+       
+        if (taskNumber >= 1)
         {
             bucket.SetActive(false);
             spilledWater.SetActive(false);
         }
+        
 
         float waitDuration = 1;
 
 
-        if (taskNumber == 1)
-        {
-            // grandpa.isSitting = false;
-            DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(2));
-        }
+        // if (taskNumber == 1) //when grandpa slip
+        // {
+        //     // grandpa.isSitting = false;
+        //     DOVirtual.DelayedCall(3, () => grandpa.ChasePlayerForDuration(2));
+        // }
 
         if (taskNumber == 2) //when bury book
         {

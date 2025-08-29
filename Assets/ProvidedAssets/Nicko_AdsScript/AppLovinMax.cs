@@ -91,7 +91,11 @@ public class AppLovinMax : MonoBehaviour
         MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += Nicko_AnalyticalManager.instance.Revenue_ReportMax;
 
         // Create once
-        MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft);
+         MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft);
+        // MaxSdk.LoadMRec(recBannerAdUnitId);
+        
+        LoadRecBanner();
+        _isRecBannerReady = true;
     }
     public void InitializeBanner()
     {
@@ -104,23 +108,23 @@ public class AppLovinMax : MonoBehaviour
         MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerClickedEvent;
         MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += Nicko_AnalyticalManager.instance.Revenue_ReportMax;
 
-        // LoadBanner();
+        MaxSdk.CreateBanner(adBannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter
+        ); // Adjust position if needed
+         LoadBanner();
     }
 
 
     public void LoadRecBanner()
     {
-        MaxSdk.CreateMRec(GlobalConstant.Mrecmax, MaxSdkBase.AdViewPosition.TopLeft); // Adjust position if needed
+        // MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft); // Adjust position if needed
         MaxSdk.LoadMRec(recBannerAdUnitId);
-         _isRecBannerReady = true;
+         
         Debug.Log("[Max] Requested MREC banner load");
     }
 
     public void LoadBanner()
     {
-        MaxSdk.CreateBanner(GlobalConstant.BannerMax, MaxSdkBase.BannerPosition.BottomCenter
-        ); // Adjust position if needed
-        MaxSdk.LoadBanner(adBannerAdUnitId);
+         MaxSdk.LoadBanner(adBannerAdUnitId);
         Debug.Log("[Max] Requested banner load");
     }
 
@@ -150,6 +154,7 @@ public class AppLovinMax : MonoBehaviour
     
     private void OnMRecFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
     {
+       // LoadRecBanner();
         _isRecBannerReady = false;
         Debug.LogWarning($"[Max] MREC banner failed to load: {errorInfo.Message}");
     }
@@ -171,6 +176,7 @@ public class AppLovinMax : MonoBehaviour
     {
         isbannerReady = false;
         Debug.LogWarning($"  banner failed to load: {errorInfo.Message}");
+        // LoadBanner();
         // Retry loading after a delay
        // Invoke(nameof(LoadBanner), 5f);
     }
@@ -205,6 +211,7 @@ public class AppLovinMax : MonoBehaviour
         if (_isRecBannerReady)
         {
             MaxSdk.ShowMRec(recBannerAdUnitId);
+            
             Debug.Log("[Max] MREC banner shown");
         }
         else
@@ -336,6 +343,8 @@ public class AppLovinMax : MonoBehaviour
             InitializeAppOpen();
             InitializeRecBanner();
             InitializeBanner();
+
+            Debug.Log("Initializeddd");
         };
         MobileAds.SetiOSAppPauseOnBackground(true);
         MobileAds.RaiseAdEventsOnUnityMainThread = true;

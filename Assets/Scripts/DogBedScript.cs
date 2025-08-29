@@ -9,6 +9,13 @@ public class DogBedScript : Interactable
 
     public override void Interact(PlayerScript player)
     {
+        DisableForInteraction(true);
+
+        for (int i = 0; i < sleepingCutscenes.Length; i++)
+        {
+            sleepingCutscenes[i].SetActive(false);
+        }
+        
         GameObject sleepingCutscene = sleepingCutscenes[GlobalValues.SelectedDogIndex];
         player.DisablePlayer();
         sleepingCutscene.SetActive(true);

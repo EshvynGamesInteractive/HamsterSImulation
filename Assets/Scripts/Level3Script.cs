@@ -10,7 +10,7 @@ public class Level3Script : LevelScript
 
     private void Awake()
     {
-        Invoke(nameof(GrandpaSitForDinner), 0.2f);
+        // Invoke(nameof(GrandpaSitForDinner), 0.2f);
     }
 
     private void Start()
@@ -31,6 +31,7 @@ public class Level3Script : LevelScript
 
     private void GrandpaSitForDinner()
     {
+        grandpa.isSitting = true;
         grandpa.MakeGrandpaSit(dinnerPos);
     }
 
@@ -51,10 +52,7 @@ public class Level3Script : LevelScript
                 balloonTimeline.SetActive(false);
                 player.EnablePlayer();
 
-              
 
-              
-               
                 MainScript.instance.AllTasksCompleted();
             });
         }
@@ -75,6 +73,11 @@ public class Level3Script : LevelScript
 
                 //});
             }
+            else
+            {
+                GrandpaSitForDinner();
+                DOVirtual.DelayedCall(1, () => GrandpaSitForDinner());
+            }
 
             if (taskNumber == 1) //when bury cloth
                 grandpa.StopTheChase();
@@ -86,14 +89,13 @@ public class Level3Script : LevelScript
             {
                 grandpa.StopTheChase();
                 if (Nicko_ADSManager._Instance)
-
                     Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
                 DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
             }
 
             DOVirtual.DelayedCall(taskUpdateDelay, () =>
             {
-                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber()+1);
+                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber() + 1);
 
 
                 SetCurrentStageTaskNumber(taskNumber);
@@ -109,7 +111,6 @@ public class Level3Script : LevelScript
                 {
                     MainScript.instance.CurrentLevelTasksCompleted();
                     SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
-                   
                 }
                 else
                 {
@@ -117,8 +118,6 @@ public class Level3Script : LevelScript
                     MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
                 }
             });
-
-
         }
     }
 
@@ -137,12 +136,17 @@ public class Level3Script : LevelScript
             grandpa.isSitting = false;
             tableCloth.SetActive(false);
         }
+        else
+        {
+            GrandpaSitForDinner();
+            DOVirtual.DelayedCall(1, () => GrandpaSitForDinner());
+        }
 
         if (taskNumber == 1) //when bury cloth
             grandpa.StopTheChase();
 
-        if (taskNumber == 2) // when topple dishes
-            grandpa.ChasePlayerForDuration(2);
+        // if (taskNumber == 2) // when topple dishes
+        //     grandpa.ChasePlayerForDuration(2);
 
         if (taskNumber == 3) // when licking cutlery
         {
@@ -150,7 +154,7 @@ public class Level3Script : LevelScript
             if (Nicko_ADSManager._Instance)
 
                 Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
-            DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
+            // DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
         }
 
         DOVirtual.DelayedCall(taskUpdateDelay, () =>
@@ -158,11 +162,10 @@ public class Level3Script : LevelScript
             items[taskNumber].EnableForInteraction(true);
             MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
         });
-     
 
 
         SetCurrentStageTaskNumber(taskNumber);
-        int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels()-1];
+        int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
         Debug.Log(currentLevelTasks);
         Debug.Log(GetCurrentLevelCompletedTaskNumber());
 
@@ -171,8 +174,6 @@ public class Level3Script : LevelScript
 
     public override void StartNextLevel()
     {
-        
-
         OnEnable();
     }
 

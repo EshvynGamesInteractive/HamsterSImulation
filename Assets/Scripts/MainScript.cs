@@ -2,11 +2,15 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using SickscoreGames.HUDNavigationSystem;
 
 public class MainScript : MonoBehaviour
 {
     public static MainScript instance;
     public TutorialScript tutorial;
+    [SerializeField] private Text txtBonesReward;
+    [SerializeField] private HUDNavigationElement navElement;
+    [SerializeField] private Sprite indicationDefaultIcon;
     [SerializeField] private bool isTesting = false;
     [SerializeField] int activeLevelIndex;
     [SerializeField] Sprite soundOn, soundOff;
@@ -92,7 +96,7 @@ public class MainScript : MonoBehaviour
             levels[activeLevelIndex].gameObject.SetActive(true);
             activeLevel = levels[activeLevelIndex];
         }
-        
+
         UpdateBonesText();
     }
 
@@ -100,6 +104,7 @@ public class MainScript : MonoBehaviour
     {
         txtLevel.text = "Chapter " + levelNumber;
     }
+
     public void UpdateBonesText()
     {
         txtBones.text = "" + GlobalValues.TotalBones;
@@ -169,11 +174,47 @@ public class MainScript : MonoBehaviour
         }
 
         pathDraw.SetDestination(pos);
+        ChangeIndicationIcons(indicationDefaultIcon);
+    }
+
+    public void SetIndicationPosition(Transform pos, Sprite indicationIcon)
+    {
+        Debug.Log(pos.name);
+        ShowIndication();
+        indication.transform.position = pos.position;
+        if (pos.TryGetComponent<Interactable>(out Interactable interactable))
+        {
+            if (interactable.indicationPoint != null)
+            {
+                pathDraw.SetDestination(interactable.indicationPoint);
+                return;
+            }
+        }
+
+        pathDraw.SetDestination(pos);
+        ChangeIndicationIcons(indicationIcon);
+    }
+
+    private void ChangeIndicationIcons(Sprite newIcon)
+    {
+        if (navElement != null && navElement.Indicator != null)
+        {
+            if (navElement.Indicator.OnscreenIcon != null)
+                navElement.Indicator.OnscreenIcon.sprite = newIcon;
+
+            if (navElement.Indicator.OffscreenIcon != null)
+                navElement.Indicator.OffscreenIcon.sprite = newIcon;
+        }
     }
 
     public void HideIndication()
     {
-        pathDraw.Stop();
+        Debug.Log("HideIndication");
+        if (pathDraw != null)
+        {
+            pathDraw.Stop();
+        }
+
         if (indication != null)
             indication.SetActive(false);
     }
@@ -230,19 +271,20 @@ public class MainScript : MonoBehaviour
     {
         OnBtnNextLevel();
         GlobalValues.TotalBones += activeLevel.levelCompleteReward;
-        
+
         UpdateBonesText();
     }
+
     public void CurrentLevelTasksCompleted()
     {
         if (gameover)
             return;
-        
+
         GlobalValues.TotalBones += activeLevel.levelCompleteReward;
-        
+        txtBonesReward.text = "" + activeLevel.levelCompleteReward;
         UpdateBonesText();
-        
-        
+
+
         activeLevel.SetCurrentLevelCompletedTaskNumber(0);
         Debug.Log("currenttasks");
         grandPa.StopTheChase();
@@ -250,14 +292,14 @@ public class MainScript : MonoBehaviour
         player.DisablePlayer();
         player.gameObject.SetActive(true);
         gameover = true;
-        Invoke(nameof(LevelCompleted), 1);
+        Invoke(nameof(LevelCompleted), 4);
     }
 
     private void LevelCompleted()
     {
         canShowRewardedPopup = false;
 
-
+        grandPa.StopTheChase();
         SoundManager.instance.PlaySound(SoundManager.instance.levelComplete);
         OpenPopup(pnlLevelWin);
         System.GC.Collect();
@@ -269,8 +311,8 @@ public class MainScript : MonoBehaviour
         Debug.Log("allTasksCompleted " + gameover);
         if (gameover)
             return;
-        
-        
+
+
         activeLevel.SetCurrentLevelCompletedTaskNumber(0);
         activeLevel.SetCurrentStageUnlockedLevels(1);
         activeLevel.SetCurrentStageTaskNumber(0);
@@ -288,8 +330,8 @@ public class MainScript : MonoBehaviour
     private void StageCompleted()
     {
         canShowRewardedPopup = false;
-     
-        if (GlobalValues.currentStage >= levels.Length)
+
+        if (GlobalValues.UnlockedLevels >= levels.Length)
             btnNextStage.SetActive(false);
         else
         {
@@ -333,7 +375,7 @@ public class MainScript : MonoBehaviour
             Nicko_ADSManager._Instance.HideBanner();
         canShowRewardedPopup = false;
 
-        
+
         Time.timeScale = 0.001f;
         pnl.SetActive(true);
         float animTime = 1;
@@ -354,7 +396,7 @@ public class MainScript : MonoBehaviour
     public void ClosePopup(GameObject pnl)
     {
         player.GetComponent<FP_Controller>().OnEnable();
-        
+
         if (Nicko_ADSManager._Instance)
             Nicko_ADSManager._Instance.ShowBanner("Popup close");
         canShowRewardedPopup = true;

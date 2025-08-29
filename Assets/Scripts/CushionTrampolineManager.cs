@@ -5,8 +5,9 @@ using System.Collections.Generic;
 
 public class CushionTrampolineManager : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Transform exitPoint;
+    [Header("References")] [SerializeField]
+    private Transform exitPoint;
+
     [SerializeField] Transform[] cushionPositions;
     [SerializeField] Transform[] cushions;
     [SerializeField] GameObject cookieJar;
@@ -24,10 +25,7 @@ public class CushionTrampolineManager : MonoBehaviour
     private FP_Controller player;
 
 
-
-
-    [Header("Settings")]
-    [SerializeField] private float gameDuration = 30f;
+    [Header("Settings")] [SerializeField] private float gameDuration = 30f;
     [SerializeField] private int maxCushions = 5;
     private float timer;
     private bool isGameActive;
@@ -74,7 +72,6 @@ public class CushionTrampolineManager : MonoBehaviour
         player = playerScript.GetComponent<FP_Controller>();
         cookieJar.SetActive(false);
         txtTimer.transform.parent.gameObject.SetActive(false);
-
     }
 
     private void Update()
@@ -89,21 +86,23 @@ public class CushionTrampolineManager : MonoBehaviour
             Debug.Log("Success! You escaped with food!");
             EndMiniGame();
         }
-        if (!jarPicked)
-        {
-            timer -= Time.deltaTime;
-            txtTimer.text = timer.ToString("f0");
 
-            if (timer <= 0f)
-                EndMiniGame();
-        }
+        // if (!jarPicked)
+        // {
+        timer -= Time.deltaTime;
+        txtTimer.text = timer.ToString("f0");
+
+        if (timer <= 0f)
+            EndMiniGame();
+        // }
     }
 
     private void OnMiniGameStarted(MiniGameType type)
     {
         if (type != MiniGameType.CushionTrampoline) return;
         jarPicked = false;
-        MainScript.instance.taskPanel.UpdateTask("Stack cushions on the marked spot and jump to reach the cookie jar!", cookieJarIcon);
+        MainScript.instance.taskPanel.UpdateTask("Stack cushions on the marked spot and jump to reach the cookie jar!",
+            cookieJarIcon);
 
 
         stackPoint.gameObject.SetActive(true);
@@ -116,7 +115,8 @@ public class CushionTrampolineManager : MonoBehaviour
         float camMoveDuration = 2f;
 
         jarCamera.transform.DOMove(playerr.playerCamera.position, camMoveDuration).SetEase(Ease.Linear);
-        jarCamera.transform.DORotate(playerr.playerCamera.eulerAngles, camMoveDuration / 4).SetDelay(camMoveDuration - (camMoveDuration / 4));
+        jarCamera.transform.DORotate(playerr.playerCamera.eulerAngles, camMoveDuration / 4)
+            .SetDelay(camMoveDuration - (camMoveDuration / 4));
 
         DOVirtual.DelayedCall(camMoveDuration, () =>
         {
@@ -140,7 +140,6 @@ public class CushionTrampolineManager : MonoBehaviour
         cookieJar.transform.rotation = cookieJarPosition.rotation;
         cookieJar.SetActive(true);
         cookieJar.GetComponent<Interactable>().EnableForInteraction(false);
-
 
 
         isGameActive = true;
@@ -167,9 +166,10 @@ public class CushionTrampolineManager : MonoBehaviour
 
     public void CookieJarPicked()
     {
-        txtTimer.transform.parent.gameObject.SetActive(false);
+        // txtTimer.transform.parent.gameObject.SetActive(false);
         jarPicked = true;
     }
+
     public void StartJumpSequence()
     {
         player.DoTrampolineJump(CalculateBounceForce());
@@ -188,11 +188,19 @@ public class CushionTrampolineManager : MonoBehaviour
     private void EndMiniGame()
     {
         cookieJar.SetActive(false);
+
+
+        DOVirtual.DelayedCall(2, () =>
+        {
+            if (playerScript.pickedObject != null)
+                playerScript.ThrowObject();
+        });
+       
         stackPoint.gameObject.SetActive(false);
         isGameActive = false;
         txtTimer.transform.parent.gameObject.SetActive(false);
 
-        gameStartTrigger.SetActive(true);
+       
 
         MiniGameManager.Instance.EndMiniGame();
         MainScript.instance.pnlInfo.ShowInfo("Mini-game over! Try again anytime.");
@@ -201,7 +209,7 @@ public class CushionTrampolineManager : MonoBehaviour
         //{
         //    cushions[i].gameObject.SetActive(false);
         //}
-      
+
         PlaceCushionsOnOriginalPosition();
         stackedCushions.Clear();
     }
@@ -213,6 +221,7 @@ public class CushionTrampolineManager : MonoBehaviour
             //playerScript.PlaceObject(cushions[0].position);
             playerScript.ThrowObject();
         }
+
         for (int i = 0; i < cushionPositions.Length; i++)
         {
             cushions[i].position = cushionPositions[i].position;

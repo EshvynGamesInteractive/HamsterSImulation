@@ -52,7 +52,7 @@ public class Level2Script : LevelScript
                     {
                         toyThrowTimeline.SetActive(false);
                         player.EnablePlayer();
-                        DOVirtual.DelayedCall(2, () => { grandpa.ChasePlayerForDuration(30); });
+                        DOVirtual.DelayedCall(2, () => { grandpa.ChasePlayerForDuration(2); });
                         throwTimelineDuration = 0; //so it only runs the cutscene once in one scene load
                     });
                 }
@@ -146,25 +146,25 @@ public class Level2Script : LevelScript
         float taskUpdateDelay = 0;
 
 
-        if (taskNumber == 1) //throw toy
-        {
-            grandpa.ChasePlayerForDuration(2);
-        }
+        // if (taskNumber == 1) //throw toy
+        // {
+        //     grandpa.ChasePlayerForDuration(2);
+        // }
+        //
+        // if (taskNumber == 2) //when salt pour
+        // {
+        //     grandpa.ChasePlayerForDuration(2);
+        // }
 
-        if (taskNumber == 2) //when salt pour
-        {
-            grandpa.ChasePlayerForDuration(2);
-        }
+        // if (taskNumber == 3) //when tablet hide
+        // {
+        //     grandpa.ChasePlayerForDuration(2);
+        // }
 
-        if (taskNumber == 3) //when tablet hide
-        {
-            grandpa.ChasePlayerForDuration(2);
-        }
-
-        if (taskNumber == 4) // when door shut
-        {
-            grandpa.ChasePlayerForDuration(2);
-        }
+        // if (taskNumber == 4) // when door shut
+        // {
+        //     grandpa.ChasePlayerForDuration(2);
+        // }
 
         if (taskNumber > 4)
         {

@@ -177,7 +177,7 @@ public class BubblePopManager : MonoBehaviour
         bubbleCam.transform.DORotateQuaternion(player.playerCamera.rotation, jumpDuration);
         DOVirtual.DelayedCall(jumpDuration, () => {
             MiniGameManager.Instance.EndMiniGame();
-            gameStartTrigger.SetActive(true);
+            // gameStartTrigger.SetActive(true);
             player.EnablePlayer();
             bubbleCam.SetActive(false);
         }); 

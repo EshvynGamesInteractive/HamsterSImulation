@@ -11,7 +11,7 @@ public class Level5Script : LevelScript
 
     private void Awake()
     {
-        Invoke(nameof(GrandpaSitOnBed), 0.2f);
+        // Invoke(nameof(GrandpaSitOnBed), 0.2f);
     }
 
     private void Start()
@@ -31,6 +31,7 @@ public class Level5Script : LevelScript
 
     private void GrandpaSitOnBed()
     {
+        grandpa.isSitting = false;
         grandpa.MakeGrandpaSit(sittingPos);
     }
 
@@ -56,6 +57,11 @@ public class Level5Script : LevelScript
             {
                 grandpa.isSitting = false;
             }
+            else
+            {
+                GrandpaSitOnBed();
+                DOVirtual.DelayedCall(1, () => GrandpaSitOnBed());
+            }
 
             if (taskNumber == 1) //when place mousetrap
             {
@@ -76,7 +82,7 @@ public class Level5Script : LevelScript
             if (taskNumber == 2) // when sleep
                 grandpa.StopTheChase();
 
-            if (taskNumber == 3) // when licking cutlery
+            if (taskNumber == 3) // 
             {
                 grandpa.StopTheChase();
                 DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
@@ -123,20 +129,25 @@ public class Level5Script : LevelScript
         {
             grandpa.isSitting = false;
         }
+        else
+        {
+            GrandpaSitOnBed();
+            DOVirtual.DelayedCall(1, () => GrandpaSitOnBed());
+        }
 
         if (taskNumber == 1) //when bury cloth
             grandpa.StopTheChase();
 
-        if (taskNumber == 2) // when topple dishes
-            grandpa.ChasePlayerForDuration(2);
+        // if (taskNumber == 2) // when topple dishes
+        //     grandpa.ChasePlayerForDuration(2);
 
         if (taskNumber == 3) // when licking cutlery
         {
             grandpa.StopTheChase();
-            if (Nicko_ADSManager._Instance)
-
-                Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
-            DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
+            // if (Nicko_ADSManager._Instance)
+            //
+            //     Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
+            // DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
         }
 
         DOVirtual.DelayedCall(taskUpdateDelay, () =>
@@ -167,9 +178,10 @@ public class Level5Script : LevelScript
     private int paintingsCounter = 0;
     private int balloonCounter = 0;
     private int cushionCounter = 0;
+
     public void ItemBroken()
     {
-        if(GetCurrentStageCompletedTaskNumber() !=2)
+        if (GetCurrentStageCompletedTaskNumber() != 2)
             return;
         brokenCounter++;
         if (brokenCounter >= itemsToBreak)
@@ -178,21 +190,24 @@ public class Level5Script : LevelScript
         }
     }
 
-    
+
     public void PaintingTilted()
     {
-        if(GetCurrentStageCompletedTaskNumber() !=4)
+        if (GetCurrentStageCompletedTaskNumber() != 4)
             return;
         paintingsCounter++;
         if (paintingsCounter >= paintingsToTilt)
         {
             TaskCompleted(5);
         }
+        MainScript.instance.HideIndication();
     }
+
     public void BalloonBurst()
     {
-        if(GetCurrentStageCompletedTaskNumber() !=5)
+        if (GetCurrentStageCompletedTaskNumber() != 5)
             return;
+        MainScript.instance.HideIndication();
         balloonCounter++;
         if (balloonCounter >= balloonsToBurst)
         {
@@ -202,20 +217,22 @@ public class Level5Script : LevelScript
 
     public void PillowThrown()
     {
-        if(GetCurrentStageCompletedTaskNumber() !=6)
+        if (GetCurrentStageCompletedTaskNumber() != 6)
             return;
         cushionCounter++;
         if (cushionCounter >= cushionsToThrow)
         {
             TaskCompleted(7);
         }
+
+        MainScript.instance.HideIndication();
     }
 
     public void BasketScored()
     {
-        if(GetCurrentStageCompletedTaskNumber() !=3)
+        if (GetCurrentStageCompletedTaskNumber() != 3)
             return;
-        
+
         TaskCompleted(4);
     }
 }

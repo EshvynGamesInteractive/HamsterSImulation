@@ -94,7 +94,8 @@ public class NavmeshPathDraw : MonoBehaviour
     public void Stop()
     {
         stopped = true;
-        lr.positionCount = 0;
+        if (lr != null)
+            lr.positionCount = 0;
     }
 
 

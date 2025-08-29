@@ -16,6 +16,7 @@ public class TutorialScript : MonoBehaviour
     [SerializeField] private GameObject[] itemsToDisable;
     [SerializeField] private RectTransform highlightedCircle;
     [SerializeField] private Sprite vaseIcon;
+    [SerializeField] private GameObject mainCanvas;
     private void Start()
     {
         StartTutorial();
@@ -23,6 +24,7 @@ public class TutorialScript : MonoBehaviour
 
     private void StartTutorial()
     {
+        mainCanvas.SetActive(false);
         Typewriter.instance.GetComponent<RectTransform>().DOAnchorPosY(250, 0);
         foreach (var t in itemsToDisable)
         {
@@ -82,6 +84,7 @@ public class TutorialScript : MonoBehaviour
 
     public void UITutorialEnded()
     {
+        mainCanvas.SetActive(true);
         Typewriter.instance.HideTypeWriter();
         MainScript.instance.taskPanel.gameObject.SetActive(true);
         vase.EnableForInteraction(true);

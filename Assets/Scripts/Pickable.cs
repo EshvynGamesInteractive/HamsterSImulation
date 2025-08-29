@@ -19,10 +19,10 @@ public class Pickable : Interactable
                 else
                     MainScript.instance.SetIndicationPosition(dropPos.transform);
             }
-            else
-            {
-                MainScript.instance.HideIndication();
-            }
+            // else
+            // {
+            //     MainScript.instance.HideIndication();
+            // }
             player.PickObject(this);
         }
         else

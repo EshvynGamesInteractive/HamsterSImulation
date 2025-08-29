@@ -7,6 +7,8 @@ public class PianoButtonScript : MonoBehaviour
     [SerializeField] private AudioClip buttonSound;
     private float originalPosY;
     private MusicGameController musicGameController;
+    private bool isPressed = false;
+
     private void Start()
     {
         originalPosY = transform.localPosition.y;
@@ -20,4 +22,20 @@ public class PianoButtonScript : MonoBehaviour
         transform.DOLocalMoveY(originalPosY, 0.1f).SetDelay(0.1f);
         musicGameController.ButtonPressed(transform);
     }
+
+    // private void OnMouseExit()
+    // {
+    //     isPressed = false; // reset when finger leaves
+    // }
+    //
+    // private void OnMouseEnter()
+    // {
+    //     if (isPressed) return; // prevent repeat if finger lingers
+    //
+    //     isPressed = true;
+    //     SoundManager.instance.PlaySound(buttonSound);
+    //     transform.DOLocalMoveY(originalPosY - downVal, 0.1f);
+    //     transform.DOLocalMoveY(originalPosY, 0.1f).SetDelay(0.1f);
+    //     musicGameController.ButtonPressed(transform);
+    // }
 }

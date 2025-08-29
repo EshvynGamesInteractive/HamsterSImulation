@@ -16,13 +16,12 @@ public class PaintingScript : Interactable
         else
             endVal = Random.Range(25, 50); // right tilt
 
-
-        level5 = MainScript.instance.activeLevel.GetComponent<Level5Script>();
+        if (GlobalValues.TutorialPlayed == 1)
+            level5 = MainScript.instance.activeLevel.GetComponent<Level5Script>();
     }
 
     public override void Interact(PlayerScript player)
     {
-        MainScript.instance.HideIndication();
         Vector3 temp = transform.localEulerAngles;
         temp.z = endVal;
         transform.DOLocalRotate(temp, 0.2f);

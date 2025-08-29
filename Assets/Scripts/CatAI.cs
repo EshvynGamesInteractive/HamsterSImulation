@@ -26,8 +26,10 @@ public class CatAI : MonoBehaviour
         animator.SetTrigger(napAnimation);
         //napTimer = Random.Range(2f, napInterval); // Random initial nap delay
 
-        if (agent.enabled && agent.isOnNavMesh)
-            agent.SetDestination(waypoints[0].position); // Start at first waypoint
+        // if (agent.enabled && agent.isOnNavMesh)
+        //     agent.SetDestination(waypoints[0].position); // Start at first waypoint
+
+        agent.enabled = false;
     }
 
     //void Update()
@@ -63,7 +65,7 @@ public class CatAI : MonoBehaviour
     private void OnSockHit()
     {
         animator.SetTrigger(hitAnimation);
-       
+        agent.enabled = true;
         isMoving = true;
         agent.isStopped = false;
         animator.SetTrigger(runAnimation);
@@ -72,6 +74,7 @@ public class CatAI : MonoBehaviour
 
     private void MoveToNextWaypoint()
     {
+        
         animator.SetTrigger(runAnimation);
         currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length; // Loop through waypoints
         agent.SetDestination(waypoints[currentWaypointIndex].position);

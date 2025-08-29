@@ -111,7 +111,7 @@ public class Nicko_ADSManager : MonoBehaviour
 
     public void ShowInterstitial(string placement)
     {
-        // return;
+         return;
         Nicko_Admob.isInterstialAdPresent = true;
         if (isAdsRemove)
         {
@@ -330,7 +330,7 @@ public class Nicko_ADSManager : MonoBehaviour
         else if (admobInstance != null)
         {
             admobInstance.ShowRecBanner();
-            appLovinMax.LoadRecBanner();
+           // appLovinMax.LoadRecBanner();
             Debug.Log("[ADS] Max not ready, showing AdMob rectangular banner.");
         }
         else
@@ -437,7 +437,7 @@ public class Nicko_ADSManager : MonoBehaviour
     public bool IsMaxRecBannerReady()
     {
         print(appLovinMax._isRecBannerReady);
-        appLovinMax.LoadRecBanner();
+      //  appLovinMax.LoadRecBanner();
         return appLovinMax != null && appLovinMax.IsRecBannerReady();
     }
 

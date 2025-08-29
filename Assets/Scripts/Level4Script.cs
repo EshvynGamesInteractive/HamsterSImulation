@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Level4Script : LevelScript
 {
-    [SerializeField] GameObject  squirrelCutscene;
+    [SerializeField] GameObject squirrelCutscene;
     [SerializeField] Transform sitPos;
     [SerializeField] float cutsceneDuration = 4;
     [SerializeField] Transform cutsceneCamera;
@@ -48,12 +48,11 @@ public class Level4Script : LevelScript
 
     public override void TaskCompleted(int taskNumber)
     {
+        Debug.Log("TaskNumber " +taskNumber);
         if (taskNumber < GetCurrentStageCompletedTaskNumber())
             return;
         if (taskNumber >= tasks.Length)
         {
-          
-          
             MainScript.instance.AllTasksCompleted();
             player.DisablePlayer();
         }
@@ -98,6 +97,7 @@ public class Level4Script : LevelScript
 
             if (taskNumber == 3) // when throw cat at sock
             {
+                taskUpdateDelay = catTimelineDuration;
                 if (catTimelineDuration > 0)
                 {
                     catTimeline.SetActive(true);
@@ -117,6 +117,7 @@ public class Level4Script : LevelScript
 
             if (taskNumber == 4) // when scare hens
             {
+                taskUpdateDelay = hensTimelineDuration;
                 if (hensTimelineDuration > 0)
                 {
                     Typewriter.instance.StartTyping("What's all that clucking?! Dog, stop bothering the hens!", 4);
@@ -135,7 +136,7 @@ public class Level4Script : LevelScript
 
             DOVirtual.DelayedCall(taskUpdateDelay, () =>
             {
-                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber()+1);
+                SetCurrentLevelCompletedTaskNumber(GetCurrentLevelCompletedTaskNumber() + 1);
 
 
                 SetCurrentStageTaskNumber(taskNumber);
@@ -151,7 +152,6 @@ public class Level4Script : LevelScript
                 {
                     MainScript.instance.CurrentLevelTasksCompleted();
                     SetCurrentStageUnlockedLevels(GetCurrentStageUnlockedLevels() + 1);
-                    
                 }
                 else
                 {
@@ -194,20 +194,19 @@ public class Level4Script : LevelScript
             grandpa.ChasePlayerForDuration(2);
         }
 
-        if (taskNumber == 3) // when throw cat at sock
-        {
-            grandpa.ChasePlayerForDuration(2);
-        }
+        // if (taskNumber == 3) // when throw cat at sock
+        // {
+        //     grandpa.ChasePlayerForDuration(2);
+        // }
 
-        if (taskNumber == 4) // when scare hens
-        {
-            grandpa.ChasePlayerForDuration(2);
-        }
+        // if (taskNumber == 4) // when scare hens
+        // {
+        //     grandpa.ChasePlayerForDuration(2);
+        // }
 
 
         DOVirtual.DelayedCall(taskUpdateDelay, () =>
         {
-           
             items[taskNumber].EnableForInteraction(true);
             MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
         });

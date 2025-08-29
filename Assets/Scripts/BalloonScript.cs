@@ -10,7 +10,8 @@ public class BalloonScript : MonoBehaviour
 
     private void Start()
     {
-        level5 = MainScript.instance.activeLevel.GetComponent<Level5Script>();
+        if (GlobalValues.TutorialPlayed == 1)
+            level5 = MainScript.instance.activeLevel.GetComponent<Level5Script>();
         float floatAmount = 0.2f; // how high it floats
         float floatDuration = 2f; // how long one up/down takes
 
