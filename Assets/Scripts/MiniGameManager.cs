@@ -21,7 +21,7 @@ public class MiniGameManager : MonoBehaviour
 {
     public static MiniGameManager Instance { get; private set; }
     public Button miniGameBtn, gameStartBtn;
-
+    [SerializeField] private GameObject levelBar;
     [SerializeField] MiniGameTriggerZone[] miniGameTriggerZones;
     public FridgeHeistController fridgeLevel;
     public BubblePopManager bubbleLevel;
@@ -71,6 +71,7 @@ public class MiniGameManager : MonoBehaviour
             EndMiniGame();
             return;
         }
+        levelBar.SetActive(false);
         if (Nicko_ADSManager._Instance)
             Nicko_ADSManager._Instance.ShowInterstitial("MiniGameStart");
         MainScript.instance.grandPa.StopTheChase();
@@ -101,7 +102,7 @@ public class MiniGameManager : MonoBehaviour
             return;
         }
 
-       
+        levelBar.SetActive(true);
         MainScript.instance.canShowRewardedPopup = true;
         SoundManager.instance.PlaySound(SoundManager.instance.timeOut);
         MainScript.instance.ShowIndication();
@@ -113,7 +114,7 @@ public class MiniGameManager : MonoBehaviour
         MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
         MainScript.instance.pnlInfo.ShowInfo("Mini game ended");
 
-        DOVirtual.DelayedCall(5, () =>
+        DOVirtual.DelayedCall(10, () =>
         {
             for (int i = 0; i < miniGameTriggerZones.Length; i++)
             {

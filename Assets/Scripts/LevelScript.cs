@@ -55,7 +55,7 @@ public abstract class LevelScript : MonoBehaviour
     
     public int GetCurrentStageCompletedTaskNumber() //for storing unlocked tasks  for each stage
     {
-        Debug.Log(PlayerPrefs.GetInt("StageCompletedTasks"+gameObject.name + transform.GetSiblingIndex()));
+//        Debug.Log(PlayerPrefs.GetInt("StageCompletedTasks"+gameObject.name + transform.GetSiblingIndex()));
         return PlayerPrefs.GetInt("StageCompletedTasks"+gameObject.name + transform.GetSiblingIndex(), 0);
     }
 
@@ -75,6 +75,9 @@ public abstract class LevelScript : MonoBehaviour
     {
         PlayerPrefs.SetInt("LevelCompletedTasks"+gameObject.name + GetCurrentStageUnlockedLevels(), task);
     }
-    
-    
+
+    protected void EnableNextItem(int nextItemIndex)
+    {
+        items[nextItemIndex].EnableForInteraction(taskIcons[nextItemIndex]);
+    }
 }

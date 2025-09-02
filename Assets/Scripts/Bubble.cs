@@ -142,6 +142,10 @@ public class Bubble : MonoBehaviour
                 break;
 
             case BubbleType.GlodenBubble:
+                GlobalValues.TotalBones += 1;
+
+                MainScript.instance.UpdateBonesText();
+                
                 Instantiate(popEffect, transform.position, Quaternion.identity);
                 Debug.Log("Golden Bone! +5");
                 MiniGameManager.Instance.bubbleLevel?.AddScore(5);

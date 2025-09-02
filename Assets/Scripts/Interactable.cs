@@ -3,11 +3,14 @@
 
 public abstract class Interactable : MonoBehaviour
 {
+    
     public Transform indicationPoint;
     [SerializeField] private bool enableAtStart, showIndicationAtStart;
     [SerializeField] GameObject glowingParticle;
-    public string interactionText="Interact";
+    public string interactionText = "Interact";
+
     public bool isInteractable = true;
+
     //public GameObject indication;
     [SerializeField] private Outline outline;
     public abstract void Interact(PlayerScript player);
@@ -18,10 +21,9 @@ public abstract class Interactable : MonoBehaviour
         {
             outl.enabled = false;
             outline = outl;
-            
         }
 
-        
+
         if (enableAtStart)
         {
             EnableForInteraction(showIndicationAtStart);
@@ -31,6 +33,7 @@ public abstract class Interactable : MonoBehaviour
         //    DisableForInteraction(true);
         //}
     }
+
     public virtual void EnableForInteraction(bool showIndication)
     {
         GetComponent<Collider>().enabled = true;
@@ -38,7 +41,7 @@ public abstract class Interactable : MonoBehaviour
         //{
         //    glowingParticle.SetActive(true);
         //}
-       
+
         //if (indication != null && showIndication)
         //    indication.SetActive(true);
 
@@ -55,6 +58,18 @@ public abstract class Interactable : MonoBehaviour
         isInteractable = true;
     }
 
+    public virtual void EnableForInteraction(Sprite indicationIcon)
+    {
+        GetComponent<Collider>().enabled = true;
+
+
+        ShowOutline();
+        MainScript.instance.SetIndicationPosition(transform, indicationIcon);
+
+
+        isInteractable = true;
+    }
+
     public void DisableForInteraction(bool enableCollider)
     {
         HideOutline();
@@ -62,11 +77,13 @@ public abstract class Interactable : MonoBehaviour
         {
             glowingParticle.SetActive(false);
         }
+
         GetComponent<Collider>().enabled = enableCollider;
         //if (indication != null)
         //    indication.SetActive(false);
         isInteractable = false;
     }
+
     public void ShowOutline()
     {
         if (outline != null)

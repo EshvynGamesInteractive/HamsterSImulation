@@ -35,4 +35,9 @@ public class BalloonScript : MonoBehaviour
         if (level5 != null)
             level5.BalloonBurst();
     }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        PopBalloon();
+    }
 }

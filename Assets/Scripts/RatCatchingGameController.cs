@@ -47,6 +47,7 @@ public class RatCatchingGameController : MonoBehaviour
         UpdateTimerUI();
         if (timer <= 0f)
         {
+            Debug.Log("Failed! You could not catch them in time!");
             EndMiniGame();
         }
     }
@@ -60,6 +61,10 @@ public class RatCatchingGameController : MonoBehaviour
     {
         if (ratsBroughtBack >= ratsToBring)
         {
+            Debug.Log("Success! You got all the rats in time!");
+            GlobalValues.TotalBones += 3;
+
+            MainScript.instance.UpdateBonesText();
             EndMiniGame();
         }
     }

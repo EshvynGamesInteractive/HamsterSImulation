@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
@@ -23,8 +22,7 @@ public class FP_Controller : MonoBehaviour
     public bool canCrouch = true;
     public bool canJump = true;
     public bool canRun = true;
-    [HideInInspector]
-    public CharacterController controller;
+    [HideInInspector] public CharacterController controller;
     private Vector3 moveDirection;
     private Vector3 contactPoint;
     private Vector3 hitNormal;
@@ -66,6 +64,7 @@ public class FP_Controller : MonoBehaviour
 
     public void OnEnable()
     {
+        
         moveDirection = Vector3.zero;
         inputX = 0f;
         inputZ = 0f;
@@ -74,7 +73,8 @@ public class FP_Controller : MonoBehaviour
         crouch = false;
         canControl = false;
         playerInput.ResetInputs(); // Reset mobile input states
-        StartCoroutine(EnableControlAfterFrame());
+        if (gameObject.activeSelf)
+            StartCoroutine(EnableControlAfterFrame());
     }
 
     private IEnumerator EnableControlAfterFrame()
@@ -145,6 +145,7 @@ public class FP_Controller : MonoBehaviour
                 if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit && CanSlide())
                     sliding = true;
             }
+
             speed = isCrouching || !CanStand() ? crouchSpeed : run ? canRun ? runSpeed : walkSpeed : walkSpeed;
             if (sliding)
             {
@@ -160,6 +161,7 @@ public class FP_Controller : MonoBehaviour
                 moveDirection = myTransform.TransformDirection(moveDirection) * speed;
                 playerControl = true;
             }
+
             if (!jump)
                 jumpTimer++;
             else if (canJump && jumpTimer >= antiBunnyHopFactor)
@@ -178,6 +180,7 @@ public class FP_Controller : MonoBehaviour
                 moveDirection = myTransform.TransformDirection(moveDirection);
             }
         }
+
         moveDirection.y -= gravity * Time.deltaTime;
         if (grounded && moveDirection.y < 0)
             moveDirection.y = -1f;
@@ -206,10 +209,12 @@ public class FP_Controller : MonoBehaviour
                 jump = Input.GetKey(jumpKey);
                 break;
         }
+
         if (jumpState == 0 && CanStand() && jump && jumpTimer >= antiBunnyHopFactor)
         {
             jumpState++;
         }
+
         if ((Mathf.Abs((transform.position - contactPoint).magnitude) > 2))
             landTimer = 1;
         isCrouching = crouch && canCrouch;
@@ -217,7 +222,9 @@ public class FP_Controller : MonoBehaviour
         {
             if (isCrouching)
             {
-                controller.center = Vector3.Lerp(controller.center, new Vector3(controller.center.x, -(defaultHeight - minCrouchHeight) / 2, controller.center.z), 15 * Time.deltaTime);
+                controller.center = Vector3.Lerp(controller.center,
+                    new Vector3(controller.center.x, -(defaultHeight - minCrouchHeight) / 2, controller.center.z),
+                    15 * Time.deltaTime);
                 controller.height = Mathf.Lerp(controller.height, minCrouchHeight, 15 * Time.deltaTime);
             }
             else
@@ -264,7 +271,8 @@ public class FP_Controller : MonoBehaviour
     private bool CanStand()
     {
         RaycastHit hitAbove = new RaycastHit();
-        return !Physics.SphereCast(controller.bounds.center, controller.radius, Vector3.up, out hitAbove, controller.height / 2 + 0.5F);
+        return !Physics.SphereCast(controller.bounds.center, controller.radius, Vector3.up, out hitAbove,
+            controller.height / 2 + 0.5F);
     }
 
     private bool CanSlide()
@@ -276,38 +284,12 @@ public class FP_Controller : MonoBehaviour
     {
         return surfaceTag;
     }
+
     public void ForceJump()
     {
         DoTrampolineJump(5);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //using UnityEngine;

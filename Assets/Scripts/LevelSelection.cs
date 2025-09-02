@@ -17,7 +17,7 @@ public class LevelSelection : MonoBehaviour
 
     private void Start()
     {
-        //LockLevels();
+        LockLevels();
     }
 
     private void OnEnable()
@@ -26,7 +26,10 @@ public class LevelSelection : MonoBehaviour
             GlobalValues.UnlockedStages = levels.Length;
 
         if (Nicko_ADSManager._Instance)
+        {
             Nicko_ADSManager._Instance.HideBanner();
+            Nicko_ADSManager._Instance.HideRecBanner();
+        }
 
         float moveTO = 300;
         float moveDuration = 0.2f;
@@ -116,13 +119,14 @@ public class LevelSelection : MonoBehaviour
         GlobalValues.currentStage = selectedLevel;
         //GlobalValues.sceneTOLoad = "Gameplay";
         //Debug.Log("gameplay");
+        gameObject.SetActive(false);
         CanvasScriptSplash.instance.LoadScene("Gameplay");
         //SceneManager.LoadScene("Loading");
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("PlayButtonAd");
 
-            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+            Nicko_ADSManager._Instance.RecShowBanner("OnBtnPlayLevel");
         }
     }
 

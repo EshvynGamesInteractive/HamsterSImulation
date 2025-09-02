@@ -820,14 +820,14 @@ public class Nicko_Admob : MonoBehaviour
     public void RequestRecBannerAd()
     {
         Debug.Log("Requesting Banner ad.");
-        string adUnitId = LowBannerID;
+        string adUnitId = rectbannerID;
 
 #if UNITY_EDITOR
         adUnitId = "unused";
 #elif UNITY_ANDROID
-            adUnitId = LowBannerID;
+            adUnitId = rectbannerID;
 #elif UNITY_IPHONE
-            adUnitId = LowBannerID;
+            adUnitId = rectbannerID;
 #else
             adUnitId = "unexpected_platform";
 #endif

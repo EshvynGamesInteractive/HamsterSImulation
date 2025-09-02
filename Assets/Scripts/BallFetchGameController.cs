@@ -48,6 +48,10 @@ public class BallFetchGameController : MonoBehaviour
         if (!gameActive) return;
         score += amount;
         UpdateScoreUI();
+        
+        GlobalValues.TotalBones += 1;
+
+        MainScript.instance.UpdateBonesText();
     }
     private void UpdateScoreUI()
     {

@@ -643,6 +643,9 @@ public class GrandpaAI : MonoBehaviour
 
         if (isChasing)
             StopTheChase();
+        
+        SoundManager.instance.PlaySound(SoundManager.instance.electrocute);
+        
         transform.LookAt(player.transform);
         MainScript.instance.RestartRewardedTimer();
         Debug.Log("electrocuted");
@@ -661,7 +664,7 @@ public class GrandpaAI : MonoBehaviour
 
         MainScript.instance.pnlInfo.ShowInfo("You made Grandpa angry, he’s coming after you!");
 
-        DOVirtual.DelayedCall(3, () =>
+        DOVirtual.DelayedCall(4, () =>
         {
             electrocutedParticle.SetActive(false);
             if (faceMat != null) faceMat.color = Color.white;

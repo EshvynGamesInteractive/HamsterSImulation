@@ -157,7 +157,8 @@ public class Level1Script : LevelScript
                 }
                 else
                 {
-                    items[taskNumber].EnableForInteraction(true);
+                    // items[taskNumber].EnableForInteraction(true);
+                    EnableNextItem(taskNumber);
                     MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
                 }
             });
@@ -234,7 +235,8 @@ public class Level1Script : LevelScript
 
         DOVirtual.DelayedCall(waitDuration, () =>
         {
-            items[taskNumber].EnableForInteraction(true);
+            // items[taskNumber].EnableForInteraction(true);
+                EnableNextItem(taskNumber);
             MainScript.instance.taskPanel.UpdateTask(tasks[taskNumber], taskIcons[taskNumber]);
         });
 

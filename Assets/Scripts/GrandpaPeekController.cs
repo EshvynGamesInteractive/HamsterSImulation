@@ -4,21 +4,25 @@ using UnityEngine.UI;
 public class GrandpaPeekController : MonoBehaviour
 {
     public GameObject dogInHand;
-    [Header("Vision Settings")]
-    [SerializeField] private float viewDistance = 5f;
+
+    [Header("Vision Settings")] [SerializeField]
+    private float viewDistance = 5f;
+
     [SerializeField] private float viewAngle = 60f;
     [SerializeField] Transform headTransform;
     [SerializeField] Transform standPos;
 
-    [Header("Look Settings")]
-    [SerializeField] private float lookInterval = 5f;
+    [Header("Look Settings")] [SerializeField]
+    private float lookInterval = 5f;
 
-    [Header("References")]
-    [SerializeField] private Animator animator;
+    [Header("References")] [SerializeField]
+    private Animator animator;
+
     [SerializeField] private FP_Controller playerController;
 
-    [Header("Moving Target Settings")]
-    [SerializeField] private Transform lookTarget;
+    [Header("Moving Target Settings")] [SerializeField]
+    private Transform lookTarget;
+
     [SerializeField] private Transform fromPoint;
     [SerializeField] private Transform toPoint;
     [SerializeField] private float targetMoveSpeed = 1f;
@@ -28,17 +32,11 @@ public class GrandpaPeekController : MonoBehaviour
     [SerializeField] private LayerMask obstructionMask;
 
 
-
-
-
     private Vector3 currentTargetPos;
     private bool movingToToPoint = true;
 
     private float timer;
     public bool isLooking = false;
-
-
-
 
 
     [SerializeField] private float coneHeight = 3f;
@@ -49,10 +47,6 @@ public class GrandpaPeekController : MonoBehaviour
     public bool playerCaught;
 
 
-
-
-
-
     private void Start()
     {
         if (lookTarget != null && fromPoint != null)
@@ -60,11 +54,13 @@ public class GrandpaPeekController : MonoBehaviour
 
         currentTargetPos = toPoint.position;
 
-        //GenerateLookCone();
+        // GenerateLookCone();
 
         StartLooking();
     }
+
     GameObject cone;
+
     private void GenerateLookCone()
     {
         cone = new GameObject("LookCone");
@@ -133,14 +129,10 @@ public class GrandpaPeekController : MonoBehaviour
     }
 
 
-
-  
-
     private void Update()
     {
         if (playerCaught)
         {
-
             return;
         }
 
@@ -163,6 +155,8 @@ public class GrandpaPeekController : MonoBehaviour
             //}
         }
 
+        Debug.Log("looking " +isLooking);
+        Debug.Log("cansee " +CanSeePlayer());
         if (isLooking && CanSeePlayer())
         {
             if (playerController.controller.velocity.magnitude > 0.1f && !playerCaught)
@@ -186,6 +180,7 @@ public class GrandpaPeekController : MonoBehaviour
         if (cone != null && cone.activeSelf)
             cone.SetActive(false);
     }
+
     private void CatchPlayer()
     {
         GameEnd();
@@ -204,7 +199,6 @@ public class GrandpaPeekController : MonoBehaviour
         MiniGameManager.Instance.fridgeLevel.btnRevive.SetActive(true);
         dogInHand.SetActive(true);
         MainScript.instance.player.PlayerCaught(true);
-
     }
 
 
@@ -221,11 +215,12 @@ public class GrandpaPeekController : MonoBehaviour
 
         // Distance check
         if (distanceToPlayer > viewDistance) return false;
-
+        Debug.DrawRay(headTransform.position, dirToPlayer * viewDistance, Color.red);
         // Line of sight check
-        if (Physics.Raycast(headTransform.position, dirToPlayer, out RaycastHit hit, viewDistance, obstructionMask))
+        //  if (Physics.Raycast(headTransform.position, dirToPlayer, out RaycastHit hit, viewDistance, obstructionMask))
+         if (Physics.Raycast(headTransform.position, dirToPlayer, out RaycastHit hit, viewDistance))
         {
-            //Debug.Log("Ray hit: " + hit.transform.name); // Debug the hit object
+            Debug.Log("Ray hit: " + hit.transform.name); // Debug the hit object
 
             if (hit.transform == player)
                 return true;
@@ -304,5 +299,4 @@ public class GrandpaPeekController : MonoBehaviour
 
         Gizmos.DrawRay(headTransform.position, dirToPlayer * viewDistance);
     }
-
 }

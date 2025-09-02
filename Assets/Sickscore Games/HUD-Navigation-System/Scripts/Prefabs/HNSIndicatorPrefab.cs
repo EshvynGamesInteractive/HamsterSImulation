@@ -70,5 +70,14 @@ namespace SickscoreGames.HUDNavigationSystem
 				OnscreenIcon.color = color;
 		}
 		#endregion
+
+
+		public void ChangeIcon(Sprite icon)
+		{
+			Debug.Log("Huray");
+			Debug.Log(icon.name);
+			OnscreenIcon.sprite = icon;
+			OffscreenIcon.sprite = icon;
+		}
 	}
 }

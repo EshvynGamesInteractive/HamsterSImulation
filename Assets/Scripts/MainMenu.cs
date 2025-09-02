@@ -7,9 +7,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite soundOn, soundOff;
     [SerializeField] Image btnSound1, btnSound2;
     [SerializeField] GameObject levelSelection;
-    [SerializeField] private string moreGamesURL;
-    [SerializeField] private string privacyURL;
-    [SerializeField] private string rateUsURL;
+    // [SerializeField] private string moreGamesURL;
+    // [SerializeField] private string privacyURL;
+    // [SerializeField] private string rateUsURL;
     private static bool appOpenShown = false;
 
     private void Start()
@@ -24,7 +24,7 @@ public class MainMenu : MonoBehaviour
             }
 
 
-       Nicko_ADSManager._Instance.HideRecBanner();
+            Nicko_ADSManager._Instance.HideRecBanner();
             Nicko_ADSManager._Instance.ShowBanner("MenuStart");
         }
 
@@ -73,13 +73,7 @@ public class MainMenu : MonoBehaviour
         levelSelection.SetActive(true);
     }
 
-    public void OpenPopup()
-    {
-    }
-
-    public void ClosePopup()
-    {
-    }
+  
 
     public void OnBtnQuit()
     {
@@ -88,17 +82,17 @@ public class MainMenu : MonoBehaviour
 
     public void OnBtnMoreGames()
     {
-        Application.OpenURL(moreGamesURL);
+        Application.OpenURL(GlobalConstant.MoreGamesLink);
     }
 
     public void OnBtnPrivacy()
     {
-        Application.OpenURL(privacyURL);
+        Application.OpenURL(GlobalConstant.PrivacyPoliciesLInk);
     }
 
     public void OnBtnRateUs()
     {
-        Application.OpenURL(rateUsURL);
+        Application.OpenURL(GlobalConstant.RateUsLink);
     }
 
     public void OnBtnClick()

@@ -10,6 +10,7 @@ public class PlayerScript : MonoBehaviour
     public Transform playerCamera;
     public GameObject playerCanvas;
     [SerializeField] private GameObject btnShop;
+
     [Header("Pickup Settings")] [SerializeField]
     private Transform pickedItemHolder, pickedCushionHolder;
 
@@ -17,7 +18,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float throwForce = 5f;
     [SerializeField] GameObject btnThrow;
     [SerializeField] private Transform playerHead, playerModel, cinematicCamera;
-   
+
     [SerializeField] private Transform rightPaw; // Walking right paw, parented to player
     [SerializeField] private Transform leftPaw; // Walking left paw, parented to player
     [SerializeField] private Transform animRightPaw; // Animation right paw, parented to camera
@@ -264,8 +265,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (!IsObjectPicked || pickedObject == null) return;
         SoundManager.instance.PlaySound(SoundManager.instance.throwItem);
-        if (pickedObject.gameObject.CompareTag("ShockGun"))
-            pickedObject.GetComponent<MeshRenderer>().enabled = false;
+
 
         if (pickedObject.gameObject.CompareTag("Vase"))
             MainScript.instance.tutorial.EndTutorial();
@@ -313,13 +313,26 @@ public class PlayerScript : MonoBehaviour
                 level5.PillowThrown();
             }
         }
+        else if (pickedObject.gameObject.CompareTag("ShockGun"))
+        {
+            GameObject gun = pickedObject.gameObject;
+            gun.GetComponent<MeshRenderer>().enabled = false;
+
+            gun.GetComponent<Interactable>().DisableForInteraction(true);
+
+            DOVirtual.DelayedCall(2, () =>
+            {
+                 gun.SetActive(false);
+            });
+        }
         else
             pickedObject.EnableForInteraction(false);
 
+
         pickedObject = null;
         IsObjectPicked = false;
-       
-            MainScript.instance.grandPa.NotifyPlayerHasThrown();
+
+        MainScript.instance.grandPa.NotifyPlayerHasThrown();
     }
 
     public void ShowDogCamera(Vector3 pos)
@@ -337,8 +350,7 @@ public class PlayerScript : MonoBehaviour
         pickedObject = null;
         IsObjectPicked = false;
     }
-    
-   
+
 
     public bool HasPickedObject()
     {
@@ -384,7 +396,6 @@ public class PlayerScript : MonoBehaviour
 
     public void PlayDogEatingAnim()
     {
-        
         playerModel.GetComponent<Dogs>().PlayDogEatingAnim();
     }
 
@@ -423,6 +434,7 @@ public class PlayerScript : MonoBehaviour
 
     public void ChangeObjectLayer(Transform item, string newLayerName)
     {
+        Debug.Log("itemName= " + item.name);
         int newLayer = LayerMask.NameToLayer(newLayerName);
         if (newLayer == -1)
         {

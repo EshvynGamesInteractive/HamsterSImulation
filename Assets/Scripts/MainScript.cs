@@ -161,7 +161,7 @@ public class MainScript : MonoBehaviour
 
     public void SetIndicationPosition(Transform pos)
     {
-        Debug.Log(pos.name);
+        Debug.Log("first");
         ShowIndication();
         indication.transform.position = pos.position;
         if (pos.TryGetComponent<Interactable>(out Interactable interactable))
@@ -179,9 +179,10 @@ public class MainScript : MonoBehaviour
 
     public void SetIndicationPosition(Transform pos, Sprite indicationIcon)
     {
-        Debug.Log(pos.name);
+        Debug.Log("second");
         ShowIndication();
         indication.transform.position = pos.position;
+        ChangeIndicationIcons(indicationIcon);
         if (pos.TryGetComponent<Interactable>(out Interactable interactable))
         {
             if (interactable.indicationPoint != null)
@@ -192,19 +193,23 @@ public class MainScript : MonoBehaviour
         }
 
         pathDraw.SetDestination(pos);
-        ChangeIndicationIcons(indicationIcon);
     }
+
+    private HNSIndicatorPrefab indicator;
 
     private void ChangeIndicationIcons(Sprite newIcon)
     {
-        if (navElement != null && navElement.Indicator != null)
+        DOVirtual.DelayedCall(0.01f, () =>
         {
-            if (navElement.Indicator.OnscreenIcon != null)
-                navElement.Indicator.OnscreenIcon.sprite = newIcon;
-
-            if (navElement.Indicator.OffscreenIcon != null)
-                navElement.Indicator.OffscreenIcon.sprite = newIcon;
-        }
+            if (indicator == null)
+                indicator = FindFirstObjectByType<HNSIndicatorPrefab>();
+           
+            Debug.Log(indicator.name);
+            if (indicator != null)
+            {
+                indicator.ChangeIcon(newIcon);
+            }
+        });
     }
 
     public void HideIndication()
@@ -289,16 +294,16 @@ public class MainScript : MonoBehaviour
         Debug.Log("currenttasks");
         grandPa.StopTheChase();
         levelFillBar.DOFillAmount(1, 0.2f).SetUpdate(true);
-        player.DisablePlayer();
-        player.gameObject.SetActive(true);
+
         gameover = true;
-        Invoke(nameof(LevelCompleted), 4);
+        Invoke(nameof(LevelCompleted), 2);
     }
 
     private void LevelCompleted()
     {
         canShowRewardedPopup = false;
-
+        player.DisablePlayer();
+        player.gameObject.SetActive(true);
         grandPa.StopTheChase();
         SoundManager.instance.PlaySound(SoundManager.instance.levelComplete);
         OpenPopup(pnlLevelWin);
@@ -420,7 +425,7 @@ public class MainScript : MonoBehaviour
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryONPauseAD");
-            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+            Nicko_ADSManager._Instance.RecShowBanner("OnBtnRetry");
         }
 
         Time.timeScale = 1;
@@ -435,7 +440,7 @@ public class MainScript : MonoBehaviour
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryAfterWinAD");
-            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+            Nicko_ADSManager._Instance.RecShowBanner("OnBtnRetry2");
         }
 
         GlobalValues.retryAfterLevelCompleted = true;
@@ -451,7 +456,7 @@ public class MainScript : MonoBehaviour
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("HomeButtonAD");
-            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+            Nicko_ADSManager._Instance.RecShowBanner("OnBtnHome");
         }
 
         // decrementedNumber = 0;
@@ -468,7 +473,7 @@ public class MainScript : MonoBehaviour
         if (Nicko_ADSManager._Instance)
         {
             Nicko_ADSManager._Instance.ShowInterstitial("NextStageButtonAD");
-            Nicko_ADSManager._Instance.RecShowBanner("LoadingStart");
+            Nicko_ADSManager._Instance.RecShowBanner("OnBtnNext");
         }
 
         Time.timeScale = 1;

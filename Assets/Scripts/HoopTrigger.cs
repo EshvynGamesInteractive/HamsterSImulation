@@ -20,8 +20,12 @@ public class HoopTrigger : MonoBehaviour
 
             confettiParticle.Play();
             StartCoroutine(DisableTemporarily());
+            GlobalValues.TotalBones += 1;
 
+            MainScript.instance.UpdateBonesText();
 
+            SoundManager.instance.PlaySound(SoundManager.instance.partyPop);
+            
             Level5Script level5 = MainScript.instance.activeLevel.GetComponent<Level5Script>();
 
             if (level5 != null) //means level5 is active

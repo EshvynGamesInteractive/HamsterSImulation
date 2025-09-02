@@ -71,7 +71,11 @@ public class FridgeHeistController : MonoBehaviour
 
         //foodTOPick.SetActive(true);
 
-        Instantiate(foodTOPick, foodTOPick.transform.position, Quaternion.identity).SetActive(true);
+        GameObject fruit = Instantiate(foodTOPick, foodTOPick.transform.position, Quaternion.identity);
+        fruit.SetActive(true);
+       
+        
+         // fruit.GetComponent<Interactable>().EnableForInteraction(pineappleIcon);
         foorCamera.transform.DOMove(player.playerCamera.position, camMoveDuration).SetEase(Ease.Linear);
         foorCamera.transform.DORotate(player.playerCamera.eulerAngles, camMoveDuration / 4)
             .SetDelay(camMoveDuration - (camMoveDuration / 4));
@@ -80,13 +84,14 @@ public class FridgeHeistController : MonoBehaviour
         {
             foorCamera.gameObject.SetActive(false);
             player.EnablePlayer();
+            fruit.GetComponent<Interactable>().EnableForInteraction(pineappleIcon);
         });
 
 
         grandpaAI.gameObject.SetActive(true);
         grandpaAI.enabled = false;
         grandpaAI.MakeGrandpaSit(sitPosition);
-
+        grandpaAI.GetComponent<Collider>().enabled = false;
         grandpaPeekController.enabled = true;
 
         grandpaPeekController.GameStarted();
@@ -167,6 +172,7 @@ public class FridgeHeistController : MonoBehaviour
         btnRevive.SetActive(true);
         grandpaPeekController.enabled = false;
         grandpaAI.enabled = true;
+        grandpaAI.GetComponent<Collider>().enabled = true;
     }
 
 
@@ -197,6 +203,8 @@ public class FridgeHeistController : MonoBehaviour
 
     private void EndHeist()
     {
+       
+        
         grandpaAI.isSitting = false;
         grandpaPeekController.GameEnd();
         heistActive = false;
@@ -211,6 +219,10 @@ public class FridgeHeistController : MonoBehaviour
         MainScript.instance.pnlInfo.ShowInfo("Heist completed");
         //Debug.Log("Heist completed successfully!");
         MiniGameManager.Instance.EndMiniGame();
+        
+        GlobalValues.TotalBones += 2;
+
+        MainScript.instance.UpdateBonesText();
     }
 
     private void SlowDownPlayer(bool slow)

@@ -14,7 +14,7 @@ public class RatAI : Pickable
     private bool isMoving = false;
     private bool isWaiting = false;
     private bool isCaught = false;
-
+    public float currentSpeed;
 
     public override void Interact(PlayerScript player)
     {
@@ -45,9 +45,17 @@ public class RatAI : Pickable
         isMoving = false;
         currentWaypointIndex = 0;
 
-        UpdateAnimation();
+        // UpdateAnimation();
+    }
+    private void OnEnable()
+    {
+        InvokeRepeating(nameof(UpdateAnimation), 0f, 0.2f); // every 0.1s
     }
 
+    private void OnDisable()
+    {
+        CancelInvoke(nameof(UpdateAnimation));
+    }
     private void Update()
     {
         if (!isMoving || isWaiting || isCaught) return;
@@ -57,13 +65,13 @@ public class RatAI : Pickable
             StartCoroutine(WaitAtWaypoint());
         }
 
-        UpdateAnimation();
+        //UpdateAnimation();
     }
 
     private IEnumerator WaitAtWaypoint()
     {
         isWaiting = true;
-        UpdateAnimation();
+        //    UpdateAnimation();
 
         yield return new WaitForSeconds(waitTime);
 
@@ -77,14 +85,17 @@ public class RatAI : Pickable
     {
         if (agent.enabled)
             agent.SetDestination(waypoints[currentWaypointIndex].position);
-        UpdateAnimation();
+        //  UpdateAnimation();
     }
 
     private void UpdateAnimation()
     {
-        bool walking = agent.velocity.magnitude > 0.1f && !isWaiting && !isCaught;
+        currentSpeed = agent.velocity.magnitude;
+
+        // Debug.Log("speed " + agent.velocity.magnitude);
+
+        bool walking = agent.velocity.magnitude > 0.01f && !isWaiting && !isCaught;
         animator.SetBool("Walk", walking);
-        animator.SetBool("Idle", !walking);
     }
 
     public void Caught()
@@ -94,6 +105,5 @@ public class RatAI : Pickable
         agent.isStopped = true;
         agent.enabled = false;
         animator.SetBool("Walk", false);
-        animator.SetBool("Idle", true);
     }
 }

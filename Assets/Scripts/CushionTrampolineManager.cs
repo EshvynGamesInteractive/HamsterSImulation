@@ -84,6 +84,10 @@ public class CushionTrampolineManager : MonoBehaviour
             && playerScript.pickedObject != null && playerScript.pickedObject.TryGetComponent<CookieJar>(out _))
         {
             Debug.Log("Success! You escaped with food!");
+            
+            GlobalValues.TotalBones += 2;
+
+            MainScript.instance.UpdateBonesText();
             EndMiniGame();
         }
 
@@ -93,7 +97,10 @@ public class CushionTrampolineManager : MonoBehaviour
         txtTimer.text = timer.ToString("f0");
 
         if (timer <= 0f)
+        { 
+            Debug.Log("Failed! You could not get it in time!");
             EndMiniGame();
+        }
         // }
     }
 

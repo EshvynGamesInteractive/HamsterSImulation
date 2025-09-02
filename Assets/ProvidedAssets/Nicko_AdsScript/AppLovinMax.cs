@@ -38,7 +38,7 @@ public class AppLovinMax : MonoBehaviour
 
     public bool IsRecBannerReady()
     {
-        LoadRecBanner();
+        //LoadRecBanner();
         return _isRecBannerReady;
     }
 
@@ -91,26 +91,26 @@ public class AppLovinMax : MonoBehaviour
         MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += Nicko_AnalyticalManager.instance.Revenue_ReportMax;
 
         // Create once
-         MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft);
+        MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft);
         // MaxSdk.LoadMRec(recBannerAdUnitId);
-        
+
         LoadRecBanner();
-        _isRecBannerReady = true;
     }
+
     public void InitializeBanner()
     {
         if (!GlobalConstant.AdsON)
             return;
-        
-        // Attach callbacks for MREC
+
+        // Attach callbacks for banner
         MaxSdkCallbacks.Banner.OnAdLoadedEvent += OnBannerLoadedEvent;
         MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += OnBannerFailedEvent;
         MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerClickedEvent;
         MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += Nicko_AnalyticalManager.instance.Revenue_ReportMax;
 
-        MaxSdk.CreateBanner(adBannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter
-        ); // Adjust position if needed
-         LoadBanner();
+        MaxSdk.CreateBanner(adBannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter); // Adjust position if needed
+
+        LoadBanner();
     }
 
 
@@ -118,13 +118,13 @@ public class AppLovinMax : MonoBehaviour
     {
         // MaxSdk.CreateMRec(recBannerAdUnitId, MaxSdkBase.AdViewPosition.TopLeft); // Adjust position if needed
         MaxSdk.LoadMRec(recBannerAdUnitId);
-         
+
         Debug.Log("[Max] Requested MREC banner load");
     }
 
     public void LoadBanner()
     {
-         MaxSdk.LoadBanner(adBannerAdUnitId);
+        MaxSdk.LoadBanner(adBannerAdUnitId);
         Debug.Log("[Max] Requested banner load");
     }
 
@@ -151,10 +151,11 @@ public class AppLovinMax : MonoBehaviour
     //     // Retry loading after a delay
     //     Invoke(nameof(LoadRecBanner), 5f);
     // }
-    
+
     private void OnMRecFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
     {
-       // LoadRecBanner();
+        // LoadRecBanner();
+        //   Invoke(nameof(LoadRecBanner), 5f);
         _isRecBannerReady = false;
         Debug.LogWarning($"[Max] MREC banner failed to load: {errorInfo.Message}");
     }
@@ -178,12 +179,12 @@ public class AppLovinMax : MonoBehaviour
         Debug.LogWarning($"  banner failed to load: {errorInfo.Message}");
         // LoadBanner();
         // Retry loading after a delay
-       // Invoke(nameof(LoadBanner), 5f);
+        //  Invoke(nameof(LoadBanner), 5f);
     }
 
     private void OnBannerClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-       // LoadBanner();
+        // LoadBanner();
         Debug.Log("[Max]   banner clicked");
     }
 
@@ -211,7 +212,7 @@ public class AppLovinMax : MonoBehaviour
         if (_isRecBannerReady)
         {
             MaxSdk.ShowMRec(recBannerAdUnitId);
-            
+
             Debug.Log("[Max] MREC banner shown");
         }
         else
@@ -220,6 +221,7 @@ public class AppLovinMax : MonoBehaviour
             Nicko_ADSManager._Instance.admobInstance.ShowRecBanner();
         }
     }
+
     public void ShowBanner()
     {
         Debug.Log("[Max] bannner shown");
@@ -235,7 +237,7 @@ public class AppLovinMax : MonoBehaviour
 
     public void HideBanner()
     {
-          MaxSdk.HideBanner(adBannerAdUnitId);
+        MaxSdk.HideBanner(adBannerAdUnitId);
     }
 
     #endregion
@@ -433,7 +435,7 @@ public class AppLovinMax : MonoBehaviour
         Debug.Log("Interstitial dismissed");
         LoadInterstitial();
     }
-  
+
     #endregion
 
     #region Rewarded Ad Methods
@@ -479,9 +481,9 @@ public class AppLovinMax : MonoBehaviour
             Nicko_ADSManager._Instance.ShowNoAdPanel();
         }
     }
-    
-    
-    public void ShowRewardedOrInterstitialAd(Action ac)//added by Khubaib
+
+
+    public void ShowRewardedOrInterstitialAd(Action ac) //added by Khubaib
     {
         if (isAdsRemove || !GlobalConstant.AdsON)
             return;
@@ -491,7 +493,6 @@ public class AppLovinMax : MonoBehaviour
         if (MaxSdk.IsRewardedAdReady(RewardedAdUnitId))
         {
             MaxSdk.ShowRewardedAd(RewardedAdUnitId);
-            
         }
         else if (MaxSdk.IsInterstitialReady(InterstitialAdUnitId))
         {
@@ -574,7 +575,7 @@ public class AppLovinMax : MonoBehaviour
         // Rewarded ad was displayed and user should receive the reward
         Debug.Log("Rewarded ad received reward");
     }
-  
+
     #endregion
 }
 
