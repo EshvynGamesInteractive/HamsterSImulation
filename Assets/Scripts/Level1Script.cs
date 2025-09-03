@@ -243,8 +243,8 @@ public class Level1Script : LevelScript
         SetCurrentStageTaskNumber(taskNumber);
         int currentLevelTasks = eachLevelTasksCount[GetCurrentStageUnlockedLevels() - 1];
 
-        Debug.Log(currentLevelTasks);
-        Debug.Log(GetCurrentLevelCompletedTaskNumber());
+        // Debug.Log(currentLevelTasks);
+        // Debug.Log(GetCurrentLevelCompletedTaskNumber());
         MainScript.instance.TaskCompleted(GetCurrentLevelCompletedTaskNumber(), currentLevelTasks);
     }
 }

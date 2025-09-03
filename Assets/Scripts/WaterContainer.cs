@@ -13,7 +13,7 @@ public class WaterContainer : Interactable
     }
     public override void Interact(PlayerScript player)
     {
-        player.AnimatePawToCenter();
+        player.AnimatePawToInteract();
         DisableForInteraction(true);
         Invoke(nameof(SpillWater), 0.5f);
     }

@@ -14,6 +14,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1;
         if (Nicko_ADSManager._Instance)
         {
             Debug.Log("aaaaaaa");

@@ -8,7 +8,7 @@ public class HensCage : Interactable
         SoundManager.instance.PlaySound(SoundManager.instance.hens);
         SoundManager.instance.PlaySoundDelayed(SoundManager.instance.hens, 4);
         SoundManager.instance.PlaySoundDelayed(SoundManager.instance.hens, 8);
-        player.AnimatePawToCenter();
+        player.AnimatePawToInteract();
         MainScript.instance.activeLevel.TaskCompleted(4);
         DisableForInteraction(true);
         for (int i = 0; i < hens.Length; i++)

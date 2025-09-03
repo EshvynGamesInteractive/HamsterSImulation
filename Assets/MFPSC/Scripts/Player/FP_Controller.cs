@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(FP_Input))]
 [RequireComponent(typeof(FP_CameraLook))]
@@ -64,7 +63,6 @@ public class FP_Controller : MonoBehaviour
 
     public void OnEnable()
     {
-        
         moveDirection = Vector3.zero;
         inputX = 0f;
         inputZ = 0f;
@@ -92,7 +90,8 @@ public class FP_Controller : MonoBehaviour
         rayDistance = controller.height * 0.5F + controller.radius;
         slideLimit = controller.slopeLimit - 0.1F;
         jumpTimer = antiBunnyHopFactor;
-        JumpLandSource = gameObject.AddComponent<AudioSource>();
+        // JumpLandSource = gameObject.AddComponent<AudioSource>(); //Khubaib
+        JumpLandSource = SoundManager.instance.effectsSource;
     }
 
     public void EnterHeistMode()
@@ -210,8 +209,11 @@ public class FP_Controller : MonoBehaviour
                 break;
         }
 
+
         if (jumpState == 0 && CanStand() && jump && jumpTimer >= antiBunnyHopFactor)
         {
+            landTimer = 1;//khubaib
+            PlaySound(footSteps.jumpSound, JumpLandSource); 
             jumpState++;
         }
 
@@ -240,6 +242,9 @@ public class FP_Controller : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+    
+        if (!IsGrounded() && landTimer == 1)
+            PlaySound(footSteps.landSound, JumpLandSource); //khubaib
         landTimer = 0;
         jumpState = 0;
         contactPoint = hit.point;
@@ -248,6 +253,7 @@ public class FP_Controller : MonoBehaviour
 
     void PlaySound(AudioClip audio, AudioSource source)
     {
+        
         source.clip = audio;
         if (audio)
             source.Play();

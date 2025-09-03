@@ -74,8 +74,8 @@ namespace SickscoreGames.HUDNavigationSystem
 
 		public void ChangeIcon(Sprite icon)
 		{
-			Debug.Log("Huray");
-			Debug.Log(icon.name);
+			// Debug.Log("Huray");
+			// Debug.Log(icon.name);
 			OnscreenIcon.sprite = icon;
 			OffscreenIcon.sprite = icon;
 		}

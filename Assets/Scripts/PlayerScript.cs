@@ -92,10 +92,10 @@ public class PlayerScript : MonoBehaviour
         GetComponent<FP_Controller>().OnEnable();
     }
 
-    public void AnimatePawToCenter()
+    public void AnimatePawToInteract()
     {
         //if (isPicking) return;
-        isPicking = true;
+        isPicking = true;  // so not called second time before the animation ends
 
         // Disable walking paws, enable animation paws
         rightPaw.gameObject.SetActive(false);
@@ -114,13 +114,40 @@ public class PlayerScript : MonoBehaviour
             isPicking = false;
         });
     }
+    
+    public void AnimatePawToThrow()
+    {
+        isPicking = true;
+
+       
+        rightPaw.gameObject.SetActive(false);
+        animRightPaw.gameObject.SetActive(true);
+
+        float xRot = -140;
+        float yRot = 50;
+        float xRotend = -100;
+        float yRotend = 25;
+        Sequence pawRotateSequence = DOTween.Sequence();
+        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRot, yRot, 0), 0f)
+            .SetEase(Ease.InOutQuad));
+        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRotend, yRotend, 0), 0.2f).SetEase(Ease.InOutQuad));
+        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRotend+0.1f, yRotend, 0), 0.2f).SetEase(Ease.InOutQuad));
+        pawRotateSequence.Append(animRightPaw.DOLocalRotate(Vector3.zero, 0.03f).SetEase(Ease.InOutQuad));
+        pawRotateSequence.OnComplete(() =>
+        {
+            rightPaw.gameObject.SetActive(true);
+            animRightPaw.gameObject.SetActive(false);
+            isPicking = false;
+        });
+    }
 
 
     public void AnimatePawAttack()
     {
         if (isPicking) return;
         isPicking = true;
-
+        
+        SoundManager.instance.PlaySound(SoundManager.instance.dogAngry);
 
         pawAttackImg.fillAmount = 0;
         pawAttackImg.fillOrigin = (int)Image.OriginHorizontal.Right; // or Top, depending on UI setup
@@ -258,7 +285,7 @@ public class PlayerScript : MonoBehaviour
             pickedObject.transform.DOLocalRotate(Vector3.zero, moveDuration);
             ChangeObjectLayer(pickedObject.transform, "PickedLayer");
         });
-        AnimatePawToCenter();
+        AnimatePawToInteract();
     }
 
     public void ThrowObject()
@@ -266,7 +293,7 @@ public class PlayerScript : MonoBehaviour
         if (!IsObjectPicked || pickedObject == null) return;
         SoundManager.instance.PlaySound(SoundManager.instance.throwItem);
 
-
+        AnimatePawToThrow();
         if (pickedObject.gameObject.CompareTag("Vase"))
             MainScript.instance.tutorial.EndTutorial();
         btnThrow.SetActive(false);

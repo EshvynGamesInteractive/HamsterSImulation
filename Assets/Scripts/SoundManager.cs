@@ -5,7 +5,7 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
-    [SerializeField] private AudioSource musicSource, effectsSource, loopSource;
+    [SerializeField] public AudioSource musicSource, effectsSource, loopSource;
 
     public AudioClip buttonClick,
         levelFail,
@@ -39,7 +39,10 @@ public class SoundManager : MonoBehaviour
         drawerClose,
         chime,
         electrocute,
-        partyPop;
+        partyPop,
+        dogAngry,
+        purchase
+;
 
     private void Awake()
     {

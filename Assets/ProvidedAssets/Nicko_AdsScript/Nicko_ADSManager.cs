@@ -1,14 +1,13 @@
 using System;
-using System;
+using DG.Tweening;
 using GoogleMobileAds.Api;
-// using LaundaryMan;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 public class Nicko_ADSManager : MonoBehaviour
 {
     public static Nicko_ADSManager _Instance;
+
     public GameObject noAdAvailablePanel;
     public Button btnOkNoAd;
 
@@ -26,32 +25,92 @@ public class Nicko_ADSManager : MonoBehaviour
         set => PlayerPrefs.SetInt("RemoveAds", value ? 1 : 0);
     }
 
-    public void OnRemoveAds()
-    {
-        PlayerPrefs.SetInt("RemoveAds", 1);
-        admobInstance.HideRecBanner();
-        admobInstance.HideLeftBanner();
-    }
+    [Header("Admob State Flags")] public bool _isBannerShowing, _isBannerReady;
+    public bool _isRecShowing, _isRecBannerReady;
 
-    [Header("Admob IDS")] public bool _isBannerShowing, _isBannerReady;
-    [Header("Admob IDS")] public bool _isRecShowing, _isRecBannerReady;
-    private bool _isFlooringBannerReady, _isFlooringBannerShowing;
-    private bool isMRecShowing;
-
-    private int interstitialRetryAttempt;
-    private int rewardedRetryAttempt;
-
-    [Header("Max IDS")] public string MaxSdkKey = "";
-
+    [Header("References")] public Nicko_Admob admobInstance;
+    public Nicko_AppLovinMax appLovinMax;
 
     private void Awake()
     {
         if (_Instance == null)
             _Instance = this;
+
         DontDestroyOnLoad(gameObject);
         btnOkNoAd.onClick.AddListener(HideNoAdPanel);
     }
 
+    #region Init
+
+    public void Init()
+    {
+        Debug.Log("Application.version " + Application.version);
+        PostInit();
+    }
+
+    void PostInit()
+    {
+        adPriority = GlobalConstant.adPriority;
+
+        // Assign AdMob IDs from constants
+        admobInstance.recBannerIDMed = admobInstance.bannerIDMed = GlobalConstant.Nicko_Admob_Banner_MID;
+        admobInstance.interMedID = GlobalConstant.Nicko_Admob_Inter_IdMid;
+        admobInstance.rewardedIDMed = GlobalConstant.Nicko_Admob_Rewarded_Id_Mid;
+        admobInstance.appOpenMed = GlobalConstant.Nicko_Admob_AppOpen_Id_Mid;
+
+        admobInstance.recBannerIDHigh = admobInstance.bannerIDHigh = GlobalConstant.Nicko_Admob_Banner_HIGH;
+        admobInstance.interHighID = GlobalConstant.Nicko_Admob_Inter_IdHigh;
+        admobInstance.rewardedIDHigh = GlobalConstant.Nicko_Admob_Rewarded_Id_High;
+        admobInstance.appOpenHigh = GlobalConstant.Nicko_Admob_AppOpen_IdHigh;
+
+        admobInstance.recBannerIDLow = admobInstance.bannerIDLow = GlobalConstant.Nicko_Admob_Banner_Simple;
+        admobInstance.interstitialID = GlobalConstant.Nicko_Admob_Inter_IdLow;
+        admobInstance.rewardedIDLow = GlobalConstant.Nicko_Admob_Rewarded_Id_Simple;
+        admobInstance.appOpenLow = GlobalConstant.Nicko_Admob_AppOpen_Id_Low;
+
+        // Assign MAX IDs
+        appLovinMax.InterstitialAdUnitId = GlobalConstant.InterstitialAdUnitId;
+        appLovinMax.RewardedAdUnitId = GlobalConstant.RewardedAdUnitId;
+        appLovinMax.BannerAdUnitId = GlobalConstant.BannerMax;
+        appLovinMax.MrecAdUnitId = GlobalConstant.Mrecmax;
+        appLovinMax.AppOpenAdUnitId = GlobalConstant.Appopenmax;
+
+        MobileAds.SetiOSAppPauseOnBackground(true);
+        MobileAds.RaiseAdEventsOnUnityMainThread = true;
+
+        admobInstance.Init();
+        appLovinMax.Init();
+        DOVirtual.DelayedCall(5, ShowAppOpenAd);
+    }
+
+    #endregion
+
+    #region Remove Ads
+
+    public void OnRemoveAds()
+    {
+        PlayerPrefs.SetInt("RemoveAds", 1);
+        Debug.Log("[ADS] Remove Ads purchased → disabling all ads.");
+
+        // Hide AdMob banners
+
+        admobInstance?.HideBanner();
+        admobInstance?.HideRecBanner();
+
+        // Hide Max banners
+        appLovinMax?.HideBanner();
+        appLovinMax?.HideMRec();
+
+        // Reset flags
+        _isBannerShowing = false;
+        _isRecShowing = false;
+        _isBannerReady = false;
+        _isRecBannerReady = false;
+    }
+
+    #endregion
+
+    #region UI Panel
 
     public void ShowNoAdPanel()
     {
@@ -62,420 +121,140 @@ public class Nicko_ADSManager : MonoBehaviour
     {
         noAdAvailablePanel.SetActive(false);
     }
-    //  public AdTimer TIMER;
 
-    public void Init()
-    {
-        Debug.Log("Application.version " + Application.version);
+    #endregion
 
-        PostInit();
-        // TIMER.Init();
-    }
+    #region Interstitial
 
-    public Nicko_Admob admobInstance;
-    public AppLovinMax appLovinMax;
-
-    void PostInit()
-    {
-        adPriority = GlobalConstant.adPriority;
-
-        admobInstance.rectbannerID = GlobalConstant.Nicko_Admob_Banner_MID;
-
-
-        admobInstance.bannerIDMed = GlobalConstant.Nicko_Admob_Banner_MID;
-        admobInstance.InterMediumFloorID = GlobalConstant.Nicko_Admob_Inter_IdMid;
-        admobInstance.rewardedIDMed = GlobalConstant.Nicko_Admob_Rewarded_Id_Mid;
-        admobInstance.appOpenIDMed = GlobalConstant.Nicko_Admob_AppOpen_Id_Mid;
-
-        admobInstance.bannerIDHigh = GlobalConstant.Nicko_Admob_Banner_HIGH;
-        admobInstance.InterHighFloorID = GlobalConstant.Nicko_Admob_Inter_IdHigh;
-        admobInstance.rewardedIDHigh = GlobalConstant.Nicko_Admob_Rewarded_Id_High;
-        admobInstance.appOpenIDHigh = GlobalConstant.Nicko_Admob_AppOpen_IdHigh;
-
-        admobInstance.LowBannerID = GlobalConstant.Nicko_Admob_Banner_Simple;
-        admobInstance.interstitialID = GlobalConstant.Nicko_Admob_Inter_IdLow;
-        admobInstance.rewardedIDLow = GlobalConstant.Nicko_Admob_Rewarded_Id_Simple;
-        admobInstance.appOpenIDLow = GlobalConstant.Nicko_Admob_AppOpen_Id_Low;
-
-
-        appLovinMax.MaxSdkKey = MaxSdkKey;
-        appLovinMax.InterstitialAdUnitId = GlobalConstant.InterstitialAdUnitId;
-        appLovinMax.RewardedAdUnitId = GlobalConstant.RewardedAdUnitId;
-
-        appLovinMax.adBannerAdUnitId = GlobalConstant.BannerMax;
-        appLovinMax.recBannerAdUnitId = GlobalConstant.Mrecmax;
-        appLovinMax.appOpenAdUnitId = GlobalConstant.Appopenmax;
-        appLovinMax.RewardedAdUnitId = GlobalConstant.RewardedAdUnitId;
-
-
-        MobileAds.SetiOSAppPauseOnBackground(true);
-        MobileAds.RaiseAdEventsOnUnityMainThread = true;
-        admobInstance.Initialize();
-        appLovinMax.Init();
-    }
-
+   
     public void ShowInterstitial(string placement)
     {
-        // return;
-        Nicko_Admob.isInterstialAdPresent = true;
-        if (isAdsRemove)
-        {
+        return;
+        if (isAdsRemove || !GlobalConstant.AdsON)
             return;
-        }
-
-        if (!GlobalConstant.AdsON)
-        {
-            return;
-        }
 
         Nicko_AnalyticalManager.instance.InterstitialEvent(placement);
 
-        if (adPriority == AdPriority.Max)
+        if (adPriority == AdPriority.Max && appLovinMax != null)
         {
-            if (appLovinMax)
-            {
+            if (appLovinMax.InterstitialAdUnitId != string.Empty)
                 appLovinMax.ShowInterstitial();
-                print("Max Ad Showed");
-            }
-            else
-            {
-                admobInstance.ShowInterstitial();
-            }
         }
         else
         {
-            //  appLovinMax.InitializeInterstitialAds();
             admobInstance.ShowInterstitial();
         }
     }
+    #endregion
 
-    #region Rewarded Ad Methods
+    #region Rewarded
 
     public Action action;
 
+    
+    
     public void ShowRewardedAd(Action ac, string placement)
     {
-        if (isAdsRemove)
-        {
-            return;
-        }
-
-        if (!GlobalConstant.AdsON)
-        {
-            return;
-        }
+        if (isAdsRemove || !GlobalConstant.AdsON) return;
 
         action = ac;
-        if (adPriority == AdPriority.Max)
+
+        if (adPriority == AdPriority.Max && appLovinMax != null)
         {
-            appLovinMax.ShowRewardedAd(ac);
-            // appLovinMax.ShowRewardedOrInterstitialAd(ac); //added by Khubaib
+            if (appLovinMax.RewardedAdUnitId != string.Empty)
+                appLovinMax.ShowRewardedAd(ac);
         }
         else
-            admobInstance.ShowRewardedAdmob(ac);
-
-        if (Nicko_AnalyticalManager.instance)
         {
-            Nicko_AnalyticalManager.instance.VideoEvent(placement);
-        }
-    }
-
-    public void ShowRewardedAd(string placement)
-    {
-        if (isAdsRemove)
-        {
-            return;
+            admobInstance.ShowRewardedAd(ac);
         }
 
-        if (!GlobalConstant.AdsON)
-        {
-            return;
-        }
-
-        if (GlobalConstant.isLogger)
-            print("Nicko_Admob.Instance");
-        if (adPriority == AdPriority.Max)
-        {
-            appLovinMax.ShowRewardedAd(action);
-            // appLovinMax.ShowRewardedOrInterstitialAd(action);//added by Khubaib
-        }
-        else
-            admobInstance.ShowRewardedAdmob(action);
-
-        if (Nicko_AnalyticalManager.instance)
-        {
-            Nicko_AnalyticalManager.instance.VideoEvent(placement);
-        }
+        Nicko_AnalyticalManager.instance?.VideoEvent(placement);
     }
 
     #endregion
 
-    #region Banner Ad Methods
-
-    // public void ShowBanner(string placement)
-    // {
-    //     if (isAdsRemove)
-    //     {
-    //         return;
-    //     }
-    //
-    //     if (!GlobalConstant.AdsON)
-    //     {
-    //         return;
-    //     }
-    //
-    //     _isBannerShowing = true;
-    //
-    //     admobInstance.ShowLeftBanner();
-    //     if (Nicko_AnalyticalManager.instance)
-    //     {
-    //         Nicko_AnalyticalManager.instance.CustomScreenEvent(placement);
-    //     }
-    // }
-
+    #region Banner
 
     public void ShowBanner(string placement)
     {
-        if (isAdsRemove || !GlobalConstant.AdsON)
-        {
-            Debug.Log("[ADS] Ads disabled or removed, skipping banner.");
-            return;
-        }
+        if (isAdsRemove || !GlobalConstant.AdsON) return;
 
-        // if (_isBannerShowing)
-        //     HideBanner();
-
+        if (_isBannerShowing) HideBanner();
         _isBannerShowing = true;
 
-        if (appLovinMax != null)
+        if (adPriority == AdPriority.Max && appLovinMax != null)
         {
             appLovinMax.ShowBanner();
-            Debug.Log("[ADS] Showing Max banner.");
-        }
-        else if (admobInstance != null)
-        {
-            admobInstance.ShowLeftBanner();
-            admobInstance?.RequestLeftBannerAd();
-            admobInstance?.RequestRightBannerAd();
-            Debug.Log("[ADS] Max not ready, showing AdMob banner.");
         }
         else
         {
-            _isBannerShowing = false;
-            Debug.LogWarning("[ADS] No banner ready (Max or AdMob).");
+            admobInstance.HideBanner();
         }
 
-        
         Nicko_AnalyticalManager.instance?.CustomScreenEvent(placement);
     }
+
+    public void HideBanner()
+    {
+        admobInstance?.HideRecBanner();
+        appLovinMax?.HideBanner();
+
+        _isBannerShowing = false;
+        _isBannerReady = false;
+    }
+
+    #endregion
+
+    #region RecBanner
 
     public void RecShowBanner(string placement)
     {
-        if (isAdsRemove || !GlobalConstant.AdsON)
-        {
-            Debug.Log("[ADS] Ads disabled or removed, skipping rectangular banner.");
-            return;
-        }
-
-        // if (_isRecShowing)
-        //     HideRecBanner();
+        if (isAdsRemove || !GlobalConstant.AdsON) return;
 
         _isRecShowing = true;
 
-        if (appLovinMax != null && appLovinMax.IsRecBannerReady())
+        if (adPriority == AdPriority.Max && appLovinMax != null)
         {
-            appLovinMax.ShowRecBanner();
-            Debug.Log("[ADS] Showing Max rectangular banner.");
-        }
-        else if (admobInstance != null)
-        {
-            admobInstance.ShowRecBanner();
-            admobInstance?.RequestRecBannerAd();
-            Debug.Log("[ADS] Max not ready, showing AdMob rectangular banner.");
+            if (appLovinMax.BannerAdUnitId != string.Empty)
+                appLovinMax.ShowMRec();
         }
         else
         {
-            _isRecShowing = false;
-            Debug.LogWarning("[ADS] No rectangular banner ready (Max or AdMob).");
+            admobInstance.ShowRecBanner();
         }
 
-    
         Nicko_AnalyticalManager.instance?.CustomScreenEvent(placement);
     }
 
-
- 
-    // public void RecShowBanner(string placement)
-    // {
-    //     if (isAdsRemove || !GlobalConstant.AdsON)
-    //     {
-    //         Debug.Log("[ADS] Ads disabled or removed, skipping rectangular banner.");
-    //         return;
-    //     }
-    //
-    //     if (_isRecShowing)
-    //         HideRecBanner();
-    //     _isRecShowing = true;
-    //
-    //     Debug.Log(appLovinMax.IsRecBannerReady());
-    //
-    //     if (appLovinMax && appLovinMax.IsRecBannerReady())
-    //     {
-    //         appLovinMax.ShowRecBanner();
-    //         Debug.Log("[ADS] Showing Max rectangular banner.");
-    //     }
-    //     else if (admobInstance != null)
-    //     {
-    //         admobInstance.ShowRecBanner();
-    //         appLovinMax.LoadRecBanner();
-    //         Debug.Log("[ADS] Max not ready, showing AdMob rectangular banner.");
-    //     }
-    //     else
-    //     {
-    //         _isRecShowing = false;
-    //         Debug.LogWarning("[ADS] No rectangular banner ready (Max or AdMob).");
-    //     }
-    //
-    //     admobInstance.RequestRecBannerAd();
-    //     Nicko_AnalyticalManager.instance?.CustomScreenEvent(placement);
-    // }
-
-    // public void HideRecBanner()
-    // {
-    //     Debug.Log("HideMREC1");
-    //
-    //
-    //     if (admobInstance != null)
-    //     {
-    //         admobInstance.HideRecBanner();
-    //         Debug.Log("[ADS] Hiding Admob rectangular banner.");
-    //     }
-    //
-    //     if (appLovinMax != null)
-    //     {
-    //         appLovinMax.HideRecBanner();
-    //         Debug.Log("[ADS] Hiding Max MREC banner.");
-    //     }
-    //
-    //     _isRecShowing = false;
-    //     _isRecBannerReady = false;
-    // }
-
-    
     public void HideRecBanner()
     {
-        Debug.Log("[ADS] Hiding rectangular banners.");
+        admobInstance?.HideRecBanner();
+        appLovinMax?.HideMRec();
 
-        if (admobInstance != null)
-            admobInstance.HideRecBanner();
-
-        if (appLovinMax != null)
-        {
-            appLovinMax.HideRecBanner();
-           
-        }
-
-        _isRecBannerReady = false;
         _isRecShowing = false;
+        _isRecBannerReady = false;
     }
 
-    
-    public void HideBanner()
-    {
-        Debug.Log("[ADS] Hiding banners.");
+    #endregion
 
-        if (admobInstance != null)
-        {
-            admobInstance.HideLeftBanner();
-            admobInstance.HideRightBanner();
-        }
-
-        if (appLovinMax != null)
-        {
-            appLovinMax.HideBanner();
-           
-        }
-
-        _isBannerReady = false;
-        _isBannerShowing = false;
-    }
-
-    // public void HideBanner()
-    // {
-    //     Debug.Log("HideBanner");
-    //
-    //
-    //     if (admobInstance != null)
-    //     {
-    //         admobInstance.HideLeftBanner();
-    //         admobInstance.HideRightBanner();
-    //         Debug.Log("[ADS] Hiding Admob banner.");
-    //     }
-    //
-    //     if (appLovinMax != null)
-    //     {
-    //         appLovinMax.HideBanner();
-    //         Debug.Log("[ADS] Hiding Max banner.");
-    //     }
-    //
-    //     _isBannerReady = false;
-    //     _isBannerShowing = false;
-    //     // admobInstance.HideLeftBanner();
-    //     // admobInstance.HideRightBanner();
-    // }
+    #region AppOpen
 
     public void ShowAppOpenAd()
     {
-        Debug.Log("showing appopen");
-        if (!GlobalConstant.AdsON)
-        {
-            Debug.Log("[ADS] Ads disabled or removed, skipping App Open ad.");
-            return;
-        }
+        if (isAdsRemove || !GlobalConstant.AdsON) return;
 
+        HideBanner();
+        HideRecBanner();
 
-        if (appLovinMax != null && appLovinMax.IsAppOpenReady())
+        if (adPriority == AdPriority.Max && appLovinMax != null && appLovinMax.AppOpenAdUnitId != string.Empty)
         {
-            //   HideRecBanner();
-            HideBanner();
-            appLovinMax.ShowAppOpen();
-            Debug.Log("[ADS] Showing Max App Open ad.");
+            appLovinMax.ShowAppOpenAd();
         }
         else
         {
-            //    HideRecBanner();
-            HideBanner();
             admobInstance.ShowAppOpenAd();
         }
-    }
-    // public void HideRecBanner()
-    // {
-    //     _isBannerReady = false;
-    //     _isBannerShowing = false;
-    //     admobInstance.HideRecBanner();
-    // }
-
-    public void HideBannerAppOpen()
-    {
-        admobInstance.HideRightBanner();
-        admobInstance.HideLeftBanner();
-    }
-
-    public void HideRecBannerAppOpen()
-    {
-        admobInstance.HideRecBanner();
-    }
-
-    public bool IsBannerAdAvailable()
-    {
-        return _isBannerReady;
-    }
-
-    public bool IsMaxRecBannerReady()
-    {
-        print(appLovinMax._isRecBannerReady);
-        //  appLovinMax.LoadRecBanner();
-        return appLovinMax != null && appLovinMax.IsRecBannerReady();
     }
 
     #endregion

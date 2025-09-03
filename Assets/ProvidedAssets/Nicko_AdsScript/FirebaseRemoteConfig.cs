@@ -254,6 +254,11 @@ public class FirebaseRemoteConfig : MonoBehaviour   //commented by Khubaib
             }
 
             adsManager.Init();
+            
+            if (GlobalConstant.isLogger) print("0");
+            GlobalConstant.MoreGamesLink = Firebase.RemoteConfig.FirebaseRemoteConfig
+                .DefaultInstance
+                    .GetValue("MoreGamesLink").StringValue;
         }
 
         if (Application.platform == RuntimePlatform.IPhonePlayer)

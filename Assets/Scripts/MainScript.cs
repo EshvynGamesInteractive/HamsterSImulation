@@ -179,7 +179,7 @@ public class MainScript : MonoBehaviour
 
     public void SetIndicationPosition(Transform pos, Sprite indicationIcon)
     {
-        Debug.Log("second");
+        
         ShowIndication();
         indication.transform.position = pos.position;
         ChangeIndicationIcons(indicationIcon);
@@ -204,7 +204,7 @@ public class MainScript : MonoBehaviour
             if (indicator == null)
                 indicator = FindFirstObjectByType<HNSIndicatorPrefab>();
            
-            Debug.Log(indicator.name);
+           
             if (indicator != null)
             {
                 indicator.ChangeIcon(newIcon);
@@ -214,7 +214,7 @@ public class MainScript : MonoBehaviour
 
     public void HideIndication()
     {
-        Debug.Log("HideIndication");
+        Debug.Log("HideIndication"  );
         if (pathDraw != null)
         {
             pathDraw.Stop();
@@ -428,7 +428,9 @@ public class MainScript : MonoBehaviour
             Nicko_ADSManager._Instance.RecShowBanner("OnBtnRetry");
         }
 
-        Time.timeScale = 1;
+        // Time.timeScale = 1;
+        // gameover = true;
+        
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");
         //SceneManager.LoadScene("Loading");
@@ -444,7 +446,10 @@ public class MainScript : MonoBehaviour
         }
 
         GlobalValues.retryAfterLevelCompleted = true;
-        Time.timeScale = 1;
+        
+        // Time.timeScale = 1;
+        // gameover = true;
+        
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");
         //SceneManager.LoadScene("Loading");
@@ -460,7 +465,10 @@ public class MainScript : MonoBehaviour
         }
 
         // decrementedNumber = 0;
-        Time.timeScale = 1;
+        
+        // Time.timeScale = 1;
+        // gameover = true;
+        
         //GlobalValues.sceneTOLoad = "MainMenu";
         CanvasScriptSplash.instance.LoadScene("MainMenu");
         //SceneManager.LoadScene("Loading");
@@ -476,7 +484,8 @@ public class MainScript : MonoBehaviour
             Nicko_ADSManager._Instance.RecShowBanner("OnBtnNext");
         }
 
-        Time.timeScale = 1;
+        // Time.timeScale = 1;
+        // gameover = true;
 
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");

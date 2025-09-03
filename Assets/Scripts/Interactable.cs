@@ -50,10 +50,10 @@ public abstract class Interactable : MonoBehaviour
             ShowOutline();
             MainScript.instance.SetIndicationPosition(transform);
         }
-        else
-        {
-            MainScript.instance.HideIndication();
-        }
+        // else
+        // {
+        //     MainScript.instance.HideIndication();
+        // }
 
         isInteractable = true;
     }

@@ -87,6 +87,7 @@ public class DogSelection : MonoBehaviour
     {
         if (GlobalValues.TotalBones >= dogsPrices[dogIndex])
         {
+            SoundManager.instance.PlaySound(SoundManager.instance.purchase);
             GlobalValues.TotalBones -= dogsPrices[dogIndex];
             MainScript.instance.UpdateBonesText();
             UnlockDog();

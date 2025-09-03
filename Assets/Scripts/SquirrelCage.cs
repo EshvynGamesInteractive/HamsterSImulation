@@ -7,7 +7,7 @@ public class SquirrelCage : Interactable
     [SerializeField] Transform cageDoor;
     public override void Interact(PlayerScript player)
     {
-        player.AnimatePawToCenter();
+        player.AnimatePawToInteract();
         DisableForInteraction(true);
         OpenCageDoor();
     }

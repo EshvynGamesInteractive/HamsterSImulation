@@ -198,7 +198,7 @@ public class WallArtGameController : MonoBehaviour
         {
             if (hit.collider.CompareTag("Wall"))
             {
-                player.AnimatePawToCenter();
+                player.AnimatePawToInteract();
                 DOVirtual.DelayedCall(0.3f, () =>
                 {
                     SoundManager.instance.PlaySound(SoundManager.instance.dogPawPrint);

@@ -74,15 +74,16 @@ public class FP_CameraLook : MonoBehaviour
 
         originalLocalPos = headBob.MainCamera.localPosition;
 
-        if (GetComponent<AudioSource>() == null)
-        {
-            // we automatically add an audiosource, if one has not been manually added.
-            // (if you want to control the rolloff or other audio settings, add an audiosource manually)
-            gameObject.AddComponent<AudioSource>();
-        }
+        // if (GetComponent<AudioSource>() == null)
+        // {
+        //     // we automatically add an audiosource, if one has not been manually added.
+        //     // (if you want to control the rolloff or other audio settings, add an audiosource manually)
+        //     gameObject.AddComponent<AudioSource>();
+        // }
 
         prevPosition = transform.position;
-        audioSource = GetComponent<AudioSource>();
+        // audioSource = GetComponent<AudioSource>();
+        audioSource = SoundManager.instance.effectsSource;
     }
 
     void Update()
@@ -202,7 +203,7 @@ public class FP_CameraLook : MonoBehaviour
                     nextStepTime = headBobCycle + .5f;
                     // play footstep sounds
                     
-                    //footSteps.PlayFootstepSounds(audioSource);  //khubaib
+                    footSteps.PlayFootstepSounds(audioSource);  //khubaib
 
                 }
             }
