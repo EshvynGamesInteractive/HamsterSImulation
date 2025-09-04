@@ -84,9 +84,9 @@ public class RatCatchingGameController : MonoBehaviour
         MainScript.instance.grandPa.StartPatrolOnGroundFloor();
         timerText.transform.parent.gameObject.SetActive(true);
 
-        MainScript.instance.taskPanel.UpdateTask("Catch all the rats in bring them back", ratIcon);
+        MainScript.instance.taskPanel.UpdateTask("Catch all the rats in time and bring them back to their cage", ratIcon);
 
-        MainScript.instance.pnlInfo.ShowInfo("Bring all the rats back in time.");
+        MainScript.instance.pnlInfo.ShowInfo("Catch all the rats in given time.");
 
 
         isGameActive = true;

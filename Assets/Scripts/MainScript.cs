@@ -149,6 +149,11 @@ public class MainScript : MonoBehaviour
 
     public void OnBtnClick()
     {
+        if (Nicko_ADSManager._Instance)
+        {
+            Nicko_ADSManager._Instance.HideRecBanner();
+        }
+
         SoundManager.instance.PlaySound(SoundManager.instance.buttonClick);
     }
 
@@ -377,7 +382,11 @@ public class MainScript : MonoBehaviour
     public void OpenPopup(GameObject pnl)
     {
         if (Nicko_ADSManager._Instance)
+        {
+            Nicko_ADSManager._Instance.HideRecBanner();
             Nicko_ADSManager._Instance.HideBanner();
+        }
+
         canShowRewardedPopup = false;
 
 
@@ -427,9 +436,9 @@ public class MainScript : MonoBehaviour
             Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryONPauseAD");
             Nicko_ADSManager._Instance.RecShowBanner("OnBtnRetry");
         }
-
-        // Time.timeScale = 1;
-        // gameover = true;
+        grandPa.gameObject.SetActive(false);
+        Time.timeScale = 1;
+        gameover = true;
         
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");
@@ -447,8 +456,9 @@ public class MainScript : MonoBehaviour
 
         GlobalValues.retryAfterLevelCompleted = true;
         
-        // Time.timeScale = 1;
-        // gameover = true;
+        grandPa.gameObject.SetActive(false);
+        Time.timeScale = 1;
+        gameover = true;
         
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");
@@ -465,9 +475,9 @@ public class MainScript : MonoBehaviour
         }
 
         // decrementedNumber = 0;
-        
-        // Time.timeScale = 1;
-        // gameover = true;
+        grandPa.gameObject.SetActive(false);
+        Time.timeScale = 1;
+        gameover = true;
         
         //GlobalValues.sceneTOLoad = "MainMenu";
         CanvasScriptSplash.instance.LoadScene("MainMenu");
@@ -483,9 +493,9 @@ public class MainScript : MonoBehaviour
             Nicko_ADSManager._Instance.ShowInterstitial("NextStageButtonAD");
             Nicko_ADSManager._Instance.RecShowBanner("OnBtnNext");
         }
-
-        // Time.timeScale = 1;
-        // gameover = true;
+        grandPa.gameObject.SetActive(false);
+        Time.timeScale = 1;
+        gameover = true;
 
         //GlobalValues.sceneTOLoad = "Gameplay";
         CanvasScriptSplash.instance.LoadScene("Gameplay");

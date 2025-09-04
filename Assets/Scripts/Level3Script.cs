@@ -88,8 +88,8 @@ public class Level3Script : LevelScript
             if (taskNumber == 3) // when licking cutlery
             {
                 grandpa.StopTheChase();
-                if (Nicko_ADSManager._Instance)
-                    Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
+                // if (Nicko_ADSManager._Instance)
+                //     Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
                 DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
             }
 
@@ -152,9 +152,9 @@ public class Level3Script : LevelScript
         if (taskNumber == 3) // when licking cutlery
         {
             grandpa.StopTheChase();
-            if (Nicko_ADSManager._Instance)
-
-                Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
+            // if (Nicko_ADSManager._Instance)
+            //
+            //     Nicko_ADSManager._Instance.ShowInterstitial("LickCutlery");
             // DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
         }
 

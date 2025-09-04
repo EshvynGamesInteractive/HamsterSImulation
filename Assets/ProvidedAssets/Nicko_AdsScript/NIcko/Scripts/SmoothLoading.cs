@@ -64,46 +64,37 @@ public class SmoothLoading : MonoBehaviour
         progressBar.fillAmount = currentValue = targetValue = 0;
  
     }
+
     private void OnDisable()
     {
-        // Kill all tweens targeting objects from this script
-        if (bg != null) bg.DOKill();
-        if (dog != null) dog.DOKill();
-        if (letters != null)
-        {
-            foreach (var letter in letters)
-                if (letter != null) letter.DOKill();
-        }
-    }private void OnDestroy()
-    {
-        transform.DOKill(); // kills all tweens on this GameObject + children
+        // if (Nicko_ADSManager._Instance)
+        //
+        //     Nicko_ADSManager._Instance.HideRecBanner();
     }
-
-
 
     private IEnumerator TitleAnimation()
     {
         dog.localScale = Vector3.one * letterScale;
-        dog.GetComponent<Image>().DOFade(0, 0).SetUpdate(true);
+        dog.GetComponent<Image>().DOFade(0, 0);
 
 
         foreach (var letter in letters)
         {
             letter.localScale = Vector3.one * letterScale;
-            letter.GetComponent<Image>().DOFade(0, 0).SetUpdate(true);
+            letter.GetComponent<Image>().DOFade(0, 0);
         }
 
         foreach (var letter in letters)
         {
             letter.localScale = Vector3.one * letterScale;
-            letter.GetComponent<Image>().DOFade(1, oneLetterTime).SetUpdate(true);
-            letter.DOScale(Vector3.one, oneLetterTime).SetUpdate(true);
-            yield return new WaitForSecondsRealtime(oneLetterTime);
+            letter.GetComponent<Image>().DOFade(1, oneLetterTime);
+            letter.DOScale(Vector3.one, oneLetterTime);
+            yield return new WaitForSeconds(oneLetterTime);
         }
 
-        dog.DOScale(1, oneLetterTime).SetUpdate(true);
-        dog.GetComponent<Image>().DOFade(1, oneLetterTime).SetUpdate(true);
-        dog.DOPunchScale(new Vector2(0.2f, 0.2f), 1.5f, 4, 5).SetEase(Ease.Linear).SetUpdate(true);
+        dog.DOScale(1, oneLetterTime);
+        dog.GetComponent<Image>().DOFade(1, oneLetterTime);
+        dog.DOPunchScale(new Vector2(0.2f, 0.2f), 1.5f, 4, 5).SetEase(Ease.Linear);
         if (SoundManager.instance)
             SoundManager.instance.PlaySound(SoundManager.instance.dogBark);
     }
@@ -114,7 +105,7 @@ public class SmoothLoading : MonoBehaviour
         //gameObject.SetActive(true);
         // Load the next scene.
         //var currentScene = SceneManager.GetActiveScene();
-        bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce).SetUpdate(true);
+        bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce);
         loadOperation = SceneManager.LoadSceneAsync(sceneNum);
 
         // Don't active the scene when it's fully loaded, let the progress bar finish the animation.
@@ -131,7 +122,7 @@ public class SmoothLoading : MonoBehaviour
         //gameObject.SetActive(true);
         // Load the next scene.
         //var currentScene = SceneManager.GetActiveScene();
-        bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce).SetUpdate(true);
+        bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce);
         loadOperation = SceneManager.LoadSceneAsync(sceneNum);
 
         // Don't active the scene when it's fully loaded, let the progress bar finish the animation.
@@ -176,7 +167,7 @@ public class SmoothLoading : MonoBehaviour
     public void EmptyLoading(Action callBack)
     {
         CanvasScriptSplash.instance.ChangeCanvas(CanvasStats.Loading);
-        bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce).SetUpdate(true);
+        bg.DOAnchorPos(Vector3.zero, 1).SetEase(Ease.OutBounce);
         loadOperation = null;
         isLoading = true;
         callback = callBack;
@@ -199,7 +190,7 @@ public class SmoothLoading : MonoBehaviour
         else
             targetValue = 1;
 
-        currentValue = Mathf.MoveTowards(currentValue, targetValue, progressAnimationMultiplier * Time.unscaledDeltaTime);
+        currentValue = Mathf.MoveTowards(currentValue, targetValue, progressAnimationMultiplier * Time.deltaTime);
         progressBar.fillAmount = currentValue;
         MoveImageAlongLoadingBar();
         // When the progress reaches 1, allow the process to finish by setting the scene activation flag.
@@ -228,10 +219,9 @@ public class SmoothLoading : MonoBehaviour
         Debug.Log("shut");
         if(bgForPrivacy!=null)
             bgForPrivacy.SetActive(false);
-        bg.DOAnchorPos(new Vector3(0, 1450, 0), 0.5f).SetEase(Ease.InBounce).SetUpdate(true).OnComplete(() =>
+        bg.DOAnchorPos(new Vector3(0, 1450, 0), 0.5f).SetEase(Ease.InBounce).OnComplete(() =>
         {
             CanvasScriptSplash.instance.ChangeCanvas(CanvasStats.MainScreen);
-            Time.timeScale = 1;
             callback?.Invoke();
             callback = null;
         });

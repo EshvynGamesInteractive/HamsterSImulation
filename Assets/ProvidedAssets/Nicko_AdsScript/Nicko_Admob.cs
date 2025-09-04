@@ -16,10 +16,6 @@ public class Nicko_Admob : MonoBehaviour
     private BannerView bannerView, recBannerView;
     private Action rewardAction;
 
-
-    public AdPosition recBannerPosition;
-    public AdPosition bannerAdPosition;
-
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -53,6 +49,13 @@ public class Nicko_Admob : MonoBehaviour
     private void RequestInterstitial()
     {
         string id = GlobalConstant.UseAdBidding ? interHighID : interstitialID;
+        
+        if (interstitialAd != null)
+        {
+            interstitialAd.Destroy();
+            interstitialAd = null;
+        }
+
         InterstitialAd.Load(id, CreateAdRequest(), (ad, error) =>
         {
             if (error != null || ad == null)
@@ -117,6 +120,14 @@ public class Nicko_Admob : MonoBehaviour
     private void RequestRewarded()
     {
         string id = GlobalConstant.UseAdBidding ? rewardedIDHigh : rewardedIDLow;
+        
+        if (rewardedAd != null)
+        {
+            rewardedAd.Destroy();
+            rewardedAd = null;
+        }
+
+        
         RewardedAd.Load(id, CreateAdRequest(), (ad, error) =>
         {
             if (error != null || ad == null)
@@ -174,6 +185,14 @@ public class Nicko_Admob : MonoBehaviour
     private void RequestAppOpen()
     {
         string id = GlobalConstant.UseAdBidding ? appOpenHigh : appOpenLow;
+        
+        
+        if (appOpenAd != null)
+        {
+            appOpenAd.Destroy();
+            appOpenAd = null;
+        }
+        
         AppOpenAd.Load(id, CreateAdRequest(), (ad, error) =>
         {
             if (error != null || ad == null)
@@ -217,7 +236,6 @@ public class Nicko_Admob : MonoBehaviour
 
     public void ShowRecBanner()
     {
-        Debug.Log("recBannerView is " + recBannerView);
         if (recBannerView != null)
         {
             recBannerView.Show();
@@ -229,7 +247,12 @@ public class Nicko_Admob : MonoBehaviour
 
     private void LoadRecBannerWithFallback(string id)
     {
-        recBannerView = new BannerView(id, AdSize.MediumRectangle, recBannerPosition);
+        if (recBannerView != null)
+        {
+            recBannerView.Destroy();
+            recBannerView = null;
+        }
+        recBannerView = new BannerView(id, AdSize.MediumRectangle, AdPosition.TopLeft);
         recBannerView.LoadAd(CreateAdRequest());
 
         recBannerView.OnBannerAdLoaded += ( ) =>
@@ -263,7 +286,11 @@ public class Nicko_Admob : MonoBehaviour
 
     public void ShowBanner()
     {
-        if (bannerView != null) return;
+        if (bannerView != null)
+        {
+            bannerView.Show();
+            return;
+        }
 
         // If bidding is ON → start from High floor, else from Low
         string id = GlobalConstant.UseAdBidding ? bannerIDHigh : bannerIDLow;
@@ -272,7 +299,12 @@ public class Nicko_Admob : MonoBehaviour
 
     private void LoadBannerWithFallback(string id)
     {
-        bannerView = new BannerView(id, AdSize.Banner, bannerAdPosition);
+        if (bannerView != null)
+        {
+            bannerView.Destroy();
+            bannerView = null;
+        }
+        bannerView = new BannerView(id, AdSize.Banner, AdPosition.Bottom);
         bannerView.LoadAd(CreateAdRequest());
 
         bannerView.OnBannerAdLoaded += () =>

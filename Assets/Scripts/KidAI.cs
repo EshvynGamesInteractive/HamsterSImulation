@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class KidAI : Interactable
 {
@@ -31,9 +33,11 @@ public class KidAI : Interactable
         }
     }
 
-    void OnTriggerEnter(Collider other)
+
+
+    void OnCollisionEnter(Collision other)
     {
-        if (hasStumbled || !other.CompareTag("Toy")) return;
+        if (hasStumbled || !other.gameObject.CompareTag("Toy")) return;
         hasStumbled = true;
         Debug.Log(animator);
         animator.SetTrigger(stumbleAnimationTrigger);

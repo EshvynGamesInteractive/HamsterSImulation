@@ -80,8 +80,8 @@ public class Level2Script : LevelScript
             {
                 if (shutDoorTimelineDuration > 0)
                 {
-                    if (Nicko_ADSManager._Instance)
-                        Nicko_ADSManager._Instance.ShowInterstitial("LockKids");
+                    // if (Nicko_ADSManager._Instance)
+                    //     Nicko_ADSManager._Instance.ShowInterstitial("LockKids");
                     Typewriter.instance.StartTyping("Waaah! We're locked in! Somebody help!", 1);
                     shutDoorTimeline.SetActive(true);
                     player.DisablePlayer();

@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using GoogleMobileAds.Api;
 
-
 public class Nicko_AppLovinMax : MonoBehaviour
 {
     public static Nicko_AppLovinMax Instance;
@@ -13,10 +12,6 @@ public class Nicko_AppLovinMax : MonoBehaviour
     public string MrecAdUnitId;
     public string AppOpenAdUnitId;
 
-    
-    public MaxSdkBase.AdViewPosition recBannerPosition;
-    public MaxSdkBase.BannerPosition bannerAdPosition;
-    
     private bool isMrecLoaded;
     private Action rewardAction;
 
@@ -39,7 +34,6 @@ public class Nicko_AppLovinMax : MonoBehaviour
             if (InterstitialAdUnitId != string.Empty)
                 InitializeInterstitial();
             if (RewardedAdUnitId != string.Empty)
-
                 InitializeRewarded();
             if (BannerAdUnitId != string.Empty)
 
@@ -136,9 +130,8 @@ public class Nicko_AppLovinMax : MonoBehaviour
 
     private void InitializeBanner()
     {
-        // MaxSdk.CreateBanner(BannerAdUnitId, MaxSdkBase.BannerPosition.TopCenter);
-        MaxSdk.CreateBanner(BannerAdUnitId, bannerAdPosition);
-        MaxSdk.SetBannerBackgroundColor(BannerAdUnitId, Color.black);
+        MaxSdk.CreateBanner(BannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);
+        MaxSdk.SetBannerBackgroundColor(BannerAdUnitId,  new Color(1, 1, 1, 0f));
         MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += (id, err) =>
         {
             Nicko_ADSManager._Instance.admobInstance.ShowBanner();
@@ -154,10 +147,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
 
     private void InitializeMRec()
     {
-        MaxSdk.CreateMRec(MrecAdUnitId, recBannerPosition);
-        
-        Debug.LogError("MrecIdInit = " + MrecAdUnitId);
-        
+        MaxSdk.CreateMRec(MrecAdUnitId, MaxSdkBase.AdViewPosition.TopLeft);
         MaxSdkCallbacks.MRec.OnAdLoadedEvent += (id, info) => { isMrecLoaded = true; };
         MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += (id, err) =>
         {
@@ -169,8 +159,6 @@ public class Nicko_AppLovinMax : MonoBehaviour
 
     public void ShowMRec()
     {
-        Debug.LogError("MrecIdShow = " + MrecAdUnitId);
-            Debug.Log("isMrecLoaded " + isMrecLoaded);
         if (isMrecLoaded)
             MaxSdk.ShowMRec(MrecAdUnitId);
         else

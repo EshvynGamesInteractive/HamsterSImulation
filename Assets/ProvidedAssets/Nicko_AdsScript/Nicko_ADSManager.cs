@@ -9,7 +9,7 @@ public class Nicko_ADSManager : MonoBehaviour
     public static Nicko_ADSManager _Instance;
 
     public GameObject noAdAvailablePanel;
-    public Button btnOkNoAd;
+     public Button btnOkNoAd;
 
     public enum AdPriority
     {
@@ -30,6 +30,7 @@ public class Nicko_ADSManager : MonoBehaviour
 
     [Header("References")] public Nicko_Admob admobInstance;
     public Nicko_AppLovinMax appLovinMax;
+    // public TimeBasedAd timeBasedAd;
 
     private void Awake()
     {
@@ -51,8 +52,6 @@ public class Nicko_ADSManager : MonoBehaviour
     void PostInit()
     {
         adPriority = GlobalConstant.adPriority;
-
-        // Assign AdMob IDs from constants
         admobInstance.recBannerIDMed = admobInstance.bannerIDMed = GlobalConstant.Nicko_Admob_Banner_MID;
         admobInstance.interMedID = GlobalConstant.Nicko_Admob_Inter_IdMid;
         admobInstance.rewardedIDMed = GlobalConstant.Nicko_Admob_Rewarded_Id_Mid;
@@ -67,14 +66,11 @@ public class Nicko_ADSManager : MonoBehaviour
         admobInstance.interstitialID = GlobalConstant.Nicko_Admob_Inter_IdLow;
         admobInstance.rewardedIDLow = GlobalConstant.Nicko_Admob_Rewarded_Id_Simple;
         admobInstance.appOpenLow = GlobalConstant.Nicko_Admob_AppOpen_Id_Low;
-
-        // Assign MAX IDs
         appLovinMax.InterstitialAdUnitId = GlobalConstant.InterstitialAdUnitId;
         appLovinMax.RewardedAdUnitId = GlobalConstant.RewardedAdUnitId;
         appLovinMax.BannerAdUnitId = GlobalConstant.BannerMax;
         appLovinMax.MrecAdUnitId = GlobalConstant.Mrecmax;
         appLovinMax.AppOpenAdUnitId = GlobalConstant.Appopenmax;
-
         MobileAds.SetiOSAppPauseOnBackground(true);
         MobileAds.RaiseAdEventsOnUnityMainThread = true;
 
@@ -126,10 +122,8 @@ public class Nicko_ADSManager : MonoBehaviour
 
     #region Interstitial
 
-   
     public void ShowInterstitial(string placement)
     {
-        return;
         if (isAdsRemove || !GlobalConstant.AdsON)
             return;
 
@@ -138,21 +132,24 @@ public class Nicko_ADSManager : MonoBehaviour
         if (adPriority == AdPriority.Max && appLovinMax != null)
         {
             if (appLovinMax.InterstitialAdUnitId != string.Empty)
+            {
                 appLovinMax.ShowInterstitial();
+                // timeBasedAd.ResetAdCycle();
+            }
         }
         else
         {
             admobInstance.ShowInterstitial();
+            // timeBasedAd.ResetAdCycle();
         }
     }
+
     #endregion
 
     #region Rewarded
 
     public Action action;
 
-    
-    
     public void ShowRewardedAd(Action ac, string placement)
     {
         if (isAdsRemove || !GlobalConstant.AdsON) return;
@@ -162,11 +159,15 @@ public class Nicko_ADSManager : MonoBehaviour
         if (adPriority == AdPriority.Max && appLovinMax != null)
         {
             if (appLovinMax.RewardedAdUnitId != string.Empty)
+            {
                 appLovinMax.ShowRewardedAd(ac);
+                // timeBasedAd.ResetAdCycle();
+            }
         }
         else
         {
             admobInstance.ShowRewardedAd(ac);
+            // timeBasedAd.ResetAdCycle();
         }
 
         Nicko_AnalyticalManager.instance?.VideoEvent(placement);
@@ -189,7 +190,7 @@ public class Nicko_ADSManager : MonoBehaviour
         }
         else
         {
-            admobInstance.HideBanner();
+            admobInstance.ShowBanner();
         }
 
         Nicko_AnalyticalManager.instance?.CustomScreenEvent(placement);
