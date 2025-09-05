@@ -20,6 +20,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
         if (Instance == null) Instance = this;
     }
 
+    
     public void Init()
     {
         DontDestroyOnLoad(gameObject);

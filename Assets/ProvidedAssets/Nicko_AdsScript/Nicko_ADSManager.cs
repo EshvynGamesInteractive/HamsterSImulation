@@ -32,6 +32,10 @@ public class Nicko_ADSManager : MonoBehaviour
     public Nicko_AppLovinMax appLovinMax;
     // public TimeBasedAd timeBasedAd;
 
+    
+    public static bool isInterstitialShown;
+    
+    
     private void Awake()
     {
         if (_Instance == null)
@@ -133,12 +137,14 @@ public class Nicko_ADSManager : MonoBehaviour
         {
             if (appLovinMax.InterstitialAdUnitId != string.Empty)
             {
+                isInterstitialShown = true;
                 appLovinMax.ShowInterstitial();
                 // timeBasedAd.ResetAdCycle();
             }
         }
         else
         {
+            isInterstitialShown = true;
             admobInstance.ShowInterstitial();
             // timeBasedAd.ResetAdCycle();
         }
@@ -160,12 +166,14 @@ public class Nicko_ADSManager : MonoBehaviour
         {
             if (appLovinMax.RewardedAdUnitId != string.Empty)
             {
+                isInterstitialShown = true;
                 appLovinMax.ShowRewardedAd(ac);
                 // timeBasedAd.ResetAdCycle();
             }
         }
         else
         {
+            isInterstitialShown = true;
             admobInstance.ShowRewardedAd(ac);
             // timeBasedAd.ResetAdCycle();
         }
@@ -245,6 +253,12 @@ public class Nicko_ADSManager : MonoBehaviour
     {
         if (isAdsRemove || !GlobalConstant.AdsON) return;
 
+        if (isInterstitialShown)
+        {
+            isInterstitialShown = false;
+            return;
+        }
+        
         HideBanner();
         HideRecBanner();
 
@@ -259,4 +273,11 @@ public class Nicko_ADSManager : MonoBehaviour
     }
 
     #endregion
+
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if(!pauseStatus)
+            ShowAppOpenAd();
+    }
 }

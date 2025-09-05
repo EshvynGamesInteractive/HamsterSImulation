@@ -18,11 +18,11 @@ public class MainMenu : MonoBehaviour
         if (Nicko_ADSManager._Instance)
         {
             Debug.Log("aaaaaaa");
-            if (!appOpenShown)
-            {
-                Nicko_ADSManager._Instance.ShowAppOpenAd();
-                appOpenShown = true;
-            }
+            // if (!appOpenShown)
+            // {
+            //     Nicko_ADSManager._Instance.ShowAppOpenAd();
+            //     appOpenShown = true;
+            // }
 
 
             Nicko_ADSManager._Instance.HideRecBanner();

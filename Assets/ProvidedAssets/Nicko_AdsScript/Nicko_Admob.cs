@@ -16,6 +16,8 @@ public class Nicko_Admob : MonoBehaviour
     private BannerView bannerView, recBannerView;
     private Action rewardAction;
 
+
+   
     private void Awake()
     {
         if (Instance == null) Instance = this;

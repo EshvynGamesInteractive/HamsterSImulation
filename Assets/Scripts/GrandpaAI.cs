@@ -432,9 +432,9 @@ public class GrandpaAI : MonoBehaviour
     public void ChasePlayerForDuration(int index)
     {
         if (isSitting || isChasing) return;
-
         MainScript.instance.pnlInfo.ShowInfo("Grandpa’s coming for you, better stay out of sight!");
 
+        StopWalking();
 
         if (index == 1)
             chaseTimer = 10;
@@ -457,6 +457,14 @@ public class GrandpaAI : MonoBehaviour
         );
     }
 
+    private void StopWalking()
+    {
+        isChasing = false;
+        isChasingForDuration = false;
+        stopWalking = true;
+        agent.enabled = false;
+        EnableWalking(false);
+    }
     private void StartChase()
     {
         isChasing = true;
@@ -692,7 +700,7 @@ public class GrandpaAI : MonoBehaviour
                 waypoints = waypointsGroundFloor2;
             isRunning = false;
             agent.speed = 0.7f;
-            EnableWalking(true);
+            // EnableWalking(true);
             animator.SetBool("isRunning", false);
             ChasePlayerForDuration(1);
             beesParticle.SetActive(false);
@@ -752,7 +760,7 @@ public class GrandpaAI : MonoBehaviour
 
     private void EnableWalking(bool enable)
     {
-        // Debug.Log(enable + " Walking");
+         Debug.Log(enable + " Walking");
 
         animator.SetBool("isWalking", enable);
     }
