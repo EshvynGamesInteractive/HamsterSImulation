@@ -8,6 +8,7 @@ public class Nicko_ADSManager : MonoBehaviour
 {
     public static Nicko_ADSManager _Instance;
 
+    public InterstitialTimerManager interstitialTimer;
     public GameObject noAdAvailablePanel;
      public Button btnOkNoAd;
 
@@ -131,6 +132,11 @@ public class Nicko_ADSManager : MonoBehaviour
         if (isAdsRemove || !GlobalConstant.AdsON)
             return;
 
+        if(!interstitialTimer.canShowInterstitial)
+            return;
+        
+        interstitialTimer.StartCooldown();
+        
         Nicko_AnalyticalManager.instance.InterstitialEvent(placement);
 
         if (adPriority == AdPriority.Max && appLovinMax != null)
@@ -225,11 +231,14 @@ public class Nicko_ADSManager : MonoBehaviour
 
         if (adPriority == AdPriority.Max && appLovinMax != null)
         {
-            if (appLovinMax.BannerAdUnitId != string.Empty)
+            Debug.LogError("applovinmax"); 
+            if (appLovinMax.MrecAdUnitId != string.Empty)
                 appLovinMax.ShowMRec();
+           
         }
         else
         {
+            Debug.LogError("admob");
             admobInstance.ShowRecBanner();
         }
 
@@ -259,8 +268,8 @@ public class Nicko_ADSManager : MonoBehaviour
             return;
         }
         
-        HideBanner();
-        HideRecBanner();
+        // HideBanner();
+        // HideRecBanner();
 
         if (adPriority == AdPriority.Max && appLovinMax != null && appLovinMax.AppOpenAdUnitId != string.Empty)
         {

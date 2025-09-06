@@ -20,7 +20,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
         if (Instance == null) Instance = this;
     }
 
-    
+
     public void Init()
     {
         DontDestroyOnLoad(gameObject);
@@ -39,6 +39,8 @@ public class Nicko_AppLovinMax : MonoBehaviour
             if (BannerAdUnitId != string.Empty)
 
                 InitializeBanner();
+
+            Debug.LogError(MrecAdUnitId);
             if (MrecAdUnitId != string.Empty)
 
                 InitializeMRec();
@@ -132,15 +134,24 @@ public class Nicko_AppLovinMax : MonoBehaviour
     private void InitializeBanner()
     {
         MaxSdk.CreateBanner(BannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);
-        MaxSdk.SetBannerBackgroundColor(BannerAdUnitId,  new Color(1, 1, 1, 0f));
+        MaxSdk.SetBannerBackgroundColor(BannerAdUnitId, new Color(1, 1, 1, 0f));
         MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += (id, err) =>
         {
-            Nicko_ADSManager._Instance.admobInstance.ShowBanner();
+          //  Nicko_ADSManager._Instance.admobInstance.ShowBanner();//it can trigger failed event anytime even in gameplay
         };
     }
 
-    public void ShowBanner() => MaxSdk.ShowBanner(BannerAdUnitId);
-    public void HideBanner() => MaxSdk.HideBanner(BannerAdUnitId);
+    public void ShowBanner()
+    {
+        Debug.Log("ShowMaxBanner");
+        MaxSdk.ShowBanner(BannerAdUnitId);
+    }
+
+    public void HideBanner()
+    {
+        Debug.Log("HideMaxBanner");
+        MaxSdk.HideBanner(BannerAdUnitId);
+    }
 
     #endregion
 
@@ -149,28 +160,33 @@ public class Nicko_AppLovinMax : MonoBehaviour
     private void InitializeMRec()
     {
         MaxSdk.CreateMRec(MrecAdUnitId, MaxSdkBase.AdViewPosition.TopLeft);
-        MaxSdkCallbacks.MRec.OnAdLoadedEvent += (id, info) => { isMrecLoaded = true; };
+        Debug.LogError("mrecCreated");
+        MaxSdkCallbacks.MRec.OnAdLoadedEvent += (id, info) =>
+        {
+            isMrecLoaded = true;
+            MaxSdk.HideMRec(MrecAdUnitId);
+        };
         MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += (id, err) =>
         {
             isMrecLoaded = false;
-            Nicko_ADSManager._Instance.admobInstance.ShowRecBanner();
+            //Nicko_ADSManager._Instance.admobInstance.ShowRecBanner(); //it can trigger failed event anytime even in gameplay
         };
-        MaxSdk.HideMRec(MrecAdUnitId);
+        //MaxSdk.HideMRec(MrecAdUnitId);
     }
 
     public void ShowMRec()
     {
+        Debug.LogError("ismrecLoaded " + isMrecLoaded);
         if (isMrecLoaded)
             MaxSdk.ShowMRec(MrecAdUnitId);
-        else
-            Nicko_ADSManager._Instance.admobInstance.ShowRecBanner();
+        // else
+        //     Nicko_ADSManager._Instance.admobInstance.ShowRecBanner();
     }
 
     public void HideMRec()
     {
         if (isMrecLoaded)
             MaxSdk.HideMRec(MrecAdUnitId);
-      
     }
 
     #endregion

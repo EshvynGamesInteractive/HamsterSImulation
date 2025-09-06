@@ -17,7 +17,6 @@ public class Nicko_Admob : MonoBehaviour
     private Action rewardAction;
 
 
-   
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -51,7 +50,7 @@ public class Nicko_Admob : MonoBehaviour
     private void RequestInterstitial()
     {
         string id = GlobalConstant.UseAdBidding ? interHighID : interstitialID;
-        
+
         if (interstitialAd != null)
         {
             interstitialAd.Destroy();
@@ -122,14 +121,14 @@ public class Nicko_Admob : MonoBehaviour
     private void RequestRewarded()
     {
         string id = GlobalConstant.UseAdBidding ? rewardedIDHigh : rewardedIDLow;
-        
+
         if (rewardedAd != null)
         {
             rewardedAd.Destroy();
             rewardedAd = null;
         }
 
-        
+
         RewardedAd.Load(id, CreateAdRequest(), (ad, error) =>
         {
             if (error != null || ad == null)
@@ -187,14 +186,14 @@ public class Nicko_Admob : MonoBehaviour
     private void RequestAppOpen()
     {
         string id = GlobalConstant.UseAdBidding ? appOpenHigh : appOpenLow;
-        
-        
+
+
         if (appOpenAd != null)
         {
             appOpenAd.Destroy();
             appOpenAd = null;
         }
-        
+
         AppOpenAd.Load(id, CreateAdRequest(), (ad, error) =>
         {
             if (error != null || ad == null)
@@ -238,11 +237,14 @@ public class Nicko_Admob : MonoBehaviour
 
     public void ShowRecBanner()
     {
+        Debug.LogError("recbannerview" + recBannerView);
+
         if (recBannerView != null)
         {
             recBannerView.Show();
             return;
         }
+
         string id = GlobalConstant.UseAdBidding ? recBannerIDHigh : recBannerIDLow;
         LoadRecBannerWithFallback(id);
     }
@@ -254,27 +256,23 @@ public class Nicko_Admob : MonoBehaviour
             recBannerView.Destroy();
             recBannerView = null;
         }
+
+        Debug.LogError("mrecFallback");
         recBannerView = new BannerView(id, AdSize.MediumRectangle, AdPosition.TopLeft);
         recBannerView.LoadAd(CreateAdRequest());
 
-        recBannerView.OnBannerAdLoaded += ( ) =>
-        {
-            Debug.Log("[AdMob] Rec Banner loaded: " + id);
-        };
+        recBannerView.OnBannerAdLoaded += () => { Debug.Log("[AdMob] Rec Banner loaded: " + id); };
 
-        recBannerView.OnBannerAdLoadFailed += (  error) =>
+        recBannerView.OnBannerAdLoadFailed += (error) =>
         {
             Debug.LogWarning("[AdMob] Rec Banner failed: " + id + " → " + error.GetMessage());
- 
+
             if (id == recBannerIDHigh) LoadRecBannerWithFallback(recBannerIDMed);
             else if (id == recBannerIDMed) LoadRecBannerWithFallback(recBannerIDLow);
             else Nicko_ADSManager._Instance.appLovinMax.ShowMRec();
         };
 
-        recBannerView.OnAdPaid += (value) =>
-        {
-            Nicko_AnalyticalManager.instance.Revenue_ReportAdmob(value, "MREC");
-        };
+        recBannerView.OnAdPaid += (value) => { Nicko_AnalyticalManager.instance.Revenue_ReportAdmob(value, "MREC"); };
     }
 
     public void HideRecBanner()
@@ -284,10 +282,12 @@ public class Nicko_Admob : MonoBehaviour
     }
 
     #endregion
+
     #region Banners
 
     public void ShowBanner()
     {
+        Debug.Log("ShowAdmobBanner");
         if (bannerView != null)
         {
             bannerView.Show();
@@ -301,20 +301,19 @@ public class Nicko_Admob : MonoBehaviour
 
     private void LoadBannerWithFallback(string id)
     {
+        Debug.LogError("Bannerview =" + bannerView);
         if (bannerView != null)
         {
             bannerView.Destroy();
             bannerView = null;
         }
+
         bannerView = new BannerView(id, AdSize.Banner, AdPosition.Bottom);
         bannerView.LoadAd(CreateAdRequest());
 
-        bannerView.OnBannerAdLoaded += () =>
-        {
-            Debug.Log("[AdMob] Banner loaded: " + id);
-        };
+        bannerView.OnBannerAdLoaded += () => { Debug.Log("[AdMob] Banner loaded: " + id); };
 
-        bannerView.OnBannerAdLoadFailed += ( error) =>
+        bannerView.OnBannerAdLoadFailed += (error) =>
         {
             Debug.LogWarning("[AdMob] Banner failed: " + id + " → " + error.GetMessage());
 
@@ -324,18 +323,15 @@ public class Nicko_Admob : MonoBehaviour
             else Nicko_ADSManager._Instance.appLovinMax.ShowBanner();
         };
 
-        bannerView.OnAdPaid += (value) =>
-        {
-            Nicko_AnalyticalManager.instance.Revenue_ReportAdmob(value, "Banner");
-        };
+        bannerView.OnAdPaid += (value) => { Nicko_AnalyticalManager.instance.Revenue_ReportAdmob(value, "Banner"); };
     }
 
     public void HideBanner()
     {
+        Debug.Log("HideAdmobBanner");
         bannerView?.Destroy();
         bannerView = null;
     }
 
     #endregion
-     
 }
