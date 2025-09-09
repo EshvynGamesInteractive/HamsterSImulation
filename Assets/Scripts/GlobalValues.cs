@@ -5,6 +5,7 @@ public static class GlobalValues
     public static int currentStage=1;
     public static string sceneTOLoad = "MainMenu";
     public static bool retryAfterLevelCompleted;
+    public static bool canShowInterstitialAtSceneStart;
     
     public static int TutorialPlayed
     {

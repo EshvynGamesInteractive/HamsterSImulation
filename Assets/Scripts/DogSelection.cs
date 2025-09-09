@@ -100,8 +100,8 @@ public class DogSelection : MonoBehaviour
 
     public void OnBtnWatchAdForDog()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowRewardedAd(() => UnlockDog(), "RewardedDogUnlockAd");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowRewardedAd(() => UnlockDog(), "RewardedDogUnlockAd");
         else
             UnlockDog();
     }
@@ -115,6 +115,8 @@ public class DogSelection : MonoBehaviour
 
     public void ClosePanel()
     {
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("CloseDogSelection");
         MainScript.instance.ClosePopup(gameObject);
     }
 }

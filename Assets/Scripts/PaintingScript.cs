@@ -16,6 +16,7 @@ public class PaintingScript : Interactable
         else
             endVal = Random.Range(25, 50); // right tilt
 
+       
         if (GlobalValues.TutorialPlayed == 1)
             level5 = MainScript.instance.activeLevel.GetComponent<Level5Script>();
     }
@@ -26,6 +27,9 @@ public class PaintingScript : Interactable
         temp.z = endVal;
         transform.DOLocalRotate(temp, 0.2f);
         DisableForInteraction(false);
+        
+        Debug.Log(level5);
+        
         if (level5 != null)
             level5.PaintingTilted();
     }

@@ -6,7 +6,6 @@ public class WallArtGameController : MonoBehaviour
 {
     [SerializeField] GameObject pnlWallColor;
     [SerializeField] private GameObject pawPrintPrefab;
-    [SerializeField] private GameObject gameStartTrigger;
     [SerializeField] private Transform wallSurface;
     [SerializeField] private float gameDuration = 30f;
     [SerializeField] BoxCollider wallCanvas;

@@ -17,17 +17,14 @@ public class GroupInteractableActivator : Interactable
     {
     }
 
-    public override void EnableForInteraction(bool showIndication)
+    public override void EnableForInteraction(Sprite icon)
     {
-        if (showIndication)
-        {
-            ShowOutline();
-            MainScript.instance.SetIndicationPosition(itemsToEnable[0].transform);
-        }
-        else
-        {
-            MainScript.instance.HideIndication();
-        }
+        Debug.Log("Overrided");
+
+        ShowOutline();
+        MainScript.instance.SetIndicationPosition(itemsToEnable[0].transform, icon);
+
+
         foreach (BoxCollider interactable in itemsToEnable)
         {
             interactable.enabled = true;

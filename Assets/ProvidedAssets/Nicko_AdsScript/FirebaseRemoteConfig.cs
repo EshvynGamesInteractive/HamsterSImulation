@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
@@ -140,10 +140,26 @@ public class FirebaseRemoteConfig : MonoBehaviour   //commented by Khubaib
                     .BooleanValue;
             if (GlobalConstant.isLogger) print("19");
 
+            Debug.LogError("Oneee");
+            
             GlobalConstant.AdsON =
                 Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue("isAdsOn")
                     .BooleanValue;
             if (GlobalConstant.isLogger) print("18");
+            
+            
+            
+            var rc = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance;
+
+            if (rc.Keys.Contains("BannerMid"))
+            {
+                Debug.LogError("YesItContains");
+            }
+            else
+            {
+                Debug.LogError("Noitdoesnot");
+            }
+
 
             GlobalConstant.Nicko_Admob_Banner_MID =
                 Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance
@@ -177,7 +193,7 @@ public class FirebaseRemoteConfig : MonoBehaviour   //commented by Khubaib
             GlobalConstant.Nicko_Admob_AppOpen_IdHigh =
                 Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance
                     .GetValue("AppOpenHigh").StringValue;
-
+            Debug.LogError("Twooo");
             if (GlobalConstant.isLogger) print("10");
             GlobalConstant.Nicko_Admob_Banner_Simple =
                 Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance
@@ -223,7 +239,7 @@ public class FirebaseRemoteConfig : MonoBehaviour   //commented by Khubaib
                 .GetValue("UseAdBidding").BooleanValue;
             
             
-            
+            Debug.LogError("Three");
             
             GlobalConstant.BannerMax  =  Firebase.RemoteConfig.FirebaseRemoteConfig
                 .DefaultInstance
@@ -252,7 +268,45 @@ public class FirebaseRemoteConfig : MonoBehaviour   //commented by Khubaib
             {
     
             }
+            Debug.LogError("Four");
+            // GlobalConstant.timeGapBetweenInterstitials   =  (float)Firebase.RemoteConfig.FirebaseRemoteConfig
+            //     .DefaultInstance
+            //     .GetValue("timeGapBetweenInterstitials").DoubleValue ;
+            // print("timeGapBetweenInterstitials =" + GlobalConstant.timeGapBetweenInterstitials);
+            //
+            // GlobalConstant.interruptiveAdTime   =  (float)Firebase.RemoteConfig.FirebaseRemoteConfig
+            //     .DefaultInstance
+            //     .GetValue("interruptiveAdTime").DoubleValue ;
+            // print("interruptiveAdTime =" + GlobalConstant.interruptiveAdTime);
+            
+            
+            
+            // var rc = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance;
 
+            if (rc.Keys.Contains("timeGapBetweenInterstitials"))
+            {
+                GlobalConstant.timeGapBetweenInterstitials = (float)rc.GetValue("TimeGapBetweenInterstitials").DoubleValue;
+            }
+            else
+            {
+                Debug.LogWarning("RemoteConfig: timeGapBetweenInterstitials not found, using default.");
+                GlobalConstant.timeGapBetweenInterstitials = adsManager.interstitialTimerManager.interstitialCooldownTime;
+            }
+
+            if (rc.Keys.Contains("interruptiveAdTime"))
+            {
+                GlobalConstant.interruptiveAdTime = (float)rc.GetValue("InterruptiveAdTime").DoubleValue;
+            }
+            else
+            {
+                Debug.LogWarning("RemoteConfig: interruptiveAdTime not found, using default.");
+                GlobalConstant.interruptiveAdTime = adsManager.interruptiveAd.interruptiveAdDelay;
+            }
+
+           
+
+            
+            Debug.LogError("Five");
             adsManager.Init();
             
             if (GlobalConstant.isLogger) print("0");

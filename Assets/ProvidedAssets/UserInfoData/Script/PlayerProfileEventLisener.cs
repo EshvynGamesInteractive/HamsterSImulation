@@ -13,17 +13,17 @@ public class PlayerProfileEventLisener : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.RecShowBanner("PlayerProfileEventLisener");
+            Nicko_ADSManager.instance.RecShowBanner("PlayerProfileEventLisener");
         }
     }
     public void Next()
     {
         Singolton.Instance.canvasManager.CurrentStateChanger(UserInfoStates.CountrySelection);
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("PlayerProfileEventListener");
+            Nicko_ADSManager.instance.ShowInterstitial("PlayerProfileEventListener");
         }
     }
 

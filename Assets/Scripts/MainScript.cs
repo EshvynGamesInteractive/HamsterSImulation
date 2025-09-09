@@ -8,6 +8,7 @@ public class MainScript : MonoBehaviour
 {
     public static MainScript instance;
     public TutorialScript tutorial;
+    [SerializeField] private GameObject shopBtn;
     [SerializeField] private Text txtBonesReward;
     [SerializeField] private HUDNavigationElement navElement;
     [SerializeField] private Sprite indicationDefaultIcon;
@@ -56,10 +57,16 @@ public class MainScript : MonoBehaviour
         if (isTesting)
             GlobalValues.currentStage = activeLevelIndex + 1; //forTesting
 
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.HideRecBanner();
-            Nicko_ADSManager._Instance.ShowBanner("GameStart");
+            Nicko_ADSManager.instance.HideRecBanner();
+            Nicko_ADSManager.instance.ShowBanner("GameStart");
+
+            if (!GlobalValues.canShowInterstitialAtSceneStart)
+            {
+                GlobalValues.canShowInterstitialAtSceneStart = true;
+            }
+            Nicko_ADSManager.instance.ShowInterstitial("GameplayStart");
         }
 
         CheckSound();
@@ -68,9 +75,11 @@ public class MainScript : MonoBehaviour
         {
             canShowRewardedPopup = false;
             tutorial.gameObject.SetActive(true);
+            shopBtn.SetActive(false);
         }
         else
         {
+            shopBtn.SetActive(true);
             canShowRewardedPopup = true;
             if (GlobalValues.currentStage > levels.Length)
                 GlobalValues.currentStage = levels.Length;
@@ -110,6 +119,11 @@ public class MainScript : MonoBehaviour
         txtBones.text = "" + GlobalValues.TotalBones;
     }
 
+    public void OpenDogSelection()
+    {
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("DogSelectionOpen");
+    }
     private void CheckSound()
     {
         if (GlobalValues.Effects == 1)
@@ -149,9 +163,9 @@ public class MainScript : MonoBehaviour
 
     public void OnBtnClick()
     {
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.HideRecBanner();
+            Nicko_ADSManager.instance.HideRecBanner();
         }
 
         SoundManager.instance.PlaySound(SoundManager.instance.buttonClick);
@@ -271,8 +285,8 @@ public class MainScript : MonoBehaviour
 
     public void OnBtn2xWatchAd()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowRewardedAd(() => Add2xCoins(), "RewardedReviveAd");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowRewardedAd(() => Add2xCoins(), "RewardedReviveAd");
         else
             Add2xCoins();
     }
@@ -372,8 +386,8 @@ public class MainScript : MonoBehaviour
 
     public void OpenPausePanel()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowInterstitial("LevelPauseAD");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("LevelPauseAD");
         OpenPopup(pnlPause);
         System.GC.Collect();
         System.GC.WaitForPendingFinalizers();
@@ -381,10 +395,10 @@ public class MainScript : MonoBehaviour
 
     public void OpenPopup(GameObject pnl)
     {
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.HideRecBanner();
-            Nicko_ADSManager._Instance.HideBanner();
+            Nicko_ADSManager.instance.HideRecBanner();
+            Nicko_ADSManager.instance.HideBanner();
         }
 
         canShowRewardedPopup = false;
@@ -411,8 +425,8 @@ public class MainScript : MonoBehaviour
     {
         player.GetComponent<FP_Controller>().OnEnable();
 
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowBanner("Popup close");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowBanner("Popup close");
         canShowRewardedPopup = true;
         Time.timeScale = 1;
         float animTime = 1;
@@ -428,13 +442,18 @@ public class MainScript : MonoBehaviour
         ClosePopup((pnlLose));
     }
 
+    public void OnBtnResume()
+    {
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("ResumeButtonAd");
+    }
     public void OnBtnRetry()
     {
         timerAd.StartPanelTimer();
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryONPauseAD");
-            Nicko_ADSManager._Instance.RecShowBanner("OnBtnRetry");
+            Nicko_ADSManager.instance.ShowInterstitial("LevelRetryONPauseAD");
+            Nicko_ADSManager.instance.RecShowBanner("OnBtnRetry");
         }
         grandPa.gameObject.SetActive(false);
         Time.timeScale = 1;
@@ -448,10 +467,10 @@ public class MainScript : MonoBehaviour
     public void OnBtnRetryAfterLevelCompleted()
     {
         timerAd.StartPanelTimer();
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("LevelRetryAfterWinAD");
-            Nicko_ADSManager._Instance.RecShowBanner("OnBtnRetry2");
+             Nicko_ADSManager.instance.ShowInterstitial("LevelRetryAfterWinAD");
+            Nicko_ADSManager.instance.RecShowBanner("OnBtnRetry2");
         }
 
         GlobalValues.retryAfterLevelCompleted = true;
@@ -468,10 +487,10 @@ public class MainScript : MonoBehaviour
     public void OnBtnHome()
     {
         timerAd.StartPanelTimer();
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("HomeButtonAD");
-            Nicko_ADSManager._Instance.RecShowBanner("OnBtnHome");
+             Nicko_ADSManager.instance.ShowInterstitial("HomeButtonAD");
+            Nicko_ADSManager.instance.RecShowBanner("OnBtnHome");
         }
 
         // decrementedNumber = 0;
@@ -488,10 +507,10 @@ public class MainScript : MonoBehaviour
     public void OnBtnNext()
     {
         timerAd.StartPanelTimer();
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("NextStageButtonAD");
-            Nicko_ADSManager._Instance.RecShowBanner("OnBtnNext");
+             Nicko_ADSManager.instance.ShowInterstitial("NextStageButtonAD");
+            Nicko_ADSManager.instance.RecShowBanner("OnBtnNext");
         }
         grandPa.gameObject.SetActive(false);
         Time.timeScale = 1;
@@ -506,9 +525,9 @@ public class MainScript : MonoBehaviour
     public void OnBtnNextLevel()
     {
         timerAd.StartPanelTimer();
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("NextLevelButtonAD");
+            Nicko_ADSManager.instance.ShowInterstitial("NextLevelButtonAD");
         }
 
         activeLevel.StartNextLevel();

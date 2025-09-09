@@ -69,7 +69,7 @@ public class FridgeHeistController : MonoBehaviour
 
         float camMoveDuration = 2f;
 
-        //foodTOPick.SetActive(true);
+        foodTOPick.SetActive(false);
 
         GameObject fruit = Instantiate(foodTOPick, foodTOPick.transform.position, Quaternion.identity);
         fruit.SetActive(true);
@@ -178,8 +178,8 @@ public class FridgeHeistController : MonoBehaviour
 
     public void RevivePlayer()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowRewardedAd(() => WatchedAdForRevive(), "RewardedReviveAd");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowRewardedAd(() => WatchedAdForRevive(), "RewardedReviveAd");
         else
             WatchedAdForRevive();
     }

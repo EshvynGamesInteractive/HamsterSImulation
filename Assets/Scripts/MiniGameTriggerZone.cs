@@ -114,7 +114,7 @@ public class MiniGameTriggerZone : MonoBehaviour
 
         MiniGameManager.Instance?.StartMiniGame(miniGameToStart);
         //Debug.Log(gameObject.name);
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
     }
 
     private void OnDrawGizmosSelected()

@@ -60,9 +60,16 @@ public class Nicko_AppLovinMax : MonoBehaviour
         MaxSdkCallbacks.Interstitial.OnAdDisplayFailedEvent += (id, err, info) =>
         {
             Nicko_AnalyticalManager.instance.InterstitialEvent("Max_Inter_Failed");
-            Nicko_ADSManager._Instance.admobInstance.ShowInterstitial();
+            //Nicko_ADSManager.instance.admobInstance.ShowInterstitial();
         };
-        MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += (id, info) => { LoadInterstitial(); };
+        MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += (id, info) =>
+        {
+            Nicko_ADSManager.instance.RestartAdTimers();
+            Debug.Log("OnHideInterstitial");
+            LoadInterstitial();
+            
+            
+        };
         MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += (adUnit, adInfo) =>
         {
             Nicko_AnalyticalManager.instance.Revenue_ReportMax(adUnit, adInfo);
@@ -81,7 +88,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
         }
         else
         {
-            Nicko_ADSManager._Instance.admobInstance.ShowInterstitial();
+            Nicko_ADSManager.instance.admobInstance.ShowInterstitial();
         }
     }
 
@@ -97,7 +104,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
         };
         MaxSdkCallbacks.Rewarded.OnAdDisplayFailedEvent += (id, err, info) =>
         {
-            Nicko_ADSManager._Instance.admobInstance.ShowRewardedAd(rewardAction);
+            Nicko_ADSManager.instance.admobInstance.ShowRewardedAd(rewardAction);
         };
         MaxSdkCallbacks.Rewarded.OnAdHiddenEvent += (id, info) => { LoadRewarded(); };
         MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent += (id, reward, info) =>
@@ -123,7 +130,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
         }
         else
         {
-            Nicko_ADSManager._Instance.admobInstance.ShowRewardedAd(onReward);
+            Nicko_ADSManager.instance.admobInstance.ShowRewardedAd(onReward);
         }
     }
 
@@ -137,7 +144,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
         MaxSdk.SetBannerBackgroundColor(BannerAdUnitId, new Color(1, 1, 1, 0f));
         MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += (id, err) =>
         {
-          //  Nicko_ADSManager._Instance.admobInstance.ShowBanner();//it can trigger failed event anytime even in gameplay
+          //  Nicko_ADSManager.instance.admobInstance.ShowBanner();//it can trigger failed event anytime even in gameplay
         };
     }
 
@@ -169,7 +176,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
         MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += (id, err) =>
         {
             isMrecLoaded = false;
-            //Nicko_ADSManager._Instance.admobInstance.ShowRecBanner(); //it can trigger failed event anytime even in gameplay
+            //Nicko_ADSManager.instance.admobInstance.ShowRecBanner(); //it can trigger failed event anytime even in gameplay
         };
         //MaxSdk.HideMRec(MrecAdUnitId);
     }
@@ -197,7 +204,7 @@ public class Nicko_AppLovinMax : MonoBehaviour
     {
         MaxSdkCallbacks.AppOpen.OnAdLoadFailedEvent += (id, err) =>
         {
-            Nicko_ADSManager._Instance.admobInstance.ShowAppOpenAd();
+           //  Nicko_ADSManager.instance.admobInstance.ShowAppOpenAd();
         };
         MaxSdkCallbacks.AppOpen.OnAdHiddenEvent += (id, info) => { LoadAppOpen(); };
         MaxSdkCallbacks.AppOpen.OnAdRevenuePaidEvent += (id, info) =>
@@ -211,13 +218,16 @@ public class Nicko_AppLovinMax : MonoBehaviour
 
     public void ShowAppOpenAd()
     {
+        Debug.LogError("222");
         if (MaxSdk.IsAppOpenAdReady(AppOpenAdUnitId))
         {
+            Debug.LogError("MaxAppOpen");
             MaxSdk.ShowAppOpenAd(AppOpenAdUnitId);
         }
         else
         {
-            Nicko_ADSManager._Instance.admobInstance.ShowAppOpenAd();
+           
+            Nicko_ADSManager.instance.admobInstance.ShowAppOpenAd();
         }
     }
 

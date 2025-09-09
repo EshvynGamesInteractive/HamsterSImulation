@@ -71,28 +71,39 @@ public class MiniGameManager : MonoBehaviour
             EndMiniGame();
             return;
         }
-        levelBar.SetActive(false);
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowInterstitial("MiniGameStart");
-        MainScript.instance.grandPa.StopTheChase();
-        MainScript.instance.canShowRewardedPopup = false;
-        MainScript.instance.HideIndication();
-        MainScript.instance.RestartRewardedTimer();
-        MainScript.instance.activeLevel.MiniGameEnded();
-        currentTask = MainScript.instance.taskPanel.GetCurrentTask();
-        currentTaskSprite = MainScript.instance.taskPanel.GetCurrentTaskSprite();
 
-        ActiveMiniGame = type;
-        //Debug.Log($"Starting mini-game: {type}");
-        OnMiniGameStart?.Invoke(type);
-        for (int i = 0; i < miniGameTriggerZones.Length; i++)
+        if (Nicko_ADSManager.instance)
         {
-            miniGameTriggerZones[i].gameObject.SetActive(false);
-        }
+            Nicko_ADSManager.instance.ShowRewardedAd(() =>
+            {
+                levelBar.SetActive(false);
+                // if (Nicko_ADSManager.instance)
+                    // Nicko_ADSManager.instance.ShowInterstitial("MiniGameStart");
+                MainScript.instance.grandPa.StopTheChase();
+                MainScript.instance.canShowRewardedPopup = false;
+                MainScript.instance.HideIndication();
+                MainScript.instance.RestartRewardedTimer();
+                MainScript.instance.activeLevel.MiniGameEnded();
+                currentTask = MainScript.instance.taskPanel.GetCurrentTask();
+                currentTaskSprite = MainScript.instance.taskPanel.GetCurrentTaskSprite();
 
-        MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(false);
+                ActiveMiniGame = type;
+                //Debug.Log($"Starting mini-game: {type}");
+                OnMiniGameStart?.Invoke(type);
+                for (int i = 0; i < miniGameTriggerZones.Length; i++)
+                {
+                    miniGameTriggerZones[i].gameObject.SetActive(false);
+                }
+
+                MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(false);
+            }, "MiniGameStart");
+        }
     }
 
+    private void StartTheGame()
+    {
+        
+    }
     public void EndMiniGame()
     {
         MainScript.instance.activeLevel.transform.parent.gameObject.SetActive(true);
@@ -121,15 +132,15 @@ public class MiniGameManager : MonoBehaviour
                 miniGameTriggerZones[i].gameObject.SetActive(true);
             }
         });
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowInterstitial("MiniGameEnd");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("MiniGameEnd");
     }
 
     public void MiniGameStarter(MiniGameType miniGameType)
     {
         //Debug.Log(miniGameType);
-    
-    
+
+
         //Debug.Log("minigamestarted");
     }
 
