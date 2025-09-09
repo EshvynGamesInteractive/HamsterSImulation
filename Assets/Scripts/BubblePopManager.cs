@@ -8,7 +8,6 @@ public class BubblePopManager : MonoBehaviour
     //public static BubblePopManager Instance { get; private set; }
 
     [SerializeField] private MiniGameType miniGameType;
-    [SerializeField] GameObject gameStartTrigger;
     [SerializeField] Material stinkyBubble, rubberDuck, shampooBottle, goldenBone;
     [SerializeField] Transform playerEndPos;
     [SerializeField] private Sprite bubbleGameIcon;

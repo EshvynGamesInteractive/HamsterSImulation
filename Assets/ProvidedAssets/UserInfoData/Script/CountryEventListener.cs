@@ -22,10 +22,10 @@ public class CountryEventListener : MonoBehaviour
     public void Next()
     {
         CanvasScriptSplash.instance.LoadScene(2);
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("CountryEventListener");
-            Nicko_ADSManager._Instance.HideRecBanner();
+            Nicko_ADSManager.instance.ShowInterstitial("CountryEventListener");
+            Nicko_ADSManager.instance.HideRecBanner();
         }
 
         PlayerPrefsManager.Shown = true;

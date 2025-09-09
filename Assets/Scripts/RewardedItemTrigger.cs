@@ -41,8 +41,8 @@ public class RewardedItemTrigger : MonoBehaviour
     public void OnBtnGetReward()
     {
        
-        if(Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowRewardedAd(() => GrantRewardedItem(), "RewardedItemAd");
+        if(Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowRewardedAd(() => GrantRewardedItem(), "RewardedItemAd");
         else
             GrantRewardedItem();
     }

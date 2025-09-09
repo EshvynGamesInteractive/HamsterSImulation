@@ -6,11 +6,10 @@ using UnityEngine.UI;
 
 public class Nicko_ADSManager : MonoBehaviour
 {
-    public static Nicko_ADSManager _Instance;
+    public static Nicko_ADSManager instance;
 
-    public InterstitialTimerManager interstitialTimer;
     public GameObject noAdAvailablePanel;
-     public Button btnOkNoAd;
+    public Button btnOkNoAd;
 
     public enum AdPriority
     {
@@ -31,16 +30,19 @@ public class Nicko_ADSManager : MonoBehaviour
 
     [Header("References")] public Nicko_Admob admobInstance;
     public Nicko_AppLovinMax appLovinMax;
-    // public TimeBasedAd timeBasedAd;
 
-    
-    public static bool isInterstitialShown;
-    
-    
+
+    public InterruptiveAd interruptiveAd;
+    public InterstitialTimerManager interstitialTimerManager;
+
+
+    private static bool isInterstitialShown;
+
+
     private void Awake()
     {
-        if (_Instance == null)
-            _Instance = this;
+        if (instance == null)
+            instance = this;
 
         DontDestroyOnLoad(gameObject);
         btnOkNoAd.onClick.AddListener(HideNoAdPanel);
@@ -56,7 +58,18 @@ public class Nicko_ADSManager : MonoBehaviour
 
     void PostInit()
     {
+        interruptiveAd.interruptiveAdDelay = GlobalConstant.interruptiveAdTime;
+        interstitialTimerManager.interstitialCooldownTime = GlobalConstant.timeGapBetweenInterstitials;
+
+
         adPriority = GlobalConstant.adPriority;
+        
+        Debug.Log("bannerID =" + GlobalConstant.Nicko_Admob_Banner_MID);
+        
+        var rc = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance;
+
+        
+
         admobInstance.recBannerIDMed = admobInstance.bannerIDMed = GlobalConstant.Nicko_Admob_Banner_MID;
         admobInstance.interMedID = GlobalConstant.Nicko_Admob_Inter_IdMid;
         admobInstance.rewardedIDMed = GlobalConstant.Nicko_Admob_Rewarded_Id_Mid;
@@ -127,16 +140,22 @@ public class Nicko_ADSManager : MonoBehaviour
 
     #region Interstitial
 
+    public void RestartAdTimers()
+    {
+        interruptiveAd.ResetAdCycle();
+        interstitialTimerManager.StartCooldown();
+    }
+
     public void ShowInterstitial(string placement)
     {
         if (isAdsRemove || !GlobalConstant.AdsON)
             return;
 
-        if(!interstitialTimer.canShowInterstitial)
+        if (!interstitialTimerManager.canShowInterstitial)
             return;
         
-        interstitialTimer.StartCooldown();
-        
+        RestartAdTimers();
+
         Nicko_AnalyticalManager.instance.InterstitialEvent(placement);
 
         if (adPriority == AdPriority.Max && appLovinMax != null)
@@ -174,14 +193,14 @@ public class Nicko_ADSManager : MonoBehaviour
             {
                 isInterstitialShown = true;
                 appLovinMax.ShowRewardedAd(ac);
-                // timeBasedAd.ResetAdCycle();
+                
             }
         }
         else
         {
             isInterstitialShown = true;
             admobInstance.ShowRewardedAd(ac);
-            // timeBasedAd.ResetAdCycle();
+            
         }
 
         Nicko_AnalyticalManager.instance?.VideoEvent(placement);
@@ -231,10 +250,9 @@ public class Nicko_ADSManager : MonoBehaviour
 
         if (adPriority == AdPriority.Max && appLovinMax != null)
         {
-            Debug.LogError("applovinmax"); 
+            Debug.LogError("applovinmax");
             if (appLovinMax.MrecAdUnitId != string.Empty)
                 appLovinMax.ShowMRec();
-           
         }
         else
         {
@@ -267,16 +285,18 @@ public class Nicko_ADSManager : MonoBehaviour
             isInterstitialShown = false;
             return;
         }
-        
+
         // HideBanner();
         // HideRecBanner();
 
         if (adPriority == AdPriority.Max && appLovinMax != null && appLovinMax.AppOpenAdUnitId != string.Empty)
         {
+            Debug.LogError("AppopenMax");
             appLovinMax.ShowAppOpenAd();
         }
         else
         {
+            Debug.LogError("appopenAdmob");
             admobInstance.ShowAppOpenAd();
         }
     }
@@ -286,7 +306,7 @@ public class Nicko_ADSManager : MonoBehaviour
 
     private void OnApplicationPause(bool pauseStatus)
     {
-        if(!pauseStatus)
+        if (!pauseStatus)
             ShowAppOpenAd();
     }
 }

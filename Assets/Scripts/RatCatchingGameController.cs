@@ -5,7 +5,6 @@ using DG.Tweening;
 public class RatCatchingGameController : MonoBehaviour
 {
     [SerializeField] private MiniGameType miniGameType;
-    [SerializeField] private GameObject gameStartTrigger;
     [SerializeField] private float gameDuration = 60f;
     [SerializeField] private Sprite ratIcon;
     [SerializeField] private RatCageScript ratCage;

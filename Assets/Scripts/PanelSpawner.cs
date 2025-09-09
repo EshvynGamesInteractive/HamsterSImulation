@@ -98,8 +98,8 @@ public class PanelSpawner : MonoBehaviour
 
     public void OnBtnPlayRewardedCutscene()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowRewardedAd(() => ShowRewardedCutscene(), "RewardedPrankCutsceneAd");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowRewardedAd(() => ShowRewardedCutscene(), "RewardedPrankCutsceneAd");
         else 
             ShowRewardedCutscene();
     }
@@ -133,8 +133,8 @@ public class PanelSpawner : MonoBehaviour
     public void CrossAdPanel()
     {
         isWaiting = false;
-        if(Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowInterstitial("CloseCutscenePanel");
+        if(Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("CloseCutscenePanel");
     }
 }
 

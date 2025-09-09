@@ -12,6 +12,9 @@ public static class GlobalConstant
     public static string BannerMax;
     public static string Mrecmax;
     public static string Appopenmax;
+
+    public static float interruptiveAdTime=20;
+    public static float timeGapBetweenInterstitials=10;
     public static string Nicko_Admob_Inter_IdHigh =
         "ca-app-pub-3940256099942544~3347511713";
 
@@ -79,6 +82,7 @@ public static class GlobalConstant
 
     public static void RewardedAdsWatched(Action ac)
     {
+        Nicko_ADSManager.instance.RestartAdTimers();
         ac.Invoke();
     }
 }

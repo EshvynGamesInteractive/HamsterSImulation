@@ -6,7 +6,9 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] Sprite soundOn, soundOff;
     [SerializeField] Image btnSound1, btnSound2;
+
     [SerializeField] GameObject levelSelection;
+
     // [SerializeField] private string moreGamesURL;
     // [SerializeField] private string privacyURL;
     // [SerializeField] private string rateUsURL;
@@ -15,7 +17,7 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         Time.timeScale = 1;
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
             Debug.Log("aaaaaaa");
             // if (!appOpenShown)
@@ -25,8 +27,13 @@ public class MainMenu : MonoBehaviour
             // }
 
 
-            Nicko_ADSManager._Instance.HideRecBanner();
-            Nicko_ADSManager._Instance.ShowBanner("MenuStart");
+            Nicko_ADSManager.instance.HideRecBanner();
+            Nicko_ADSManager.instance.ShowBanner("MenuStart");
+
+            if (GlobalValues.canShowInterstitialAtSceneStart)
+            {
+                Nicko_ADSManager.instance.ShowInterstitial("MainMenuLoad");
+            }
         }
 
         CheckSound();
@@ -72,9 +79,17 @@ public class MainMenu : MonoBehaviour
     {
         SoundManager.instance.PlaySound(SoundManager.instance.dogBark);
         levelSelection.SetActive(true);
+
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("PlayButtonAd");
     }
 
-  
+
+    public void OpenExitpanel()
+    {
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("OpenExitPanel");
+    }
 
     public void OnBtnQuit()
     {

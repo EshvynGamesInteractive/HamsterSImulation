@@ -9,7 +9,6 @@ public class BallFetchGameController : MonoBehaviour
     [SerializeField] private BallLauncher ballLauncher;
     [SerializeField] private float gameduration = 60f;
     [SerializeField] Text txtTimer, scoreText;
-    [SerializeField] GameObject gameStartTrigger;
     [SerializeField] private Sprite ballGameIcon;
     private int score;
     private float timer;

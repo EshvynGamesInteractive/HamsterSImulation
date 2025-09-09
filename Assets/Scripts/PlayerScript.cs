@@ -95,7 +95,7 @@ public class PlayerScript : MonoBehaviour
     public void AnimatePawToInteract()
     {
         //if (isPicking) return;
-        isPicking = true;  // so not called second time before the animation ends
+        isPicking = true; // so not called second time before the animation ends
 
         // Disable walking paws, enable animation paws
         rightPaw.gameObject.SetActive(false);
@@ -114,12 +114,12 @@ public class PlayerScript : MonoBehaviour
             isPicking = false;
         });
     }
-    
+
     public void AnimatePawToThrow()
     {
         isPicking = true;
 
-       
+
         rightPaw.gameObject.SetActive(false);
         animRightPaw.gameObject.SetActive(true);
 
@@ -130,8 +130,10 @@ public class PlayerScript : MonoBehaviour
         Sequence pawRotateSequence = DOTween.Sequence();
         pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRot, yRot, 0), 0f)
             .SetEase(Ease.InOutQuad));
-        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRotend, yRotend, 0), 0.2f).SetEase(Ease.InOutQuad));
-        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRotend+0.1f, yRotend, 0), 0.2f).SetEase(Ease.InOutQuad));
+        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRotend, yRotend, 0), 0.2f)
+            .SetEase(Ease.InOutQuad));
+        pawRotateSequence.Append(animRightPaw.DOLocalRotate(new Vector3(xRotend + 0.1f, yRotend, 0), 0.2f)
+            .SetEase(Ease.InOutQuad));
         pawRotateSequence.Append(animRightPaw.DOLocalRotate(Vector3.zero, 0.03f).SetEase(Ease.InOutQuad));
         pawRotateSequence.OnComplete(() =>
         {
@@ -146,7 +148,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (isPicking) return;
         isPicking = true;
-        
+
         SoundManager.instance.PlaySound(SoundManager.instance.dogAngry);
 
         pawAttackImg.fillAmount = 0;
@@ -340,17 +342,15 @@ public class PlayerScript : MonoBehaviour
                 level5.PillowThrown();
             }
         }
-        else if (pickedObject.gameObject.CompareTag("ShockGun"))
+
+        if (pickedObject.gameObject.CompareTag("ShockGun"))
         {
             GameObject gun = pickedObject.gameObject;
             gun.GetComponent<MeshRenderer>().enabled = false;
 
             gun.GetComponent<Interactable>().DisableForInteraction(true);
 
-            DOVirtual.DelayedCall(2, () =>
-            {
-                 gun.SetActive(false);
-            });
+            DOVirtual.DelayedCall(2, () => { gun.SetActive(false); });
         }
         else
             pickedObject.EnableForInteraction(false);

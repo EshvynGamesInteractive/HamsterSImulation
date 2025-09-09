@@ -2,14 +2,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TimeBasedAd : MonoBehaviour
+public class InterruptiveAd : MonoBehaviour
 {
-    [Header("Ad Settings")] public float adDuration = 90f; // Ad trigger interval (90 sec)
+    [Header("Ad Settings")] public float interruptiveAdDelay = 90f; // Ad trigger interval (90 sec)
     public float preAdDelay = 3f; // Canvas show before ad starts
 
     [Header("UI References")] public Canvas adCanvas;
     public Text adTimerText;
-    private float timeRemaining;
+    public float timeRemaining;
     private Coroutine adCycleRoutine;
 
     void Start()
@@ -24,12 +24,12 @@ public class TimeBasedAd : MonoBehaviour
         while (true) // infinite loop
         {
             // Wait for adDuration
-            timeRemaining = adDuration;
+            timeRemaining = interruptiveAdDelay;
 
             while (timeRemaining > 0)
             {
                 adTimerText.text = "Next Ad in: " + Mathf.Ceil(timeRemaining) + "s";
-                timeRemaining -= Time.unscaledDeltaTime;
+                timeRemaining -= Time.deltaTime;
                 yield return null;
             }
 
@@ -38,8 +38,8 @@ public class TimeBasedAd : MonoBehaviour
 
             while (preTime > 0)
             {
-               // Time.timeScale = 0;
-                preTime -= Time.unscaledDeltaTime;
+                // Time.timeScale = 0;
+                preTime -= Time.deltaTime;
                 adTimerText.text = "Ad starts in: " + Mathf.Ceil(preTime) + "s";
                 adCanvas.gameObject.SetActive(true);
                 yield return null;
@@ -49,7 +49,11 @@ public class TimeBasedAd : MonoBehaviour
 
             // ✅ Call Ad Manager
             print("Showing Ad Now!");
-            Nicko_ADSManager._Instance.ShowInterstitial("SecAds");
+
+            if (Nicko_ADSManager.instance)
+            {
+                Nicko_ADSManager.instance.ShowInterstitial("InterruptiveAD");
+            }
 
             // Reset UI
             adCanvas.gameObject.SetActive(false);
@@ -67,11 +71,10 @@ public class TimeBasedAd : MonoBehaviour
         Time.timeScale = 1;
 
         // ✅ reset timer bhi karo
-        timeRemaining = 90;
+        timeRemaining = interruptiveAdDelay;
 
         // Restart cycle
         adCycleRoutine = StartCoroutine(AdCycleRoutine());
         print("Ad cycle has been reset!");
     }
-
 }

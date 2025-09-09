@@ -36,6 +36,7 @@ public abstract class Interactable : MonoBehaviour
 
     public virtual void EnableForInteraction(bool showIndication)
     {
+        Debug.Log(GetComponent<Collider>());
         GetComponent<Collider>().enabled = true;
         //if (glowingParticle != null)
         //{
@@ -60,6 +61,7 @@ public abstract class Interactable : MonoBehaviour
 
     public virtual void EnableForInteraction(Sprite indicationIcon)
     {
+        Debug.Log(GetComponent<Collider>());
         GetComponent<Collider>().enabled = true;
 
 

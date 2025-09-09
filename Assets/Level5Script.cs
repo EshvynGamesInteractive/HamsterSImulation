@@ -4,8 +4,11 @@ using DG.Tweening;
 public class Level5Script : LevelScript
 {
     [SerializeField] Transform sittingPos, trapPos;
+    [SerializeField] private BasketballScript basketBall;
 
     [SerializeField] private int itemsToBreak, paintingsToTilt, balloonsToBurst, cushionsToThrow;
+
+    [SerializeField] private Transform basketHoop;
     // [SerializeField] GameObject trapTimeline;
     // [SerializeField] float trapTimelineDuration;
 
@@ -16,6 +19,7 @@ public class Level5Script : LevelScript
 
     private void Start()
     {
+        basketBall.DisableForInteraction(true);
         grandpa.StopTheChase();
     }
 
@@ -82,11 +86,12 @@ public class Level5Script : LevelScript
             if (taskNumber == 2) // when sleep
                 grandpa.StopTheChase();
 
-            if (taskNumber == 3) // 
+            if (taskNumber == 3) // when break dishes
             {
                 grandpa.StopTheChase();
                 DOVirtual.DelayedCall(5, () => { grandpa.ChasePlayerForDuration(2); });
             }
+
 
             DOVirtual.DelayedCall(taskUpdateDelay, () =>
             {
@@ -195,6 +200,7 @@ public class Level5Script : LevelScript
 
     public void PaintingTilted()
     {
+        Debug.Log(GetCurrentStageCompletedTaskNumber());
         if (GetCurrentStageCompletedTaskNumber() != 4)
             return;
         paintingsCounter++;
@@ -202,11 +208,13 @@ public class Level5Script : LevelScript
         {
             TaskCompleted(5);
         }
+
         MainScript.instance.HideIndication();
     }
 
     public void BalloonBurst()
     {
+        Debug.Log(GetCurrentStageCompletedTaskNumber());
         if (GetCurrentStageCompletedTaskNumber() != 5)
             return;
         MainScript.instance.HideIndication();
@@ -236,5 +244,13 @@ public class Level5Script : LevelScript
             return;
 
         TaskCompleted(4);
+    }
+
+    public void BallPicked()
+    {
+        Debug.Log(GetCurrentStageCompletedTaskNumber());
+        if (GetCurrentStageCompletedTaskNumber() != 3)
+            return;
+        MainScript.instance.SetIndicationPosition(basketHoop);
     }
 }

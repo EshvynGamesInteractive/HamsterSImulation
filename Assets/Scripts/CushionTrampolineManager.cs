@@ -14,7 +14,6 @@ public class CushionTrampolineManager : MonoBehaviour
     [SerializeField] Transform cookieJarPosition;
     [SerializeField] GameObject jarCamera;
     [SerializeField] private Transform stackPoint;
-    [SerializeField] private GameObject gameStartTrigger;
     [SerializeField] private GameObject jumpPowerUI;
     [SerializeField] private Text txtTimer;
     [SerializeField] float cushionHeight;
@@ -155,7 +154,7 @@ public class CushionTrampolineManager : MonoBehaviour
 
         txtTimer.transform.parent.gameObject.SetActive(true);
 
-        gameStartTrigger.SetActive(false);
+        
 
         MainScript.instance.pnlInfo.ShowInfo("Stack cushions and jump to get the cookie jar!");
     }

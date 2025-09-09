@@ -760,7 +760,7 @@ public class GrandpaAI : MonoBehaviour
 
     private void EnableWalking(bool enable)
     {
-         Debug.Log(enable + " Walking");
+         // Debug.Log(enable + " Walking");
 
         animator.SetBool("isWalking", enable);
     }

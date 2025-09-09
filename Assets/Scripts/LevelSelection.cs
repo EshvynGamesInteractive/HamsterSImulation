@@ -25,10 +25,10 @@ public class LevelSelection : MonoBehaviour
         if (GlobalValues.UnlockedStages > levels.Length)
             GlobalValues.UnlockedStages = levels.Length;
 
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.HideBanner();
-            Nicko_ADSManager._Instance.HideRecBanner();
+            Nicko_ADSManager.instance.HideBanner();
+            Nicko_ADSManager.instance.HideRecBanner();
         }
 
         float moveTO = 300;
@@ -65,8 +65,8 @@ public class LevelSelection : MonoBehaviour
 
     private void OnDisable()
     {
-        if (Nicko_ADSManager._Instance)
-            Nicko_ADSManager._Instance.ShowBanner("Level selection close");
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowBanner("Level selection close");
     }
     //IEnumerator FocusOnUnlockedLevel()
     //{
@@ -122,16 +122,18 @@ public class LevelSelection : MonoBehaviour
         gameObject.SetActive(false);
         CanvasScriptSplash.instance.LoadScene("Gameplay");
         //SceneManager.LoadScene("Loading");
-        if (Nicko_ADSManager._Instance)
+        if (Nicko_ADSManager.instance)
         {
-            Nicko_ADSManager._Instance.ShowInterstitial("PlayButtonAd");
+            Nicko_ADSManager.instance.ShowInterstitial("PlayLevelAd");
 
-            Nicko_ADSManager._Instance.RecShowBanner("OnBtnPlayLevel");
+            Nicko_ADSManager.instance.RecShowBanner("OnBtnPlayLevel");
         }
     }
 
     public void OnBtnBack()
     {
+        if (Nicko_ADSManager.instance)
+            Nicko_ADSManager.instance.ShowInterstitial("CloseLevelSelection");
         gameObject.SetActive(false);
     }
 }

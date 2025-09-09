@@ -63,12 +63,17 @@ public class Nicko_Admob : MonoBehaviour
             {
                 if (id == interHighID) RequestInterstitialWithFallback(interMedID);
                 else if (id == interMedID) RequestInterstitialWithFallback(interstitialID);
-                else Nicko_ADSManager._Instance.appLovinMax.ShowInterstitial();
+                else Debug.Log("NoInterstitialAvailable");
+               // else Nicko_ADSManager.instance.appLovinMax.ShowInterstitial();
                 return;
             }
 
             interstitialAd = ad;
-            interstitialAd.OnAdFullScreenContentClosed += () => { RequestInterstitial(); };
+            interstitialAd.OnAdFullScreenContentClosed += () =>
+            {
+                Nicko_ADSManager.instance.RestartAdTimers();
+                RequestInterstitial();
+            };
             interstitialAd.OnAdPaid += (value) =>
             {
                 Nicko_AnalyticalManager.instance.Revenue_ReportAdmob(value, "Interstitial");
@@ -83,7 +88,8 @@ public class Nicko_Admob : MonoBehaviour
             if (error != null || ad == null)
             {
                 if (id == interMedID) RequestInterstitialWithFallback(interstitialID);
-                else Nicko_ADSManager._Instance.appLovinMax.ShowInterstitial();
+                else Debug.Log("NoInterstitialAvailable");
+                // else Nicko_ADSManager.instance.appLovinMax.ShowInterstitial();
                 return;
             }
 
@@ -135,7 +141,7 @@ public class Nicko_Admob : MonoBehaviour
             {
                 if (id == rewardedIDHigh) RequestRewardedWithFallback(rewardedIDMed);
                 else if (id == rewardedIDMed) RequestRewardedWithFallback(rewardedIDLow);
-                else Nicko_ADSManager._Instance.appLovinMax.ShowRewardedAd(rewardAction);
+                else Nicko_ADSManager.instance.ShowNoAdPanel();
                 return;
             }
 
@@ -154,7 +160,8 @@ public class Nicko_Admob : MonoBehaviour
             if (error != null || ad == null)
             {
                 if (id == rewardedIDMed) RequestRewardedWithFallback(rewardedIDLow);
-                else Nicko_ADSManager._Instance.appLovinMax.ShowRewardedAd(rewardAction);
+                else Nicko_ADSManager.instance.ShowNoAdPanel();
+                // else Nicko_ADSManager.instance.appLovinMax.ShowRewardedAd(rewardAction);
                 return;
             }
 
@@ -174,6 +181,7 @@ public class Nicko_Admob : MonoBehaviour
     {
         if (appOpenAd != null && appOpenAd.CanShowAd())
         {
+            Debug.LogError("AdmobAppOpen");
             appOpenAd.Show();
             Nicko_AnalyticalManager.instance.CustomOtherEvent("AdMob_AppOpen_Shown");
         }
@@ -200,7 +208,8 @@ public class Nicko_Admob : MonoBehaviour
             {
                 if (id == appOpenHigh) RequestAppOpenWithFallback(appOpenMed);
                 else if (id == appOpenMed) RequestAppOpenWithFallback(appOpenLow);
-                else Nicko_ADSManager._Instance.appLovinMax.ShowAppOpenAd();
+                else Debug.Log("NoAppOpenAvailable");
+                // else Nicko_ADSManager.instance.appLovinMax.ShowAppOpenAd();
                 return;
             }
 
@@ -219,7 +228,8 @@ public class Nicko_Admob : MonoBehaviour
             if (error != null || ad == null)
             {
                 if (id == appOpenMed) RequestAppOpenWithFallback(appOpenLow);
-                else Nicko_ADSManager._Instance.appLovinMax.ShowAppOpenAd();
+                else Debug.Log("NoAppOpenAvailable");
+               // else Nicko_ADSManager.instance.appLovinMax.ShowAppOpenAd();
                 return;
             }
 
@@ -269,7 +279,8 @@ public class Nicko_Admob : MonoBehaviour
 
             if (id == recBannerIDHigh) LoadRecBannerWithFallback(recBannerIDMed);
             else if (id == recBannerIDMed) LoadRecBannerWithFallback(recBannerIDLow);
-            else Nicko_ADSManager._Instance.appLovinMax.ShowMRec();
+            else Debug.Log("NoMrecAvailable");
+            //else Nicko_ADSManager.instance.appLovinMax.ShowMRec();
         };
 
         recBannerView.OnAdPaid += (value) => { Nicko_AnalyticalManager.instance.Revenue_ReportAdmob(value, "MREC"); };
@@ -320,7 +331,8 @@ public class Nicko_Admob : MonoBehaviour
             // Fallback logic
             if (id == bannerIDHigh) LoadBannerWithFallback(bannerIDMed);
             else if (id == bannerIDMed) LoadBannerWithFallback(bannerIDLow);
-            else Nicko_ADSManager._Instance.appLovinMax.ShowBanner();
+            else Debug.Log("NoBannerAvailable");
+            // else Nicko_ADSManager.instance.appLovinMax.ShowBanner();
         };
 
         bannerView.OnAdPaid += (value) => { Nicko_AnalyticalManager.instance.Revenue_ReportAdmob(value, "Banner"); };

@@ -5,7 +5,6 @@ using DG.Tweening;
 public class MusicGameController : MonoBehaviour
 {
     [SerializeField] private MiniGameType miniGameType;
-    [SerializeField] private GameObject gameStartTrigger;
     [SerializeField] private float gameDuration = 30f;
     [SerializeField] Transform playerStandPos;
     [SerializeField] Transform pianoCamera;
